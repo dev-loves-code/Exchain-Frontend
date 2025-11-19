@@ -1,74 +1,80 @@
-import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const AgentSignupPage = () => {
   const { loginWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
-    full_name: '',
-    email: '',
-    phone_number: '',
-    password: '',
-    password_confirmation: '',
-    business_name: '',
-    business_license: '',
-    latitude: '',
-    longitude: '',
-    address: '',
-    city: '',
-    working_hours_start: '',
-    working_hours_end: '',
-    commission_rate: '',
+    full_name: "",
+    email: "",
+    phone_number: "",
+    password: "",
+    password_confirmation: "",
+    business_name: "",
+    business_license: "",
+    latitude: "",
+    longitude: "",
+    address: "",
+    city: "",
+    working_hours_start: "",
+    working_hours_end: "",
+    commission_rate: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async () => {
     setErrors({});
-    setSuccessMessage('');
+    setSuccessMessage("");
     setLoading(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/register/agent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/auth/register/agent",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        },
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        setSuccessMessage(data.message || 'Agent registration submitted successfully! Awaiting approval.');
+        setSuccessMessage(
+          data.message ||
+            "Agent registration submitted successfully! Awaiting approval.",
+        );
         setFormData({
-          full_name: '',
-          email: '',
-          phone_number: '',
-          password: '',
-          password_confirmation: '',
-          business_name: '',
-          business_license: '',
-          latitude: '',
-          longitude: '',
-          address: '',
-          city: '',
-          working_hours_start: '',
-          working_hours_end: '',
-          commission_rate: '',
+          full_name: "",
+          email: "",
+          phone_number: "",
+          password: "",
+          password_confirmation: "",
+          business_name: "",
+          business_license: "",
+          latitude: "",
+          longitude: "",
+          address: "",
+          city: "",
+          working_hours_start: "",
+          working_hours_end: "",
+          commission_rate: "",
         });
-        
+
         setTimeout(() => {
-          window.location.href = '/login';
+          window.location.href = "/login";
         }, 3000);
       } else {
         setErrors(data.errors || { general: data.message });
       }
     } catch (error) {
-      setErrors({ general: 'Network error. Please try again.' });
+      setErrors({ general: "Network error. Please try again." });
     }
 
     setLoading(false);
@@ -80,13 +86,17 @@ const AgentSignupPage = () => {
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center">
           Become an Agent
         </h2>
-        <p className="text-gray-600 text-center mb-8">Join PayOne's agent network</p>
+        <p className="text-gray-600 text-center mb-8">
+          Join PayOne's agent network
+        </p>
 
         <button
           onClick={loginWithGoogle}
           className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-xl py-3 mb-6 hover:bg-gray-50 transition"
         >
-          <span className="font-semibold text-gray-700">Continue With Google</span>
+          <span className="font-semibold text-gray-700">
+            Continue With Google
+          </span>
         </button>
 
         <div className="relative mb-6">
@@ -94,7 +104,9 @@ const AgentSignupPage = () => {
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="px-4 bg-white text-gray-500 text-sm">Or register with</span>
+            <span className="px-4 bg-white text-gray-500 text-sm">
+              Or register with
+            </span>
           </div>
         </div>
 
@@ -113,16 +125,37 @@ const AgentSignupPage = () => {
         <div className="space-y-6">
           {/* Personal Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Personal Information
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { name: 'full_name', placeholder: 'Full Name *', type: 'text' },
-                { name: 'email', placeholder: 'Email *', type: 'email' },
-                { name: 'phone_number', placeholder: 'Phone Number *', type: 'tel' },
-                { name: 'password', placeholder: 'Password *', type: 'password' },
-                { name: 'password_confirmation', placeholder: 'Confirm Password *', type: 'password' },
+                { name: "full_name", placeholder: "Full Name *", type: "text" },
+                { name: "email", placeholder: "Email *", type: "email" },
+                {
+                  name: "phone_number",
+                  placeholder: "Phone Number *",
+                  type: "tel",
+                },
+                {
+                  name: "password",
+                  placeholder: "Password *",
+                  type: "password",
+                },
+                {
+                  name: "password_confirmation",
+                  placeholder: "Confirm Password *",
+                  type: "password",
+                },
               ].map((field) => (
-                <div key={field.name} className={field.name === 'password_confirmation' ? 'md:col-span-1' : ''}>
+                <div
+                  key={field.name}
+                  className={
+                    field.name === "password_confirmation"
+                      ? "md:col-span-1"
+                      : ""
+                  }
+                >
                   <input
                     type={field.type}
                     name={field.name}
@@ -132,7 +165,9 @@ const AgentSignupPage = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                   {errors[field.name] && (
-                    <p className="text-red-500 text-xs mt-1">{errors[field.name][0]}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name][0]}
+                    </p>
                   )}
                 </div>
               ))}
@@ -141,15 +176,35 @@ const AgentSignupPage = () => {
 
           {/* Business Information */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Business Information</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Business Information
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { name: 'business_name', placeholder: 'Business Name *', type: 'text' },
-                { name: 'business_license', placeholder: 'Business License', type: 'text' },
-                { name: 'address', placeholder: 'Address', type: 'text' },
-                { name: 'city', placeholder: 'City', type: 'text' },
-                { name: 'latitude', placeholder: 'Latitude', type: 'number', step: 'any' },
-                { name: 'longitude', placeholder: 'Longitude', type: 'number', step: 'any' },
+                {
+                  name: "business_name",
+                  placeholder: "Business Name *",
+                  type: "text",
+                },
+                {
+                  name: "business_license",
+                  placeholder: "Business License",
+                  type: "text",
+                },
+                { name: "address", placeholder: "Address", type: "text" },
+                { name: "city", placeholder: "City", type: "text" },
+                {
+                  name: "latitude",
+                  placeholder: "Latitude",
+                  type: "number",
+                  step: "any",
+                },
+                {
+                  name: "longitude",
+                  placeholder: "Longitude",
+                  type: "number",
+                  step: "any",
+                },
               ].map((field) => (
                 <div key={field.name}>
                   <input
@@ -162,7 +217,9 @@ const AgentSignupPage = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                   {errors[field.name] && (
-                    <p className="text-red-500 text-xs mt-1">{errors[field.name][0]}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name][0]}
+                    </p>
                   )}
                 </div>
               ))}
@@ -171,12 +228,29 @@ const AgentSignupPage = () => {
 
           {/* Working Hours & Commission */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Working Details</h3>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Working Details
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { name: 'working_hours_start', placeholder: 'Start Time (e.g., 09:00)', type: 'time' },
-                { name: 'working_hours_end', placeholder: 'End Time (e.g., 17:00)', type: 'time' },
-                { name: 'commission_rate', placeholder: 'Commission Rate (1-6%)', type: 'number', step: '0.01', min: '1', max: '6' },
+                {
+                  name: "working_hours_start",
+                  placeholder: "Start Time (e.g., 09:00)",
+                  type: "time",
+                },
+                {
+                  name: "working_hours_end",
+                  placeholder: "End Time (e.g., 17:00)",
+                  type: "time",
+                },
+                {
+                  name: "commission_rate",
+                  placeholder: "Commission Rate (1-6%)",
+                  type: "number",
+                  step: "0.01",
+                  min: "1",
+                  max: "6",
+                },
               ].map((field) => (
                 <div key={field.name}>
                   <input
@@ -191,7 +265,9 @@ const AgentSignupPage = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                   {errors[field.name] && (
-                    <p className="text-red-500 text-xs mt-1">{errors[field.name][0]}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors[field.name][0]}
+                    </p>
                   )}
                 </div>
               ))}
@@ -203,13 +279,16 @@ const AgentSignupPage = () => {
             disabled={loading}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
-            {loading ? 'Submitting...' : 'Register as Agent'}
+            {loading ? "Submitting..." : "Register as Agent"}
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{' '}
-          <a href="/login" className="text-blue-600 font-semibold hover:underline">
+          Already have an account?{" "}
+          <a
+            href="/login"
+            className="text-blue-600 font-semibold hover:underline"
+          >
             Log In
           </a>
         </p>

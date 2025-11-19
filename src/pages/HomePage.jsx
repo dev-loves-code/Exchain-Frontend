@@ -1,4 +1,4 @@
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from "../context/AuthContext";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -15,14 +15,16 @@ const HomePage = () => {
             <div className="space-y-8">
               {/* User Info */}
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 md:p-8 shadow-inner">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-6">Your Information</h2>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+                  Your Information
+                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[
-                    { label: 'User ID', value: user.user_id },
-                    { label: 'Full Name', value: user.full_name },
-                    { label: 'Email', value: user.email },
-                    { label: 'Phone', value: user.phone_number || 'N/A' },
-                    { label: 'Role', value: user.role, badge: true },
+                    { label: "User ID", value: user.user_id },
+                    { label: "Full Name", value: user.full_name },
+                    { label: "Email", value: user.email },
+                    { label: "Phone", value: user.phone_number || "N/A" },
+                    { label: "Role", value: user.role, badge: true },
                   ].map((item, idx) => (
                     <div
                       key={idx}
@@ -34,7 +36,9 @@ const HomePage = () => {
                           {item.value}
                         </span>
                       ) : (
-                        <p className="font-semibold text-gray-800">{item.value}</p>
+                        <p className="font-semibold text-gray-800">
+                          {item.value}
+                        </p>
                       )}
                     </div>
                   ))}
@@ -44,7 +48,8 @@ const HomePage = () => {
               {/* API Info */}
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg shadow-sm">
                 <p className="text-sm text-yellow-700 text-center">
-                  ✅ API Connection Working! Data fetched from <code>/auth/me</code>
+                  ✅ API Connection Working! Data fetched from{" "}
+                  <code>/auth/me</code>
                 </p>
               </div>
             </div>

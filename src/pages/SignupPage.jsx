@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const SignupPage = () => {
   const { register, loginWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
-    full_name: '',
-    email: '',
-    phone_number: '',
-    password: '',
-    password_confirmation: '',
+    full_name: "",
+    email: "",
+    phone_number: "",
+    password: "",
+    password_confirmation: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: '' });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSubmit = async () => {
@@ -25,7 +25,7 @@ const SignupPage = () => {
     const result = await register(formData);
 
     if (result.success) {
-      window.location.href = '/';
+      window.location.href = "/";
     } else {
       setErrors(result.errors || { general: result.message });
     }
@@ -36,7 +36,9 @@ const SignupPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 md:p-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center">Create Account</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center">
+          Create Account
+        </h2>
         <p className="text-gray-600 text-center mb-6">Join PayOne today</p>
 
         {/* Agent Registration Banner */}
@@ -56,7 +58,9 @@ const SignupPage = () => {
           onClick={loginWithGoogle}
           className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-xl py-3 mb-6 hover:bg-gray-50 transition"
         >
-          <span className="font-semibold text-gray-700">Continue With Google</span>
+          <span className="font-semibold text-gray-700">
+            Continue With Google
+          </span>
         </button>
 
         <div className="relative mb-6">
@@ -64,7 +68,9 @@ const SignupPage = () => {
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="px-4 bg-white text-gray-500 text-sm">Or sign up with</span>
+            <span className="px-4 bg-white text-gray-500 text-sm">
+              Or sign up with
+            </span>
           </div>
         </div>
 
@@ -76,11 +82,15 @@ const SignupPage = () => {
 
         <div className="space-y-4">
           {[
-            { name: 'full_name', placeholder: 'Full Name', type: 'text' },
-            { name: 'email', placeholder: 'Email', type: 'email' },
-            { name: 'phone_number', placeholder: 'Phone Number', type: 'tel' },
-            { name: 'password', placeholder: 'Password', type: 'password' },
-            { name: 'password_confirmation', placeholder: 'Confirm Password', type: 'password' },
+            { name: "full_name", placeholder: "Full Name", type: "text" },
+            { name: "email", placeholder: "Email", type: "email" },
+            { name: "phone_number", placeholder: "Phone Number", type: "tel" },
+            { name: "password", placeholder: "Password", type: "password" },
+            {
+              name: "password_confirmation",
+              placeholder: "Confirm Password",
+              type: "password",
+            },
           ].map((field) => (
             <div key={field.name}>
               <input
@@ -92,7 +102,9 @@ const SignupPage = () => {
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
               />
               {errors[field.name] && (
-                <p className="text-red-500 text-xs mt-1">{errors[field.name][0]}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors[field.name][0]}
+                </p>
               )}
             </div>
           ))}
@@ -102,13 +114,16 @@ const SignupPage = () => {
             disabled={loading}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{' '}
-          <a href="/login" className="text-blue-600 font-semibold hover:underline">
+          Already have an account?{" "}
+          <a
+            href="/login"
+            className="text-blue-600 font-semibold hover:underline"
+          >
             Log In
           </a>
         </p>

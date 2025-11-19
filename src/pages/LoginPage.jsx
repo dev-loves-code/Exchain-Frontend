@@ -1,23 +1,23 @@
-import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const { login, loginWithGoogle } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setError('');
+    setError("");
     setLoading(true);
 
     const result = await login(email, password);
 
     if (result.success) {
-      window.location.href = '/';
+      window.location.href = "/";
     } else {
-      setError(result.message || 'Login failed');
+      setError(result.message || "Login failed");
     }
 
     setLoading(false);
@@ -35,7 +35,9 @@ const LoginPage = () => {
           onClick={loginWithGoogle}
           className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-xl py-3 mb-6 hover:bg-gray-50 transition"
         >
-          <span className="font-semibold text-gray-700">Continue With Google</span>
+          <span className="font-semibold text-gray-700">
+            Continue With Google
+          </span>
         </button>
 
         <div className="relative mb-6">
@@ -43,7 +45,9 @@ const LoginPage = () => {
             <div className="w-full border-t border-gray-300"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="px-4 bg-white text-gray-500 text-sm">Or sign in with</span>
+            <span className="px-4 bg-white text-gray-500 text-sm">
+              Or sign in with
+            </span>
           </div>
         </div>
 
@@ -73,13 +77,16 @@ const LoginPage = () => {
             disabled={loading}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{' '}
-          <a href="/signup" className="text-blue-600 font-semibold hover:underline">
+          Don't have an account?{" "}
+          <a
+            href="/signup"
+            className="text-blue-600 font-semibold hover:underline"
+          >
             Sign up
           </a>
         </p>
