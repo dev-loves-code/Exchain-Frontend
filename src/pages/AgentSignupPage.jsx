@@ -17,7 +17,6 @@ const AgentSignupPage = () => {
     city: "",
     working_hours_start: "",
     working_hours_end: "",
-    commission_rate: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -40,7 +39,7 @@ const AgentSignupPage = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
-        },
+        }
       );
 
       const data = await response.json();
@@ -48,7 +47,7 @@ const AgentSignupPage = () => {
       if (data.success) {
         setSuccessMessage(
           data.message ||
-            "Agent registration submitted successfully! Awaiting approval.",
+            "Agent registration submitted successfully! Awaiting approval."
         );
         setFormData({
           full_name: "",
@@ -64,7 +63,6 @@ const AgentSignupPage = () => {
           city: "",
           working_hours_start: "",
           working_hours_end: "",
-          commission_rate: "",
         });
 
         setTimeout(() => {
@@ -148,14 +146,7 @@ const AgentSignupPage = () => {
                   type: "password",
                 },
               ].map((field) => (
-                <div
-                  key={field.name}
-                  className={
-                    field.name === "password_confirmation"
-                      ? "md:col-span-1"
-                      : ""
-                  }
-                >
+                <div key={field.name}>
                   <input
                     type={field.type}
                     name={field.name}
@@ -226,12 +217,12 @@ const AgentSignupPage = () => {
             </div>
           </div>
 
-          {/* Working Hours & Commission */}
+          {/* Working Hours */}
           <div>
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
               Working Details
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 {
                   name: "working_hours_start",
@@ -243,14 +234,6 @@ const AgentSignupPage = () => {
                   placeholder: "End Time (e.g., 17:00)",
                   type: "time",
                 },
-                {
-                  name: "commission_rate",
-                  placeholder: "Commission Rate (1-6%)",
-                  type: "number",
-                  step: "0.01",
-                  min: "1",
-                  max: "6",
-                },
               ].map((field) => (
                 <div key={field.name}>
                   <input
@@ -259,9 +242,6 @@ const AgentSignupPage = () => {
                     value={formData[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    step={field.step}
-                    min={field.min}
-                    max={field.max}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                   {errors[field.name] && (
@@ -298,3 +278,4 @@ const AgentSignupPage = () => {
 };
 
 export default AgentSignupPage;
+
