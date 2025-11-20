@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "laravel-echo": "^2.2.6",
+    "leaflet": "^1.9.4",
+    "leaflet-routing-machine": "^3.2.12",
     "pusher-js": "^8.4.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^6.30.2"
   },
   "devDependencies": {

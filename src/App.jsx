@@ -10,6 +10,8 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AgentSignupPage from "./pages/AgentSignupPage";
 import GoogleCallbackPage from "./pages/GoogleCallbackPage";
+import AgentsMap from "./components/AgentsMap";
+import AgentProfilePage from "./pages/AgentProfilePage";
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -37,6 +39,8 @@ function AppContent() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signup/agent" element={<AgentSignupPage />} />
           <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
+          <Route path="/agents" element={<AgentsMap />} />
+         <Route path="/agents/:id" element={<AgentProfilePage />} />
         </Routes>
       </main>
     </div>
