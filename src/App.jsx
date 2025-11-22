@@ -8,6 +8,9 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AgentSignupPage from './pages/AgentSignupPage';
 import GoogleCallbackPage from './pages/GoogleCallbackPage';
+import SupportPage from './pages/SupportPage';
+import DashboardTest from './pages/DashboardTest';
+
 
 function App() {
   return (
@@ -21,6 +24,10 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signup/agent" element={<AgentSignupPage />} />
             <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
+            {/* Testing */}
+            <Route path="/dash" element={<DashboardTest />} />
+        <Route path="/support-request" element={<SupportPage />} />
+
           </Routes>
         </div>
       </Router>
