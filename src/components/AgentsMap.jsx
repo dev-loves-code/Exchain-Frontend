@@ -4,7 +4,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import { useNavigate } from "react-router-dom";
 import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
 import shadowUrl from "leaflet/dist/images/marker-shadow.png";
@@ -56,12 +55,10 @@ function RoutingControl({ start, end, showDirections }) {
   return null;
 }
 
-export default function AgentsMap() {
-  const [agents, setAgents] = useState([]);
+export default function AgentsMap({ agents }) {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [showDirections, setShowDirections] = useState(false);
-  const navigate = useNavigate();
 
   // Get user location
   useEffect(() => {
@@ -69,22 +66,6 @@ export default function AgentsMap() {
       (pos) => setCurrentPosition([pos.coords.latitude, pos.coords.longitude]),
       (err) => console.error(err)
     );
-  }, []);
-
-  // Fetch agents
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    fetch("http://127.0.0.1:8000/api/agents", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => data.success && setAgents(data.data))
-      .catch(console.error);
   }, []);
 
   const handleRoute = (agent) => {
@@ -99,6 +80,10 @@ export default function AgentsMap() {
 
   const toggleDirections = () => {
     setShowDirections(!showDirections);
+  };
+
+  const handleViewProfile = (agentId) => {
+    window.location.href = `/agents/${agentId}`;
   };
 
   return (
@@ -141,7 +126,7 @@ export default function AgentsMap() {
                 </div>
                 <div style={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
                   <button
-                    onClick={() => navigate(`/agents/${agent.agent_id}`)}
+                    onClick={() => handleViewProfile(agent.agent_id)}
                     style={{
                       padding: '8px 16px',
                       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

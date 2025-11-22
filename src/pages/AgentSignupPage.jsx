@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useState, useEffect } from "react";
 
 const AgentSignupPage = () => {
-  const { loginWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -18,9 +16,40 @@ const AgentSignupPage = () => {
     working_hours_start: "",
     working_hours_end: "",
   });
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+
+  // -------------------------------
+  // AUTO-GET USER LOCATION
+  // -------------------------------
+  useEffect(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+
+        console.log("Accurate geolocation:", { latitude, longitude, accuracy });
+
+        setFormData((prev) => ({
+          ...prev,
+          latitude,
+          longitude,
+        }));
+      },
+      (err) => {
+        console.warn("Location error:", err);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0, // prevents cached data!
+      }
+    );
+  }
+}, []);
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -49,6 +78,7 @@ const AgentSignupPage = () => {
           data.message ||
             "Agent registration submitted successfully! Awaiting approval."
         );
+
         setFormData({
           full_name: "",
           email: "",
@@ -88,14 +118,7 @@ const AgentSignupPage = () => {
           Join PayOne's agent network
         </p>
 
-        <button
-          onClick={loginWithGoogle}
-          className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-xl py-3 mb-6 hover:bg-gray-50 transition"
-        >
-          <span className="font-semibold text-gray-700">
-            Continue With Google
-          </span>
-        </button>
+        {/* REMOVED GOOGLE AUTH BUTTON */}
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
@@ -103,7 +126,7 @@ const AgentSignupPage = () => {
           </div>
           <div className="relative flex justify-center">
             <span className="px-4 bg-white text-gray-500 text-sm">
-              Or register with
+              Register below
             </span>
           </div>
         </div>
@@ -184,18 +207,6 @@ const AgentSignupPage = () => {
                 },
                 { name: "address", placeholder: "Address", type: "text" },
                 { name: "city", placeholder: "City", type: "text" },
-                {
-                  name: "latitude",
-                  placeholder: "Latitude",
-                  type: "number",
-                  step: "any",
-                },
-                {
-                  name: "longitude",
-                  placeholder: "Longitude",
-                  type: "number",
-                  step: "any",
-                },
               ].map((field) => (
                 <div key={field.name}>
                   <input
@@ -204,7 +215,6 @@ const AgentSignupPage = () => {
                     value={formData[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    step={field.step}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                   />
                   {errors[field.name] && (
@@ -214,68 +224,24 @@ const AgentSignupPage = () => {
                   )}
                 </div>
               ))}
-            </div>
-          </div>
 
-          {/* Working Hours */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              Working Details
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                {
-                  name: "working_hours_start",
-                  placeholder: "Start Time (e.g., 09:00)",
-                  type: "time",
-                },
-                {
-                  name: "working_hours_end",
-                  placeholder: "End Time (e.g., 17:00)",
-                  type: "time",
-                },
-              ].map((field) => (
-                <div key={field.name}>
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
-                  {errors[field.name] && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors[field.name][0]}
-                    </p>
-                  )}
-                </div>
-              ))}
+              {/* Hidden Latitude & Longitude */}
+              <input type="hidden" name="latitude" value={formData.latitude} />
+              <input type="hidden" name="longitude" value={formData.longitude} />
             </div>
           </div>
 
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
+            className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition"
           >
-            {loading ? "Submitting..." : "Register as Agent"}
+            {loading ? "Submitting..." : "Register"}
           </button>
         </div>
-
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-blue-600 font-semibold hover:underline"
-          >
-            Log In
-          </a>
-        </p>
       </div>
     </div>
   );
 };
 
 export default AgentSignupPage;
-
