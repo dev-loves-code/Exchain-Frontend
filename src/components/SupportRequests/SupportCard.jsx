@@ -30,7 +30,7 @@ const SupportCard = ({ subject, description }) => {
           onClick={handleChatClick}
           className="py-3 w-full text-center font-semibold text-white bg-blue-600 rounded-3xl hover:bg-blue-700 transition"
         >
-          Chat With Us
+          Contact Support
         </button>
       </div>
     </div>
