@@ -8,6 +8,9 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AgentSignupPage from './pages/AgentSignupPage';
 import GoogleCallbackPage from './pages/GoogleCallbackPage';
+import CreateRefundPage from './pages/refund-requests/CreateRefundPage';
+import ViewRefundPage from './pages/refund-requests/ViewRefundPage';
+import AdminRefundsPage from './pages/refund-requests/AdminRefundPage';
 
 function App() {
   return (
@@ -21,8 +24,14 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/signup/agent" element={<AgentSignupPage />} />
             <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
+
+            {/*Bahij - Refund Request Routes */}
+            <Route path="/refund/create" element={<CreateRefundPage />} />
+            <Route path="/refund/view/:id" element={<ViewRefundPage />} />
+            <Route path="/admin/refunds" element={<AdminRefundsPage />} />
           </Routes>
         </div>
+       
       </Router>
     </AuthProvider>
   );
