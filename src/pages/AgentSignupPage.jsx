@@ -25,31 +25,30 @@ const AgentSignupPage = () => {
   // AUTO-GET USER LOCATION
   // -------------------------------
   useEffect(() => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude, accuracy } = pos.coords;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude, accuracy } = pos.coords;
 
-        console.log("Accurate geolocation:", { latitude, longitude, accuracy });
+          console.log("Accurate geolocation:", { latitude, longitude, accuracy });
 
-        setFormData((prev) => ({
-          ...prev,
-          latitude,
-          longitude,
-        }));
-      },
-      (err) => {
-        console.warn("Location error:", err);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-        maximumAge: 0, // prevents cached data!
-      }
-    );
-  }
-}, []);
-
+          setFormData((prev) => ({
+            ...prev,
+            latitude,
+            longitude,
+          }));
+        },
+        (err) => {
+          console.warn("Location error:", err);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0, // prevents cached data!
+        }
+      );
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -224,12 +223,58 @@ const AgentSignupPage = () => {
                   )}
                 </div>
               ))}
-
-              {/* Hidden Latitude & Longitude */}
-              <input type="hidden" name="latitude" value={formData.latitude} />
-              <input type="hidden" name="longitude" value={formData.longitude} />
             </div>
           </div>
+
+          {/* Working Hours */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Working Hours
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Working Hours Start *
+                </label>
+                <input
+                  type="time"
+                  name="working_hours_start"
+                  value={formData.working_hours_start}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                {errors.working_hours_start && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.working_hours_start[0]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Working Hours End *
+                </label>
+                <input
+                  type="time"
+                  name="working_hours_end"
+                  value={formData.working_hours_end}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                {errors.working_hours_end && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.working_hours_end[0]}
+                  </p>
+                )}
+              </div>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">
+              * Please specify your business operating hours in 24-hour format (HH:MM)
+            </p>
+          </div>
+
+          {/* Hidden Latitude & Longitude */}
+          <input type="hidden" name="latitude" value={formData.latitude} />
+          <input type="hidden" name="longitude" value={formData.longitude} />
 
           <button
             onClick={handleSubmit}
