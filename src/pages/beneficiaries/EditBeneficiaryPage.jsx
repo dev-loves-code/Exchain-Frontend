@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BeneficiaryForm from "../../components/beneficiaries/BeneficiaryForm";
+import Loading from "../../components/Loading.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditBeneficiaryPage() {
@@ -14,7 +15,7 @@ export default function EditBeneficiaryPage() {
   useEffect(() => {
     const fetchBeneficiary = async () => {
       try {
-        setError(""); // clear previous errors
+        setError("");
         const token = localStorage.getItem("token");
         if (!token) throw new Error("You must be logged in");
 
@@ -46,71 +47,69 @@ export default function EditBeneficiaryPage() {
   }, [id]);
 
   const handleSubmit = async (formData) => {
-  try {
-    setError("");
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("You must be logged in");
+    try {
+      setError("");
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("You must be logged in");
 
-    const res = await fetch(`${API_BASE_URL}/beneficiaries/update/${id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+      const res = await fetch(`${API_BASE_URL}/beneficiaries/update/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    if (!res.ok) {
-      const errorData = await res.json().catch(() => null);
-      throw new Error(errorData?.message || `HTTP error: ${res.status}`);
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.message || `HTTP error: ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        navigate("/beneficiaries");
+      } else {
+        throw new Error(data.message || "Failed to update beneficiary");
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Network error. Please check your backend.");
     }
-
-    const data = await res.json();
-    if (data.success) {
-      alert("Beneficiary updated successfully!");
-      navigate("/beneficiaries"); // <- go back to list page
-    } else {
-      throw new Error(data.message || "Failed to update beneficiary");
-    }
-  } catch (err) {
-    console.error(err);
-    setError(err.message || "Network error. Please check your backend.");
-  }
-};
-
-
-  if (loading) return <p>Loading...</p>;
+  };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Edit Beneficiary</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl">
+        {loading && <Loading fullScreen={true} text="Loading beneficiary data..." />}
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 border border-red-400 rounded">
-          {error}
-          <br />
-          <button
-            onClick={() => navigate("/beneficiaries")}
-            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Go Back to Beneficiaries List
-          </button>
-        </div>
-      )}
 
-      {!error && initialData && (
-        <BeneficiaryForm
-          mode="edit"
-          initialData={initialData}
-          onSuccess={handleSubmit}
-        />
-      )}
+        {error && !loading && (
+          <div className="p-6 bg-red-100 text-red-700 rounded-3xl shadow-md mb-4">
+            <p>{error}</p>
+            <button
+              onClick={() => navigate("/beneficiaries")}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all"
+            >
+              Go Back to Beneficiaries List
+            </button>
+          </div>
+        )}
 
-      {!error && !initialData && !loading && (
-        <div className="p-3 text-gray-700">
-          Beneficiary data is empty or could not be loaded.
-        </div>
-      )}
+        {!loading && initialData && !error && (
+          <BeneficiaryForm
+            mode="edit"
+            initialData={initialData}
+            onSuccess={handleSubmit}
+          />
+        )}
+
+        {!loading && !initialData && !error && (
+          <div className="p-6 bg-white rounded-3xl shadow-2xl text-center text-gray-700">
+            Beneficiary data is empty or could not be loaded.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SuccessPopup from "./SuccessPopup"; // import the popup component
 
 export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
   const [formData, setFormData] = useState({
@@ -11,7 +12,7 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false); // track popup visibility
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,24 +23,25 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setSuccessMsg("");
 
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("You must be logged in");
 
-      const res = await fetch(`http://127.0.0.1:8000/api/beneficiaries/update/${initialData.beneficiary_id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/beneficiaries/update/${initialData.beneficiary_id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json().catch(() => ({}));
 
-      // Handle server validation errors
       if (!res.ok || !data.success) {
         if (data.errors) {
           const firstError = Object.values(data.errors).flat()[0];
@@ -49,11 +51,13 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
         } else {
           setError("Failed to update beneficiary. Please check your input.");
         }
-        return; // stop execution here
+        return;
       }
 
-      // Success case
-      setSuccessMsg("Beneficiary updated successfully!");
+      // Show success popup instead of inline message
+      setShowSuccess(true);
+
+      // Call parent's onSuccess callback
       onSuccess && onSuccess(data.beneficiary);
 
     } catch (err) {
@@ -65,70 +69,101 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-lg mx-auto p-6 bg-white rounded-xl shadow-md flex flex-col gap-4"
-    >
-      <h2 className="text-xl font-semibold text-gray-800">Edit Beneficiary</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl md:text-5xl font-black text-gray-900">
+            Edit Beneficiary
+          </h1>
+        </div>
 
-      {error && <div className="text-red-500 text-sm p-2 bg-red-100 rounded">{error}</div>}
-      {successMsg && <div className="text-green-500 text-sm p-2 bg-green-100 rounded">{successMsg}</div>}
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <div className="text-red-500 text-sm p-2 bg-red-100 rounded">{error}</div>
+          )}
 
-      <input
-        type="text"
-        name="name"
-        placeholder="Full Name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-        className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-900 font-medium mb-2">Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Full Name"
+                className="w-full px-5 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              />
+            </div>
 
-      <input
-        type="email"
-        name="email"
-        placeholder="Email (optional)"
-        value={formData.email}
-        onChange={handleChange}
-        className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+            <div>
+              <label className="block text-gray-900 font-medium mb-2">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email (optional)"
+                className="w-full px-5 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              />
+            </div>
+          </div>
 
-      <input
-        type="number"
-        name="wallet_id"
-        placeholder="Wallet ID (optional)"
-        value={formData.wallet_id}
-        onChange={handleChange}
-        className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-gray-900 font-medium mb-2">Wallet ID</label>
+              <input
+                type="number"
+                name="wallet_id"
+                value={formData.wallet_id}
+                onChange={handleChange}
+                placeholder="Wallet ID"
+                className="w-full px-5 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              />
+            </div>
 
-      <input
-        type="number"
-        name="payment_method_id"
-        placeholder="Payment Method ID (optional)"
-        value={formData.payment_method_id}
-        onChange={handleChange}
-        className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+            <div>
+              <label className="block text-gray-900 font-medium mb-2">Payment Method ID</label>
+              <input
+                type="number"
+                name="payment_method_id"
+                value={formData.payment_method_id}
+                onChange={handleChange}
+                placeholder="Payment Method ID"
+                className="w-full px-5 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              />
+            </div>
 
-      <input
-        type="number"
-        name="bank_account_id"
-        placeholder="Bank Account ID (optional)"
-        value={formData.bank_account_id}
-        onChange={handleChange}
-        className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-      />
+            <div>
+              <label className="block text-gray-900 font-medium mb-2">Bank Account ID</label>
+              <input
+                type="number"
+                name="bank_account_id"
+                value={formData.bank_account_id}
+                onChange={handleChange}
+                placeholder="Bank Account ID"
+                className="w-full px-5 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+              />
+            </div>
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className={`mt-2 px-4 py-2 rounded text-white font-semibold transition-colors ${
-          loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-        }`}
-      >
-        {loading ? "Updating..." : "Update Beneficiary"}
-      </button>
-    </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-5 bg-teal-800 hover:bg-teal-900 text-white font-semibold text-lg rounded-xl transition-all shadow-lg hover:shadow-xl`}
+          >
+            {loading ? "Updating..." : "Update Beneficiary"}
+          </button>
+        </form>
+      </div>
+
+      {/* Success Popup */}
+      {showSuccess && (
+        <SuccessPopup
+          message="Beneficiary updated successfully!"
+          onComplete={() => setShowSuccess(false)}
+        />
+      )}
+    </div>
   );
 }

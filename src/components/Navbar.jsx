@@ -11,11 +11,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+    <nav className="bg-white shadow-lg border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
         {/* Home */}
-        <Link to="/" className="text-white text-2xl font-bold">
+        <Link to="/" className="text-gray-900 text-2xl font-black hover:text-teal-800 transition-colors">
           PayOne
         </Link>
 
@@ -25,7 +25,7 @@ const Navbar = () => {
           {user && (
             <Link
               to="/beneficiaries"
-              className="text-white px-4 py-2 rounded-lg hover:bg-white/20"
+              className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
             >
               Beneficiaries
             </Link>
@@ -35,14 +35,14 @@ const Navbar = () => {
           {user ? (
             <button
               onClick={handleLogout}
-              className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-xl font-semibold transition-all shadow-sm"
             >
               Logout
             </button>
           ) : (
             <Link
               to="/login"
-              className="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:shadow"
+              className="bg-teal-800 hover:bg-teal-900 text-white px-6 py-2.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
             >
               Login
             </Link>
