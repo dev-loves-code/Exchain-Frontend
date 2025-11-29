@@ -25,11 +25,11 @@ export default function BeneficiarySelector({ onSelect }) {
 
   const getPaymentInfo = (b) => {
     if (b.wallet)
-      return { icon: Wallet, text: b.wallet.name, color: "text-purple-600", bg: "bg-purple-50" };
+      return { icon: Wallet, text: b.wallet.wallet_id, color: "text-purple-600", bg: "bg-purple-50" };
     if (b.payment_method)
-      return { icon: CreditCard, text: b.payment_method.type, color: "text-blue-600", bg: "bg-blue-50" };
+      return { icon: CreditCard, text: b.payment_method.method_type, color: "text-blue-600", bg: "bg-blue-50" };
     if (b.bank_account)
-      return { icon: Building2, text: b.bank_account.bank_name, color: "text-teal-700", bg: "bg-teal-50" };
+      return { icon: Building2, text: b.bank_account.receiver_bank_account, color: "text-teal-700", bg: "bg-teal-50" };
     return { icon: User, text: "No payment method", color: "text-gray-500", bg: "bg-gray-50" };
   };
 

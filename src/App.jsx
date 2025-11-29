@@ -13,7 +13,22 @@ import BeneficiariesListPage from "./pages/beneficiaries/BeneficiariesListPage";
 import AddBeneficiaryPage from "./pages/beneficiaries/AddBeneficiaryPage";
 import BeneficiaryDetailsPage from "./pages/beneficiaries/BeneficiaryDetailsPage";
 import EditBeneficiaryPage from "./pages/beneficiaries/EditBeneficiaryPage";
-import SendMoneyPageSuccess from './pages/beneficiaries/SendMonyPage';
+import SendMoneyPageSuccess from './pages/beneficiaries/SendMoneyPage';
+
+
+// Send Money Flow
+import SendMoneyPage from './pages/wallet-to-person/send/SendMoneyPage';
+import ConfirmTransaction from './pages/wallet-to-person/send/ConfirmTransaction';
+import TransactionSuccess from './pages/wallet-to-person/send/TransactionSuccess';
+
+// Transactions
+import TransactionsHistory from './pages/wallet-to-person/transactions/TransactionHistory';
+import ReceiptPage from './pages/wallet-to-person/transactions/ReceiptPage';
+
+// Agent W2P
+import VerifyTransaction from './pages/wallet-to-person/agent/VerifyTransaction';
+import CompleteTransaction from './pages/wallet-to-person/agent/CompleteTransaction';
+
 
 function App() {
   return (
@@ -35,7 +50,20 @@ function App() {
             <Route path="/beneficiaries/:id/edit" element={<EditBeneficiaryPage />} />
             {/* <Route path="/beneficiaries/:id" element={<BeneficiaryDetailsPage />} /> // Can be remover */}
             <Route path="/beneficiaries" element={<BeneficiariesListPage />} /> 
-            <Route path="/send/success" element={<SendMoneyPageSuccess />} />
+            {/* <Route path="/send/success" element={<SendMoneyPageSuccess />} /> */}
+
+                          {/* Wallet to Person - User */}
+              <Route path="/send" element={<SendMoneyPage />} />
+              <Route path="/send/confirm" element={<ConfirmTransaction />} />
+              <Route path="/send/success" element={<TransactionSuccess />} />
+
+              {/* Wallet to Person - Transactions History */}
+              <Route path="/transactions" element={<TransactionsHistory />} />
+              <Route path="/transactions/receipt/:id" element={<ReceiptPage />} />
+
+              {/* Agent - Wallet to Person */}
+              <Route path="/agent/verify" element={<VerifyTransaction />} />
+              <Route path="/agent/complete" element={<CompleteTransaction />} />
 
 
 
