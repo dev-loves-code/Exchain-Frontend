@@ -9,7 +9,7 @@ export default function ReceiptPage() {
 
   useEffect(() => {
     if (!id) {
-      navigate(-1); // go back if no ID
+      navigate(-1);
       return;
     }
 
@@ -78,24 +78,44 @@ export default function ReceiptPage() {
         <div className="space-y-3">
           <div className="flex justify-between">
             <span>Reference</span>
-            <span className="font-semibold">
-              {tx.reference_code || tx.transaction_id}
-            </span>
+            <span className="font-semibold">{tx.reference_code || tx.transaction_id}</span>
           </div>
           <div className="flex justify-between">
             <span>Sender Wallet</span>
-            <span>{tx.sender_wallet_id || tx.sender?.wallet_id || "-"}</span>
+            <span>{tx.sender?.wallet_id || tx.sender_wallet_id || "-"}</span>
           </div>
           <div className="flex justify-between">
             <span>Recipient</span>
-            <span>{tx.receiver_email || tx.receiver?.email || "-"}</span>
+            <span>{tx.receiver?.name || tx.receiver_email || "-"}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Email</span>
+            <span>{tx.receiver?.email || "-"}</span>
           </div>
           <div className="flex justify-between">
             <span>Amount</span>
-            <span className="font-semibold">
-              {tx.transfer_amount || tx.transfer_details?.amount || 0}{" "}
-              {tx.currency_code || tx.sender?.currency || ""}
+            <span>
+              {tx.transfer_details?.amount || tx.transfer_amount || 0}{" "}
+              {tx.sender?.currency || tx.currency_code || ""}
             </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Fees</span>
+            <span>
+              {tx.transfer_details?.fee || tx.transfer_fee || 0}{" "}
+              {tx.sender?.currency || tx.currency_code || ""}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Total Received</span>
+            <span>
+              {tx.transfer_details?.received_amount || 0}{" "}
+              {tx.receiver?.currency || tx.sender?.currency || ""}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span>Exchange Rate</span>
+            <span>{tx.transfer_details?.exchange_rate || 1}</span>
           </div>
           <div className="flex justify-between">
             <span>Status</span>

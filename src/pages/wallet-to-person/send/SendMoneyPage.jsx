@@ -53,9 +53,17 @@ export default function SendMoneyPage() {
   // Calculations
   const amountNum = parseFloat(formData.amount) || 0;
   const exchangeRate = 1.4203; // placeholder
-  const fees = (amountNum * 0.021).toFixed(2);
-  const totalToPay = (amountNum + parseFloat(fees)).toFixed(2);
-  const recipientGets = (amountNum * exchangeRate).toFixed(2);
+    // Calculate fees
+    const fees = (amountNum * 0.021).toFixed(2);
+
+    // Include fees only if selected
+    const totalToPay = formData.includeFees
+    ? (amountNum + parseFloat(fees)).toFixed(2)
+    : amountNum.toFixed(2);
+
+    // Recipient gets calculation (if you want to include fees in recipient amount, adjust accordingly)
+    const recipientGets = (amountNum * exchangeRate).toFixed(2);
+
 
   const onContinue = () => {
     if (!formData.senderWalletId) return alert("Enter sender wallet ID");
