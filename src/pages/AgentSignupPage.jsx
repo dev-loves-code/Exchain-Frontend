@@ -19,34 +19,96 @@ const AgentSignupPage = () => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
 
   // -------------------------------
-  // AUTO-GET USER LOCATION
+  // AUTO-GET USER LOCATION + REVERSE GEOCODE
   // -------------------------------
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const { latitude, longitude, accuracy } = pos.coords;
 
           console.log("Accurate geolocation:", { latitude, longitude, accuracy });
 
+          // First, set the coordinates
           setFormData((prev) => ({
             ...prev,
             latitude,
             longitude,
           }));
+
+          // Then reverse geocode to get address details
+          try {
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&zoom=18`,
+              {
+                headers: {
+                  'User-Agent': 'PayOne-Agent-Registration/1.0'
+                }
+              }
+            );
+            
+            const data = await response.json();
+            
+            console.log("Full geocoding response:", data);
+            
+            if (data && data.address) {
+              // Try multiple fields for street address
+              const street = data.address.road || 
+                            data.address.street || 
+                            data.address.pedestrian ||
+                            data.address.path ||
+                            data.address.neighbourhood ||
+                            data.address.suburb ||
+                            data.display_name?.split(',')[0] || // Fallback to first part of display name
+                            "";
+              
+              const city = data.address.city || 
+                          data.address.town || 
+                          data.address.village || 
+                          data.address.municipality ||
+                          data.address.county ||
+                          "";
+
+              console.log("Extracted address:", { 
+                street, 
+                city, 
+                fullDisplayName: data.display_name,
+                allAddressFields: data.address 
+              });
+
+              setFormData((prev) => ({
+                ...prev,
+                address: street || "Address not available - please update manually",
+                city: city || "City not available - please update manually",
+              }));
+            }
+          } catch (error) {
+            console.error("Geocoding error:", error);
+            setFormData((prev) => ({
+              ...prev,
+              address: "Unable to detect address",
+              city: "Unable to detect city",
+            }));
+          } finally {
+            setLocationLoading(false);
+          }
         },
         (err) => {
           console.warn("Location error:", err);
+          setLocationLoading(false);
         },
         {
           enableHighAccuracy: true,
           timeout: 15000,
-          maximumAge: 0, // prevents cached data!
+          maximumAge: 0,
         }
       );
+    } else {
+      setLocationLoading(false);
     }
   }, []);
 
@@ -117,8 +179,6 @@ const AgentSignupPage = () => {
           Join PayOne's agent network
         </p>
 
-        {/* REMOVED GOOGLE AUTH BUTTON */}
-
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300"></div>
@@ -129,6 +189,18 @@ const AgentSignupPage = () => {
             </span>
           </div>
         </div>
+
+        {locationLoading && (
+          <div className="bg-blue-50 text-blue-600 p-4 rounded-lg text-sm mb-4 text-center">
+            📍 Detecting your location...
+          </div>
+        )}
+
+        {!locationLoading && formData.latitude && (
+          <div className="bg-green-50 text-green-600 p-4 rounded-lg text-sm mb-4 text-center">
+            ✓ Location detected: {formData.city || "Location confirmed"}
+          </div>
+        )}
 
         {successMessage && (
           <div className="bg-green-50 text-green-600 p-4 rounded-lg text-sm mb-4 text-center">
@@ -193,36 +265,72 @@ const AgentSignupPage = () => {
               Business Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                {
-                  name: "business_name",
-                  placeholder: "Business Name *",
-                  type: "text",
-                },
-                {
-                  name: "business_license",
-                  placeholder: "Business License",
-                  type: "text",
-                },
-                { name: "address", placeholder: "Address", type: "text" },
-                { name: "city", placeholder: "City", type: "text" },
-              ].map((field) => (
-                <div key={field.name}>
-                  <input
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name]}
-                    onChange={handleChange}
-                    placeholder={field.placeholder}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                  />
-                  {errors[field.name] && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors[field.name][0]}
-                    </p>
-                  )}
-                </div>
-              ))}
+              <div>
+                <input
+                  type="text"
+                  name="business_name"
+                  value={formData.business_name}
+                  onChange={handleChange}
+                  placeholder="Business Name *"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                {errors.business_name && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.business_name[0]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="business_license"
+                  value={formData.business_license}
+                  onChange={handleChange}
+                  placeholder="Business License"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                {errors.business_license && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.business_license[0]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="Street Address (auto-detected, editable)"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Auto-detected - you can edit if incorrect
+                </p>
+                {errors.address && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.address[0]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="City (auto-detected, editable)"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Auto-detected - you can edit if incorrect
+                </p>
+                {errors.city && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.city[0]}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -278,10 +386,10 @@ const AgentSignupPage = () => {
 
           <button
             onClick={handleSubmit}
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition"
+            disabled={loading || locationLoading}
+            className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? "Submitting..." : "Register"}
+            {loading ? "Submitting..." : locationLoading ? "Detecting location..." : "Register"}
           </button>
         </div>
       </div>
