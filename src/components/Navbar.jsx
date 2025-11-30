@@ -1,5 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import NotificationBell from "./NotificationBell";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -16,8 +17,10 @@ const Navbar = () => {
         <a href="/" className="text-white text-2xl font-bold">
           PayOne
         </a>
-
+        
+         {user && <NotificationBell userId={user.user_id} />}
         <div>
+
           {user ? (
             <button
               onClick={handleLogout}

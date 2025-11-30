@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import "./index.css";
 
 import Navbar from "./components/Navbar";
-import NotificationBell from "./components/NotificationBell";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -13,6 +12,7 @@ import GoogleCallbackPage from "./pages/GoogleCallbackPage";
 import AgentProfilePage from "./pages/AgentProfilePage";
 import AgentPersonalProfilePage from "./pages/AgentPersonalProfilePage"; // Add this import
 import AgentsPage from "./pages/AgentsPage";
+import AgentCashOperationForm from "./pages/AgentCashOperationForm";
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -28,11 +28,6 @@ function AppContent() {
       {/* Navbar at the top */}
       <Navbar />
 
-      {/* Optional: secondary header for notifications or page-specific info */}
-      <header className="flex justify-end p-5 bg-gray-100">
-        {user && <NotificationBell userId={user.user_id} />}
-      </header>
-
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -42,6 +37,7 @@ function AppContent() {
           <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/agents/:id" element={<AgentProfilePage />} />
+          <Route path="/agent/cash-operation" element={<AgentCashOperationForm />} />
           
           {/* Add this route for agent's personal profile */}
           <Route path="/agent/profile" element={<AgentPersonalProfilePage />} />

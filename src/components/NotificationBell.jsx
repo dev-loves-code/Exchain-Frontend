@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Bell } from "lucide-react";
 import echo from "../echo";
 
 export default function NotificationBell({ userId }) {
@@ -7,34 +8,26 @@ export default function NotificationBell({ userId }) {
   const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    // Fetch existing notifications
     const fetchNotifications = async () => {
       const response = await fetch("http://localhost:8000/api/notifications", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       const data = await response.json();
 
-      // Ensure notification_id is always an integer
-      const fetchedNotifications = data.notifications.map((n) => ({
+      const formatted = data.notifications.map((n) => ({
         ...n,
         notification_id: parseInt(n.notification_id, 10),
       }));
 
-      setNotifications(fetchedNotifications);
+      setNotifications(formatted);
       setUnreadCount(data.unread_count);
     };
 
     fetchNotifications();
 
-    // Subscribe to real-time notifications
     const channel = echo.private(`user.${userId}`);
     const listener = (e) => {
-      console.log("🔔 RAW EVENT:", e);
-      console.log("Type of notification_id:", typeof e.notification_id);
-      console.log("Value:", e.notification_id);
-
       const newNotification = {
         notification_id: e.notification_id,
         title: e.title,
@@ -42,8 +35,6 @@ export default function NotificationBell({ userId }) {
         is_read: e.is_read || false,
         created_at: e.created_at,
       };
-
-      console.log("Processed notification:", newNotification);
 
       setNotifications((prev) => [newNotification, ...prev]);
       setUnreadCount((prev) => prev + 1);
@@ -63,53 +54,47 @@ export default function NotificationBell({ userId }) {
     };
   }, [userId]);
 
-  const markAsRead = async (notificationId) => {
-    const id = parseInt(notificationId, 10);
-
+  const markAsRead = async (id) => {
     await fetch(`http://localhost:8000/api/notifications/${id}/read`, {
       method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
 
     setUnreadCount((prev) => prev - 1);
     setNotifications((prev) =>
-      prev.map((n) => (n.notification_id === id ? { ...n, is_read: true } : n)),
+      prev.map((n) =>
+        n.notification_id === id ? { ...n, is_read: true } : n
+      )
     );
   };
 
   return (
     <div style={{ position: "relative" }}>
       <button
-        onClick={() => setShowDropdown(!showDropdown)}
+        onClick={() => setShowDropdown((prev) => !prev)}
         style={{
-          background: "#4CAF50",
-          color: "white",
+          background: "transparent",
           border: "none",
-          padding: "10px 15px",
-          borderRadius: "50%",
           cursor: "pointer",
-          fontSize: "20px",
           position: "relative",
         }}
       >
-        🔔
+        <Bell size={24} />
+
+        {/* Unread Badge */}
         {unreadCount > 0 && (
           <span
             style={{
               position: "absolute",
-              top: "-5px",
-              right: "-5px",
+              top: -5,
+              right: -5,
               background: "red",
               color: "white",
+              fontSize: "10px",
               borderRadius: "50%",
-              width: "20px",
-              height: "20px",
-              fontSize: "12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              padding: "2px 5px",
+              minWidth: "18px",
+              textAlign: "center",
             }}
           >
             {unreadCount}
@@ -117,54 +102,51 @@ export default function NotificationBell({ userId }) {
         )}
       </button>
 
+      {/* Dropdown */}
       {showDropdown && (
         <div
           style={{
             position: "absolute",
-            top: "50px",
-            right: "0",
-            background: "white",
-            border: "1px solid #ddd",
-            borderRadius: "8px",
+            right: 0,
+            top: "32px",
             width: "300px",
+            background: "white",
+            borderRadius: "8px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            padding: "10px",
+            zIndex: 1000,
             maxHeight: "400px",
             overflowY: "auto",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-            zIndex: 1000,
           }}
         >
-          <h3
-            style={{
-              padding: "15px",
-              margin: 0,
-              borderBottom: "1px solid #eee",
-            }}
-          >
+          <h4 style={{ margin: "0 0 10px 0", fontWeight: "bold" }}>
             Notifications
-          </h3>
+          </h4>
 
           {notifications.length === 0 ? (
-            <p style={{ padding: "20px", textAlign: "center", color: "#999" }}>
-              No notifications
-            </p>
+            <p style={{ margin: 0, opacity: 0.7 }}>No notifications</p>
           ) : (
-            notifications.map((notif) => (
+            notifications.map((n) => (
               <div
-                key={notif.notification_id}
-                onClick={() => markAsRead(notif.notification_id)}
+                key={n.notification_id}
+                onClick={() => !n.is_read && markAsRead(n.notification_id)}
                 style={{
-                  padding: "15px",
-                  borderBottom: "1px solid #eee",
+                  marginBottom: "10px",
+                  padding: "10px",
+                  borderRadius: "6px",
+                  background: n.is_read ? "#f5f5f5" : "#e8f0ff",
                   cursor: "pointer",
-                  background: notif.is_read ? "white" : "#f0f8ff",
+                  borderBottom: "1px solid #eee",
                 }}
               >
-                <strong>{notif.title}</strong>
+                <strong style={{ display: "block", marginBottom: "5px" }}>
+                  {n.title}
+                </strong>
                 <p style={{ margin: "5px 0", fontSize: "14px" }}>
-                  {notif.message}
+                  {n.message}
                 </p>
-                <small style={{ color: "#999" }}>
-                  {new Date(notif.created_at).toLocaleString()}
+                <small style={{ color: "#999", fontSize: "12px" }}>
+                  {new Date(n.created_at).toLocaleString()}
                 </small>
               </div>
             ))
