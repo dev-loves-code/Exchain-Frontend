@@ -27,8 +27,8 @@ const Navbar = () => {
           {/* -------- AUTHENTICATED NAVIGATION -------- */}
           {user && (
             <>
-              {/* If NOT agent → show normal user routes */}
-              {user.role !== "agent" && (
+              {/* Normal User (not agent & not admin) */}
+              {user.role === "user" && (
                 <>
                   <Link
                     to="/send"
@@ -50,17 +50,35 @@ const Navbar = () => {
                   >
                     Beneficiaries
                   </Link>
+
+                  {/* Refund Create */}
+                  <Link
+                    to="/refund/create"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Request Refund
+                  </Link>
                 </>
               )}
 
-              {/* If user IS an agent → show verify page only */}
+              {/* Agent */}
               {user.role === "agent" && (
+                <Link
+                  to="/agent/verify"
+                  className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                >
+                  Verify Transaction
+                </Link>
+              )}
+
+              {/* Admin Only */}
+              {user.role === "admin" && (
                 <>
                   <Link
-                    to="/agent/verify"
+                    to="/admin/refunds"
                     className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
                   >
-                    Verify Transaction
+                    Manage Refunds
                   </Link>
                 </>
               )}

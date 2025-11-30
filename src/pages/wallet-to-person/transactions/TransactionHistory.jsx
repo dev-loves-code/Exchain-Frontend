@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { Receipt, RefreshCw, Mail, Calendar } from "lucide-react";
 import Loading from "../../../components/Loading"; // adjust the path
 
 export default function TransactionHistory() {
@@ -51,41 +52,116 @@ export default function TransactionHistory() {
   }, [authLoading, user, navigate]);
 
   return (
-    <div className="min-h-screen p-6 bg-gray-50">
-      <div className="max-w-5xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">
-          Transactions History (Wallet → Person)
-        </h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <div className="max-w-6xl mx-auto">
+        
+        {/* Header */}
+        <div className="mb-8">
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-2">
+            Transaction History
+          </h2>
+          <p className="text-slate-500">
+            Wallet to Person Transfers
+          </p>
+        </div>
 
         {loading ? (
           <Loading fullScreen={false} text="Loading transactions..." />
         ) : transactions.length === 0 ? (
-          <p className="text-sm text-gray-500">No transactions found.</p>
+          <div className="bg-white rounded-3xl shadow-2xl p-12 text-center">
+            <p className="text-gray-500">No transactions found.</p>
+          </div>
         ) : (
-          <div className="divide-y">
+          <div className="space-y-4">
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="py-4 flex justify-between items-center"
+                className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 hover:shadow-xl transition-all duration-300"
               >
-                <div>
-                  <div className="font-semibold">
-                    {tx.reference_code || `TX-${tx.id}`}
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                  
+                  {/* LEFT SIDE - Transaction Info */}
+                  <div className="flex-1 space-y-3">
+                    
+                    {/* Reference Code & Status Badge */}
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {tx.reference_code || `TX-${tx.id}`}
+                      </h3>
+                      <span
+                        className={`
+                          inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border
+                          ${
+                            tx.status === "completed"
+                              ? "bg-green-50 text-green-700 border-green-200"
+                              : tx.status === "pending"
+                              ? "bg-yellow-50 text-yellow-700 border-yellow-200"
+                              : tx.status === "refunded"
+                              ? "bg-blue-50 text-blue-700 border-blue-200"
+                              : "bg-gray-50 text-gray-700 border-gray-200"
+                          }
+                        `}
+                      >
+                        {tx.status || "unknown"}
+                      </span>
+                    </div>
+
+                    {/* Receiver & Date Info */}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-600">
+                      <div className="flex items-center gap-2">
+                        <Mail size={16} className="text-gray-400" />
+                        <span>{tx.receiver_email}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} className="text-gray-400" />
+                        <span>{tx.created_at}</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    {tx.receiver_email} • {tx.created_at}
+
+                  {/* RIGHT SIDE - Amount & Actions */}
+                  <div className="flex flex-col items-end gap-4">
+                    
+                    {/* Amount */}
+                    <div className="text-right">
+                      <p className="text-2xl md:text-3xl font-bold text-gray-900">
+                        {tx.transfer_amount} <span className="text-xl text-gray-600">{tx.currency_code}</span>
+                      </p>
+                    </div>
+
+                    {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    {/* Receipt Button */}
+                    <button
+                      onClick={() => navigate(`/transactions/receipt/${tx.id}`)}
+                      className="flex items-center gap-2 px-5 py-3 bg-gray-50 border border-gray-300 text-gray-700 rounded-xl font-medium hover:bg-gray-100 hover:shadow-md transition-all"
+                    >
+                      <Receipt size={18} />
+                      <span>Receipt</span>
+                    </button>
+
+                    {/* Refund / View Refund Button */}
+                    {tx.refund_request_id ? (
+                      <button
+                        onClick={() => navigate(`/refund/view/${tx.refund_request_id}`)}
+                        className="flex items-center gap-2 px-5 py-3 bg-blue-700 text-white rounded-xl font-semibold hover:bg-blue-800 shadow-lg hover:shadow-xl transition-all"
+                      >
+                        <RefreshCw size={18} />
+                        <span>View Refund Request</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => navigate(`/refund/create?transaction_id=${tx.id}`)}
+                        className="flex items-center gap-2 px-5 py-3 bg-teal-800 text-white rounded-xl font-semibold hover:bg-teal-900 shadow-lg hover:shadow-xl transition-all"
+                      >
+                        <RefreshCw size={18} />
+                        <span>Refund</span>
+                      </button>
+                    )}
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold">
-                    {tx.transfer_amount} {tx.currency_code}
+
                   </div>
-                  <button
-                    onClick={() => navigate(`/transactions/receipt/${tx.id}`)}
-                    className="mt-2 px-3 py-1 rounded-md border text-sm"
-                  >
-                    Receipt
-                  </button>
+
                 </div>
               </div>
             ))}
