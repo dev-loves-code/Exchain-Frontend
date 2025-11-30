@@ -9,11 +9,10 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AgentSignupPage from './pages/AgentSignupPage';
 import GoogleCallbackPage from './pages/GoogleCallbackPage';
+
 import BeneficiariesListPage from "./pages/beneficiaries/BeneficiariesListPage";
 import AddBeneficiaryPage from "./pages/beneficiaries/AddBeneficiaryPage";
-import BeneficiaryDetailsPage from "./pages/beneficiaries/BeneficiaryDetailsPage";
 import EditBeneficiaryPage from "./pages/beneficiaries/EditBeneficiaryPage";
-import SendMoneyPageSuccess from './pages/beneficiaries/SendMoneyPage';
 
 
 // Send Money Flow
@@ -29,6 +28,9 @@ import ReceiptPage from './pages/wallet-to-person/transactions/ReceiptPage';
 import VerifyTransaction from './pages/wallet-to-person/agent/VerifyTransaction';
 import CompleteTransaction from './pages/wallet-to-person/agent/CompleteTransaction';
 
+import CreateRefundPage from './pages/refund-requests/CreateRefundPage';
+import ViewRefundPage from './pages/refund-requests/ViewRefundPage';
+import AdminRefundsPage from './pages/refund-requests/AdminRefundPage';
 
 function App() {
   return (
@@ -48,9 +50,7 @@ function App() {
             {/*Bahij - Beneficiaries */}
             <Route path="/beneficiaries/add" element={<AddBeneficiaryPage />} />
             <Route path="/beneficiaries/:id/edit" element={<EditBeneficiaryPage />} />
-            {/* <Route path="/beneficiaries/:id" element={<BeneficiaryDetailsPage />} /> // Can be remover */}
             <Route path="/beneficiaries" element={<BeneficiariesListPage />} /> 
-            {/* <Route path="/send/success" element={<SendMoneyPageSuccess />} /> */}
 
                           {/* Wallet to Person - User */}
               <Route path="/send" element={<SendMoneyPage />} />
@@ -68,8 +68,14 @@ function App() {
 
 
 
+            {/*Bahij - Refund Request Routes */}
+            <Route path="/refund/create" element={<CreateRefundPage />} />
+            <Route path="/refund/view/:id" element={<ViewRefundPage />} />
+            <Route path="/admin/refunds" element={<AdminRefundsPage />} />
+
           </Routes>
         </div>
+       
       </Router>
       </LoadingProvider>
     </AuthProvider>
