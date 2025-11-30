@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Loading from "../../../components/Loading"; // adjust path if needed
 
 export default function ReceiptPage() {
   const { id } = useParams();
@@ -53,11 +54,7 @@ export default function ReceiptPage() {
   }, [id, navigate]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600 text-lg">Loading transaction...</p>
-      </div>
-    );
+    return <Loading fullScreen={true} text="Loading transaction..." />;
   }
 
   if (!tx) {
@@ -110,7 +107,7 @@ export default function ReceiptPage() {
             <span>Total Received</span>
             <span>
               {tx.transfer_details?.received_amount || 0}{" "}
-              {tx.receiver?.currency || tx.sender?.currency || ""}
+              {tx.receiver?.currency || ""}
             </span>
           </div>
           <div className="flex justify-between">

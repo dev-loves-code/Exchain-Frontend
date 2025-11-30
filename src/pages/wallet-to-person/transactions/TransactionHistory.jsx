@@ -1,7 +1,8 @@
 // TransactionsHistory.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext"; // adjust the path
+import { useAuth } from "../../../context/AuthContext";
+import Loading from "../../../components/Loading"; // adjust the path
 
 export default function TransactionHistory() {
   const [transactions, setTransactions] = useState([]);
@@ -9,48 +10,45 @@ export default function TransactionHistory() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 
-useEffect(() => {
-  if (authLoading) return;
-  if (!user) return navigate("/login");
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) return navigate("/login");
 
-  const loadTransactions = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
+    const loadTransactions = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/transactions/transactions-history-w2p",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+        const response = await fetch(
+          "http://127.0.0.1:8000/api/transactions/transactions-history-w2p",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      if (!response.ok) throw new Error("Network response was not ok");
+        if (!response.ok) throw new Error("Network response was not ok");
 
-      const data = await response.json();
-      console.log("Fetched transactions:", data);
+        const data = await response.json();
+        setTransactions(
+          (data?.data || data || []).map((tx) => ({
+            ...tx,
+            id: tx.id || tx.transaction_id,
+          }))
+        );
+      } catch (e) {
+        console.error("Failed to load transactions:", e);
+        alert("Could not load transactions");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setTransactions(
-        (data?.data || data || []).map(tx => ({
-          ...tx,
-          id: tx.id || tx.transaction_id, // fallback if id missing
-        }))
-      );
-    } catch (e) {
-      console.error("Failed to load transactions:", e);
-      alert("Could not load transactions");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  loadTransactions();
-}, [authLoading, user, navigate]);
-
+    loadTransactions();
+  }, [authLoading, user, navigate]);
 
   return (
     <div className="min-h-screen p-6 bg-gray-50">
@@ -58,8 +56,9 @@ useEffect(() => {
         <h2 className="text-2xl font-bold mb-4">
           Transactions History (Wallet → Person)
         </h2>
+
         {loading ? (
-          <p>Loading...</p>
+          <Loading fullScreen={false} text="Loading transactions..." />
         ) : transactions.length === 0 ? (
           <p className="text-sm text-gray-500">No transactions found.</p>
         ) : (

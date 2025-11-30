@@ -3,7 +3,8 @@ import { Check } from "lucide-react";
 import BeneficiarySelector from "../../../components/beneficiaries/BeneficiarySelector";
 import CurrencySelector from "../../../components/wallet-to-person/CurrencySelector";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext"; // adjust path if needed
+import { useAuth } from "../../../context/AuthContext";
+import Loading from "../../../components/Loading";
 
 export default function SendMoneyPage() {
   const navigate = useNavigate();
@@ -23,11 +24,11 @@ export default function SendMoneyPage() {
     serviceId: "",
   });
 
-  // Fetch cash_out services with JWT
+  // Fetch cash-out services from backend
   useEffect(() => {
     if (!user) return;
-
     const token = localStorage.getItem("token");
+
     fetch("http://127.0.0.1:8000/api/services?filter[service_type]=cash_out", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -51,19 +52,18 @@ export default function SendMoneyPage() {
   };
 
   // Calculations
+  const selectedService = services.find(
+    (s) => String(s.service_id) === String(formData.serviceId)
+  );
   const amountNum = parseFloat(formData.amount) || 0;
-  const exchangeRate = 1.4203; // placeholder
-    // Calculate fees
-    const fees = (amountNum * 0.021).toFixed(2);
+  const feePercentage = selectedService ? Number(selectedService.fee_percentage) : 0;
 
-    // Include fees only if selected
-    const totalToPay = formData.includeFees
+  const fees = (amountNum * (feePercentage / 100)).toFixed(2);
+  const totalToPay = formData.includeFees
     ? (amountNum + parseFloat(fees)).toFixed(2)
     : amountNum.toFixed(2);
 
-    // Recipient gets calculation (if you want to include fees in recipient amount, adjust accordingly)
-    const recipientGets = (amountNum * exchangeRate).toFixed(2);
-
+  const recipientGets = amountNum.toFixed(2);
 
   const onContinue = () => {
     if (!formData.senderWalletId) return alert("Enter sender wallet ID");
@@ -81,7 +81,7 @@ export default function SendMoneyPage() {
     });
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading fullScreen text="Loading user data..." />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
@@ -121,7 +121,7 @@ export default function SendMoneyPage() {
             <div className="bg-gray-50 rounded-xl p-6 mb-6">
               <h2 className="text-xl font-bold text-gray-900 mb-6">Personal Details</h2>
               <div className="space-y-5">
-                {/* Sender Wallet ID */}
+                {/* Wallet */}
                 <div>
                   <label className="block text-gray-900 font-medium mb-2">
                     Your Wallet ID <span className="text-red-500">*</span>
@@ -183,7 +183,7 @@ export default function SendMoneyPage() {
                   </div>
                 </div>
 
-                {/* Include Fees Radio Button */}
+                {/* Include Fees */}
                 <div>
                   <label className="block text-gray-900 font-medium mb-2">Include Fees</label>
                   <div className="flex gap-4">
@@ -212,7 +212,7 @@ export default function SendMoneyPage() {
                   </div>
                 </div>
 
-                {/* Service Selector */}
+                {/* Service */}
                 <div>
                   <label className="block text-gray-900 font-medium mb-2">
                     Select Cash-Out Service <span className="text-red-500">*</span>
@@ -231,26 +231,16 @@ export default function SendMoneyPage() {
                   </select>
                 </div>
 
-                {/* Recipient Gets */}
+                {/* Recipient Currency */}
                 <div>
-                  <label className="block text-gray-900 font-medium mb-2">Recipient Gets</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="number"
-                      value={recipientGets}
-                      readOnly
-                      className="flex-1 px-4 py-3 bg-gray-100 border rounded-xl"
-                    />
-                    <CurrencySelector
-                      value={formData.recipientCurrency}
-                      onChange={(c) => setFormData({ ...formData, recipientCurrency: c })}
-                    />
-                  </div>
+                  <label className="block text-gray-900 font-medium mb-2">
+                    Recipient Currency
+                  </label>
+                  <CurrencySelector
+                    value={formData.recipientCurrency}
+                    onChange={(c) => setFormData({ ...formData, recipientCurrency: c })}
+                  />
                 </div>
-
-                <p className="text-sm text-gray-600 text-center">
-                  Current exchange rate: 1 {formData.currency} = {exchangeRate} {formData.recipientCurrency}
-                </p>
               </div>
             </div>
 
@@ -258,11 +248,11 @@ export default function SendMoneyPage() {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between py-3 border-b">
                 <span className="text-gray-700 font-medium">Total Fees</span>
-                <span className="text-gray-900 font-bold">{fees} USD</span>
+                <span className="text-gray-900 font-bold">{fees} {formData.currency}</span>
               </div>
               <div className="flex justify-between py-3">
                 <span className="text-gray-900 font-bold text-lg">Total To Pay</span>
-                <span className="text-gray-900 font-bold text-xl">{totalToPay} USD</span>
+                <span className="text-gray-900 font-bold text-xl">{totalToPay} {formData.currency}</span>
               </div>
             </div>
 
@@ -274,7 +264,7 @@ export default function SendMoneyPage() {
             </button>
           </div>
 
-          {/* RIGHT SIDE – BENEFICIARY SELECTOR */}
+          {/* Beneficiary Selector */}
           <BeneficiarySelector onSelect={handleBeneficiarySelect} />
         </div>
       </div>

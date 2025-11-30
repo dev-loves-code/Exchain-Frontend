@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Loading from "../../../components/Loading"; // make sure the path is correct
 
 export default function TransactionSuccess() {
   const { state } = useLocation();
@@ -8,6 +9,7 @@ export default function TransactionSuccess() {
   const [loading, setLoading] = useState(true);
 
   const txId = state?.txId;
+  const recipientCurrencyFromState = state?.recipientCurrency;
 
   useEffect(() => {
     if (!txId) {
@@ -55,11 +57,7 @@ export default function TransactionSuccess() {
   }, [txId, navigate]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600 text-lg">Loading transaction...</p>
-      </div>
-    );
+    return <Loading fullScreen text="Loading transaction..." />;
   }
 
   return (
@@ -124,7 +122,7 @@ export default function TransactionSuccess() {
             <div className="flex justify-between">
               <span>Received Amount</span>
               <span className="font-semibold">
-                {tx.transfer_details?.received_amount} {tx.sender?.currency}
+                {tx.transfer_details?.received_amount} {recipientCurrencyFromState || tx.receiver?.currency}
               </span>
             </div>
             <div className="flex justify-between">

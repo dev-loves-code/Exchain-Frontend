@@ -14,24 +14,60 @@ const Navbar = () => {
     <nav className="bg-white shadow-lg border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
-        {/* Home */}
-        <Link to="/" className="text-gray-900 text-2xl font-black hover:text-teal-800 transition-colors">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="text-gray-900 text-2xl font-black hover:text-teal-800 transition-colors"
+        >
           PayOne
         </Link>
 
         <div className="flex items-center gap-4">
 
-          {/* Show link only when logged in */}
+          {/* -------- AUTHENTICATED NAVIGATION -------- */}
           {user && (
-            <Link
-              to="/beneficiaries"
-              className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
-            >
-              Beneficiaries
-            </Link>
+            <>
+              {/* If NOT agent → show normal user routes */}
+              {user.role !== "agent" && (
+                <>
+                  <Link
+                    to="/send"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Send Money
+                  </Link>
+
+                  <Link
+                    to="/transactions"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Transactions
+                  </Link>
+
+                  <Link
+                    to="/beneficiaries"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Beneficiaries
+                  </Link>
+                </>
+              )}
+
+              {/* If user IS an agent → show verify page only */}
+              {user.role === "agent" && (
+                <>
+                  <Link
+                    to="/agent/verify"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Verify Transaction
+                  </Link>
+                </>
+              )}
+            </>
           )}
 
-          {/* Auth Buttons */}
+          {/* -------- AUTH BUTTONS -------- */}
           {user ? (
             <button
               onClick={handleLogout}
