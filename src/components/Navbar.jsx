@@ -51,24 +51,48 @@ const Navbar = () => {
                     Beneficiaries
                   </Link>
 
-                  {/* Refund Create */}
                   <Link
                     to="/refund/create"
                     className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
                   >
                     Request Refund
                   </Link>
+
+                  {/* Support Requests */}
+                  <Link
+                    to="/support-request"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Support
+                  </Link>
+
+                  <Link
+                    to="/support-request-list"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    My Support Requests
+                  </Link>
                 </>
               )}
 
               {/* Agent */}
               {user.role === "agent" && (
-                <Link
-                  to="/agent/verify"
-                  className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
-                >
-                  Verify Transaction
-                </Link>
+                <>
+                  <Link
+                    to="/agent/verify"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Verify Transaction
+                  </Link>
+
+                  {/* Admin/Agent can view support details */}
+                  <Link
+                    to="/support/:id"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Support Detail
+                  </Link>
+                </>
               )}
 
               {/* Admin Only */}
@@ -79,6 +103,13 @@ const Navbar = () => {
                     className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
                   >
                     Manage Refunds
+                  </Link>
+
+                  <Link
+                    to="/support-request-list"
+                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
+                  >
+                    Support Admin
                   </Link>
                 </>
               )}

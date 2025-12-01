@@ -6,29 +6,31 @@ const SupportCard = ({ subject, description }) => {
   const navigate = useNavigate();
 
   const handleChatClick = () => {
-    navigate("/support-request"); // navigate to form page
+    navigate("/support-request"); // navigate to support form page
   };
 
   return (
-    <div className="bg-neutral-100 w-full rounded-3xl p-6 shadow-md">
-      <div className="text-center mb-6">
-        <span className="text-gray-400 mb-2 block">
-          <Headphones size={40} className="mx-auto" />
-        </span>
-        <div>
-          <h4 className="text-gray-700 font-normal mb-2">{subject || "Need Help?"}</h4>
-          <p className="text-gray-500 text-lg font-normal">
-            {description || "Need help with your account? Our experts are ready to assist you!"}
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center">
+        {/* Icon */}
+        <div className="flex items-center justify-center mb-6">
+          <Headphones className="w-10 h-10 text-teal-700" />
         </div>
-      </div>
 
-      <span className="border-b border-gray-200 w-full my-6 block"></span>
+        {/* Subject */}
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+          {subject || "Need Help?"}
+        </h2>
 
-      <div className="px-3 pb-3 flex items-center">
+        {/* Description */}
+        <p className="text-gray-700 mb-8">
+          {description || "Need help with your account? Our experts are ready to assist you!"}
+        </p>
+
+        {/* Button */}
         <button
           onClick={handleChatClick}
-          className="py-3 w-full text-center font-semibold text-white bg-blue-600 rounded-3xl hover:bg-blue-700 transition"
+          className="w-full py-4 bg-teal-800 hover:bg-teal-900 text-white font-semibold text-lg rounded-xl transition-all shadow-lg hover:shadow-xl"
         >
           Contact Support
         </button>

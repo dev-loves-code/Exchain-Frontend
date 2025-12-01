@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Clock, CheckCircle, XCircle, Mail, User, Calendar, ArrowLeft } from "lucide-react";
+import { Clock, CheckCircle, XCircle, Mail, User, Calendar, ArrowLeft, Sparkles } from "lucide-react";
 
 const SupportRequestDetail = () => {
   const { id } = useParams();
@@ -63,69 +63,83 @@ const SupportRequestDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-800 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading request details...</p>
         </div>
       </div>
     );
   }
 
-  if (!request) return <p className="text-center py-10 text-gray-600">Request not found.</p>;
+  if (!request)
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <p className="text-gray-600 text-lg">Request not found.</p>
+      </div>
+    );
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all shadow-sm mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" /> Back to requests
-      </button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-6">
+          <Sparkles className="w-6 h-6 text-teal-600" />
+          <h1 className="text-2xl font-bold text-gray-900">Support Request Details</h1>
+        </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">{request.subject}</h2>
-        <span
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(
-            request.status
-          )}`}
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 px-5 py-3 bg-teal-800 text-white rounded-xl hover:bg-teal-900 transition-all shadow-lg mb-8"
         >
-          {getStatusIcon(request.status)}
-          {request.status?.charAt(0).toUpperCase() + request.status?.slice(1)}
-        </span>
+          <ArrowLeft className="w-4 h-4" /> Back to requests
+        </button>
 
-        {/* User Info */}
-        <div className="flex flex-wrap gap-4 text-sm text-gray-600 mt-4">
-          {request.user_full_name && (
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-gray-400" />
-              <span>{request.user_full_name}</span>
-            </div>
-          )}
-          {request.user_email && (
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-gray-400" />
-              <span>{request.user_email}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Description */}
-        {request.description && (
-          <div className="mt-6 text-gray-700">
-            <h3 className="font-semibold mb-2">Description</h3>
-            <p>{request.description}</p>
+        {/* Request Card */}
+        <div className="bg-gray-50 rounded-3xl shadow-inner p-8 border border-gray-200 space-y-6">
+          <div>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-2">{request.subject}</h2>
+            <span
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border ${getStatusColor(
+                request.status
+              )}`}
+            >
+              {getStatusIcon(request.status)}
+              {request.status?.charAt(0).toUpperCase() + request.status?.slice(1)}
+            </span>
           </div>
-        )}
 
-        {/* Timestamp */}
-        <div className="mt-6 text-xs text-gray-500 flex items-center gap-2">
-          <Calendar className="w-4 h-4" />
-          {`Sent at: ${new Date(request.sent_at).toLocaleString()}`}
+          {/* User Info */}
+          <div className="flex flex-wrap gap-6 text-gray-700 text-sm">
+            {request.user_full_name && (
+              <div className="flex items-center gap-2">
+                <User className="w-5 h-5 text-gray-400" />
+                <span>{request.user_full_name}</span>
+              </div>
+            )}
+            {request.user_email && (
+              <div className="flex items-center gap-2">
+                <Mail className="w-5 h-5 text-gray-400" />
+                <span>{request.user_email}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          {request.description && (
+            <div className="text-gray-700">
+              <h3 className="font-semibold text-lg mb-2">Description</h3>
+              <p>{request.description}</p>
+            </div>
+          )}
+
+          {/* Timestamp */}
+          <div className="flex items-center gap-2 text-gray-500 text-sm">
+            <Calendar className="w-5 h-5" />
+            <span>{`Sent at: ${new Date(request.sent_at).toLocaleString()}`}</span>
+          </div>
         </div>
-
-
       </div>
     </div>
   );

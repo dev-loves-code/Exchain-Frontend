@@ -3,9 +3,11 @@ import SupportRequestForm from "../../components/SupportRequests/SupportRequestF
 
 const SupportPage = () => {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Send a Support Request</h1>
-      <SupportRequestForm  />
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      {/* Optional padding wrapper */}
+      <div className="w-full px-4">
+        <SupportRequestForm />
+      </div>
     </div>
   );
 };
