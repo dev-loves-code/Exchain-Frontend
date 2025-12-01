@@ -9,6 +9,13 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AgentSignupPage from './pages/AgentSignupPage';
 import GoogleCallbackPage from './pages/GoogleCallbackPage';
+import SupportPage from './pages/SupportRequests/SupportPage';
+import DashboardTest from './pages/SupportRequests/DashboardTest';
+import SupportRequestListPage from './pages/SupportRequests/SupportRequestListPage';
+import SupportRequestDetailPage from './pages/SupportRequests/SupportRequestDetailPage';
+import SupportRequestDetailAdminPage from "./pages/SupportRequests/SupportRequestDetailAdminPage";
+
+
 
 import BeneficiariesListPage from "./pages/beneficiaries/BeneficiariesListPage";
 import AddBeneficiaryPage from "./pages/beneficiaries/AddBeneficiaryPage";
@@ -74,6 +81,13 @@ function App() {
             <Route path="/refund/view/:id" element={<ViewRefundPage />} />
             <Route path="/admin/refunds/:refundId" element={<RefundDetailPage />} />
             <Route path="/admin/refunds" element={<AdminRefundsPage />} />
+
+            {/* Bahij - Support Request */}
+            <Route path="/dash" element={<DashboardTest />} /> {/*To see the card*/}
+            <Route path="/support-request" element={<SupportPage />} /> {/*To to support form*/}
+            <Route path="/support-request-list" element={<SupportRequestListPage />} /> 
+            <Route path="/support/:id" element={<SupportRequestDetailPage />} />
+            <Route path="/admin/support/:id" element={<SupportRequestDetailAdminPage />} />
 
           </Routes>
         </div>
