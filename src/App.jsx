@@ -31,6 +31,7 @@ import CompleteTransaction from './pages/wallet-to-person/agent/CompleteTransact
 import CreateRefundPage from './pages/refund-requests/CreateRefundPage';
 import ViewRefundPage from './pages/refund-requests/ViewRefundPage';
 import AdminRefundsPage from './pages/refund-requests/AdminRefundPage';
+import RefundDetailPage from './pages/refund-requests/RefundDetailPage';
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
             {/*Bahij - Refund Request Routes */}
             <Route path="/refund/create" element={<CreateRefundPage />} />
             <Route path="/refund/view/:id" element={<ViewRefundPage />} />
+            <Route path="/admin/refunds/:refundId" element={<RefundDetailPage />} />
             <Route path="/admin/refunds" element={<AdminRefundsPage />} />
 
           </Routes>

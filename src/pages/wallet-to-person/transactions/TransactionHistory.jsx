@@ -92,7 +92,7 @@ export default function TransactionHistory() {
                         className={`
                           inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border
                           ${
-                            tx.status === "completed"
+                            tx.status === "done"
                               ? "bg-green-50 text-green-700 border-green-200"
                               : tx.status === "pending"
                               ? "bg-yellow-50 text-yellow-700 border-yellow-200"
