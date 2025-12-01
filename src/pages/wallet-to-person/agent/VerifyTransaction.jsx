@@ -41,7 +41,8 @@ export default function VerifyTransaction() {
       const data = text ? JSON.parse(text) : {};
 
       if (!res.ok || !data.success) {
-        throw new Error(data.message || "Verification failed");
+    const errorMsg = data.errors || data.message || "Verification failed";
+    throw new Error(Array.isArray(errorMsg) ? errorMsg.join(", ") : errorMsg);
       }
 
       setResult(data.data || data);
