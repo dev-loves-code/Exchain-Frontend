@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../../components/Loading";
+import ValidationErrors from "../../../components/ValidationErrors"; // <-- import path
 
 export default function VerifyTransaction() {
   const navigate = useNavigate();
@@ -8,16 +9,18 @@ export default function VerifyTransaction() {
   const [ref, setRef] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const verifyTransaction = async (referenceCode) => {
     if (!referenceCode) return;
 
     setLoading(true);
+    setErrors([]); // reset errors before each request
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You must be logged in to verify a transaction");
-      navigate("/send");
+      setLoading(false);
+      setErrors(["You must be logged in to verify a transaction"]);
       return;
     }
 
@@ -44,18 +47,21 @@ export default function VerifyTransaction() {
       setResult(data.data || data);
     } catch (err) {
       console.error("Transaction verification error:", err);
-      alert(err.message || "Could not verify transaction");
+      setErrors([err.message || "Could not verify transaction"]);
     } finally {
       setLoading(false);
     }
   };
 
+  // Fullscreen loading
   if (loading) {
     return <Loading fullScreen text="Verifying transaction..." />;
   }
 
   return (
     <div className="min-h-screen p-6 bg-gray-50">
+      <ValidationErrors errors={errors} onClose={() => setErrors([])} />
+
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
         <h2 className="text-xl font-bold mb-4">Agent - Verify Transaction</h2>
 
@@ -65,12 +71,13 @@ export default function VerifyTransaction() {
           placeholder="Reference code"
           className="w-full px-4 py-3 border rounded-xl mb-4"
         />
+
         <button
           disabled={loading || !ref}
           onClick={() => verifyTransaction(ref)}
           className="px-4 py-3 bg-teal-800 text-white rounded-xl w-full mb-4"
         >
-          {loading ? "Verifying..." : "Verify"}
+          Verify
         </button>
 
         {result && (

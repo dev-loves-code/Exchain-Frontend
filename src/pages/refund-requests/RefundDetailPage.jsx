@@ -13,6 +13,8 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
+import Loading from "../../components/Loading";
+
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
@@ -70,13 +72,8 @@ const RefundDetailPage = () => {
   // Avoid “toUpperCase” crash before refund loads
   const safeStatus = refund?.status ? refund.status : "pending";
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center text-gray-700 text-lg">
-        Loading refund details...
-      </div>
-    );
-  }
+if (loading) return <Loading fullScreen text="Loading refund request..." />;
+
 
   if (!refund) {
     return (

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Clock, CheckCircle, XCircle, Mail, User, Calendar, ArrowLeft, Sparkles } from "lucide-react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import Loading from "../../components/Loading";
 
 const SupportRequestDetailAdmin = () => {
   const { id } = useParams();
@@ -89,14 +90,8 @@ const SupportRequestDetailAdmin = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-800 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading request details...</p>
-        </div>
-      </div>
-    );
+    // <- Use your custom Lottie loading here
+    return <Loading fullScreen text="Loading request details..." />;
   }
 
   if (!request)

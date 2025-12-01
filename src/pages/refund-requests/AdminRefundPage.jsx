@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Search, Filter, Eye, ArrowRight, Clock, CheckCircle, XCircle, User, Hash, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading";
+
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
@@ -213,15 +215,8 @@ const AdminRefundsPage = () => {
     }
   };
 
-  if (loading)
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading refund requests...</p>
-        </div>
-      </div>
-    );
+if (loading) return <Loading fullScreen text="Loading refund requests..." />;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">

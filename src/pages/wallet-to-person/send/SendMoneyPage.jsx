@@ -5,6 +5,7 @@ import CurrencySelector from "../../../components/wallet-to-person/CurrencySelec
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import Loading from "../../../components/Loading";
+import ValidationErrors from "../../../components/ValidationErrors";
 
 export default function SendMoneyPage() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function SendMoneyPage() {
   const [step, setStep] = useState(1);
   const [selectedBeneficiary, setSelectedBeneficiary] = useState(null);
   const [services, setServices] = useState([]);
+  const [errors, setErrors] = useState([]);
 
   const [formData, setFormData] = useState({
     senderWalletId: "",
@@ -24,16 +26,13 @@ export default function SendMoneyPage() {
     serviceId: "",
   });
 
-  // Fetch cash-out services from backend
+  // Fetch cash-out services
   useEffect(() => {
     if (!user) return;
     const token = localStorage.getItem("token");
 
     fetch("http://127.0.0.1:8000/api/services?filter[service_type]=cash_out", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
     })
       .then((res) => res.json())
       .then((data) => {
@@ -57,28 +56,21 @@ export default function SendMoneyPage() {
   );
   const amountNum = parseFloat(formData.amount) || 0;
   const feePercentage = selectedService ? Number(selectedService.fee_percentage) : 0;
-
   const fees = (amountNum * (feePercentage / 100)).toFixed(2);
   const totalToPay = formData.includeFees
     ? (amountNum + parseFloat(fees)).toFixed(2)
     : amountNum.toFixed(2);
-
   const recipientGets = amountNum.toFixed(2);
 
   const onContinue = () => {
-    if (!formData.senderWalletId) return alert("Enter sender wallet ID");
+    // Validation
+    if (!formData.senderWalletId) return setErrors(["Enter sender wallet ID"]);
     if (!formData.recipient || !formData.recipientEmail)
-      return alert("Enter recipient details");
-    if (!formData.serviceId) return alert("Select a cash-out service");
+      return setErrors(["Enter recipient details"]);
+    if (!formData.serviceId) return setErrors(["Select a cash-out service"]);
+    if (amountNum < 5) return setErrors(["Minimum amount allowed is 5"]);
 
-    navigate("/send/confirm", {
-      state: {
-        formData,
-        fees,
-        totalToPay,
-        recipientGets,
-      },
-    });
+    navigate("/send/confirm", { state: { formData, fees, totalToPay, recipientGets } });
   };
 
   if (loading) return <Loading fullScreen text="Loading user data..." />;
@@ -168,18 +160,19 @@ export default function SendMoneyPage() {
                   <label className="block text-gray-900 font-medium mb-2">
                     You Send <span className="text-red-500">*</span>
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-col">
                     <input
                       type="number"
                       value={formData.amount}
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                       placeholder="Amount"
-                      className="flex-1 px-4 py-3 bg-white border rounded-xl"
+                      className={`flex-1 px-4 py-3 border rounded-xl bg-white ${
+                        amountNum < 5 ? "border-red-500" : "border-gray-200"
+                      }`}
                     />
-                    <CurrencySelector
-                      value={formData.currency}
-                      onChange={(c) => setFormData({ ...formData, currency: c })}
-                    />
+                    {amountNum < 5 && (
+                      <p className="text-red-500 text-sm mt-1">Minimum amount allowed is 5</p>
+                    )}
                   </div>
                 </div>
 
@@ -233,9 +226,7 @@ export default function SendMoneyPage() {
 
                 {/* Recipient Currency */}
                 <div>
-                  <label className="block text-gray-900 font-medium mb-2">
-                    Recipient Currency
-                  </label>
+                  <label className="block text-gray-900 font-medium mb-2">Recipient Currency</label>
                   <CurrencySelector
                     value={formData.recipientCurrency}
                     onChange={(c) => setFormData({ ...formData, recipientCurrency: c })}
@@ -268,6 +259,9 @@ export default function SendMoneyPage() {
           <BeneficiarySelector onSelect={handleBeneficiarySelect} />
         </div>
       </div>
+
+      {/* Validation Errors Popup */}
+      <ValidationErrors errors={errors} onClose={() => setErrors([])} />
     </div>
   );
 }

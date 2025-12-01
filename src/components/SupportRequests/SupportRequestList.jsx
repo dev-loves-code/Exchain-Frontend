@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { Filter, Clock, CheckCircle, XCircle, Mail, User, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading"; // <- Import your Lottie Loading component
 
 const SupportRequestList = () => {
   const { user } = useAuth();
@@ -119,14 +120,7 @@ const SupportRequestList = () => {
         </div>
 
         {/* Loading */}
-        {loading && (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Loading support requests...</p>
-            </div>
-          </div>
-        )}
+        {loading && <Loading fullScreen text="Loading support requests..." />}
 
         {/* Requests List */}
         {!loading && requests.length === 0 ? (

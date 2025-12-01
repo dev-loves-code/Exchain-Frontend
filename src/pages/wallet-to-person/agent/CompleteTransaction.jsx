@@ -1,23 +1,25 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Loading from "../../../components/Loading";
 import AgentTransactionReceipt from "../../../components/wallet-to-person/AgentTransactionReceipt";
+import SuccessPopup from "../../../components/SuccessPopup"; // <-- import path
 
 export default function CompleteTransaction() {
   const { state } = useLocation();
-  const navigate = useNavigate();
 
   const [txId] = useState(state?.transaction_id || "");
   const [summary] = useState(state?.summary || null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const onComplete = async () => {
     if (!txId) return;
 
     setLoading(true);
     setError("");
+    setShowSuccess(false);
 
     try {
       const token = localStorage.getItem("token");
@@ -52,7 +54,11 @@ export default function CompleteTransaction() {
       }
 
       // Merge backend result with summary
-      setResult({ ...summary, ...data.data });
+      const mergedResult = { ...summary, ...data.data };
+      setResult(mergedResult);
+
+      // Show success popup
+      setShowSuccess(true);
     } catch (e) {
       console.error("Complete transaction error:", e);
       if (summary) {
@@ -65,38 +71,51 @@ export default function CompleteTransaction() {
     }
   };
 
+  const handleSuccessComplete = () => {
+    setShowSuccess(false);
+    // stay on the same page
+  };
+
   if (loading) {
     return <Loading fullScreen text="Completing transaction..." />;
   }
 
-  // If result exists, render the receipt component
-  if (result) {
-    return <AgentTransactionReceipt tx={result} />;
-  }
-
   return (
-    <div className="min-h-screen p-6 bg-gray-50">
-      <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-bold mb-4">Agent - Complete Transaction</h2>
-
-        <input
-          value={txId}
-          readOnly
-          className="w-full px-4 py-3 border rounded-xl mb-4 bg-gray-100 cursor-not-allowed"
+    <div className="min-h-screen p-6 bg-gray-50 relative">
+      {/* Show Success Popup on top of receipt */}
+      {showSuccess && (
+        <SuccessPopup
+          message="Transaction completed successfully!"
+          onComplete={handleSuccessComplete}
         />
+      )}
 
-        <button
-          disabled={loading || !txId}
-          onClick={onComplete}
-          className="px-4 py-3 bg-teal-800 text-white rounded-xl w-full mb-4"
-        >
-          Complete Transaction
-        </button>
+      {result ? (
+        // Always show the receipt if result exists
+        <AgentTransactionReceipt tx={result} />
+      ) : (
+        <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
+          <h2 className="text-xl font-bold mb-4">Agent - Complete Transaction</h2>
 
-        {error && (
-          <div className="mt-2 p-3 bg-red-100 text-red-700 rounded">{error}</div>
-        )}
-      </div>
+          <input
+            value={txId}
+            readOnly
+            className="w-full px-4 py-3 border rounded-xl mb-4 bg-gray-100 cursor-not-allowed"
+          />
+
+          <button
+            disabled={loading || !txId}
+            onClick={onComplete}
+            className="px-4 py-3 bg-teal-800 text-white rounded-xl w-full mb-4"
+          >
+            Complete Transaction
+          </button>
+
+          {error && (
+            <div className="mt-2 p-3 bg-red-100 text-red-700 rounded">{error}</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
