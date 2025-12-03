@@ -80,3 +80,33 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-vintage-brown);
 }
+
+/* Add these to your global CSS file (index.css or App.css) */
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-progress {
+  animation: progress 3s linear forwards;
+}
