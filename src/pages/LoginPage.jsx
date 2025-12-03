@@ -27,7 +27,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 md:p-12">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center">
-          Welcome back to PayOne
+          Welcome back to Exchain
         </h2>
         <p className="text-gray-600 text-center mb-8">Sign in to continue</p>
 
@@ -75,7 +75,7 @@ const LoginPage = () => {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
+            className="w-full bg-teal-800 hover:bg-teal-900 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
@@ -85,7 +85,7 @@ const LoginPage = () => {
           Don't have an account?{" "}
           <a
             href="/signup"
-            className="text-blue-600 font-semibold hover:underline"
+            className="text-bg-teal-900 font-semibold hover:underline"
           >
             Sign up
           </a>

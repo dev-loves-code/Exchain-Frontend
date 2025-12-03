@@ -1,70 +1,82 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-vintage-cream: #F5F1E8;
+  --color-vintage-beige: #E8E1D1;
+  --color-vintage-light: #FAF7F0;
+  --color-vintage-brown: #5D4A3A;
+  --color-vintage-dark: #3A2C1E;
+  --color-vintage-border: #D4C9B8;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Custom gradient backgrounds */
+.bg-ivory-50 {
+  background-color: #FAF7F0;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+.bg-vintage-50 {
+  background-color: #F9F6EF;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.bg-gradient-to-r.from-vintage-beige.to-vintage-cream {
+  --tw-gradient-from: #E8E1D1;
+  --tw-gradient-to: #F5F1E8;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.text-vintage-brown {
+  color: #5D4A3A;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.text-vintage-dark {
+  color: #3A2C1E;
+}
+
+.bg-vintage-brown {
+  background-color: #5D4A3A;
+}
+
+.bg-vintage-cream {
+  background-color: #F5F1E8;
+}
+
+.border-vintage-border {
+  border-color: #D4C9B8;
+}
+
+.bg-vintage-light\/50 {
+  background-color: rgba(250, 247, 240, 0.5);
+}
+
+.bg-vintage-brown\/10 {
+  background-color: rgba(93, 74, 58, 0.1);
+}
+
+.bg-vintage-brown\/20 {
+  background-color: rgba(93, 74, 58, 0.2);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-vintage-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-vintage-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-vintage-brown);
 }

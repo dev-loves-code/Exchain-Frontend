@@ -387,7 +387,7 @@ const AgentSignupPage = () => {
           <button
             onClick={handleSubmit}
             disabled={loading || locationLoading}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-full bg-teal-800 hover:bg-teal-900 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {loading ? "Submitting..." : locationLoading ? "Detecting location..." : "Register"}
           </button>

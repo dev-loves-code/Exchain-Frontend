@@ -48,7 +48,7 @@ const SignupPage = () => {
           </p>
           <a
             href="/signup/agent"
-            className="block w-full text-center bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition text-sm"
+            className="block w-full text-center bg-teal-800 hover:bg-teal-900 text-white py-2 rounded-lg font-semibold hover:shadow-lg transition text-sm"
           >
             Register as Agent →
           </a>
@@ -112,7 +112,7 @@ const SignupPage = () => {
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
+            className="w-full bg-teal-800 hover:bg-teal-900 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
             {loading ? "Creating Account..." : "Sign Up"}
           </button>
@@ -122,7 +122,7 @@ const SignupPage = () => {
           Already have an account?{" "}
           <a
             href="/login"
-            className="text-blue-600 font-semibold hover:underline"
+            className="text-bg-teal-900 font-semibold hover:underline"
           >
             Log In
           </a>
