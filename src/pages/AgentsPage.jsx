@@ -239,15 +239,6 @@ export default function AgentsPage() {
                     Showing {agents.length} agent{agents.length !== 1 ? 's' : ''}
                   </p>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600">Sort by:</span>
-                  <select className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm">
-                    <option>Recently Added</option>
-                    <option>Name (A-Z)</option>
-                    <option>Commission Rate</option>
-                    <option>Status</option>
-                  </select>
-                </div>
               </div>
 
               {/* Agent Cards Grid */}
