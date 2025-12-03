@@ -53,20 +53,18 @@ const UserProfile = () => {
   const getRoleBadgeColor = (role) => {
     const colors = {
       admin: 'bg-red-100 text-red-700 border-red-200',
-      agent: 'bg-purple-100 text-purple-700 border-purple-200',
+      agent: 'bg-teal-100 text-teal-700 border-teal-200',
       user: 'bg-blue-100 text-blue-700 border-blue-200'
     };
     return colors[role] || 'bg-gray-100 text-gray-700 border-gray-200';
   };
 
-
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 text-lg">Loading user profile...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-teal-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading user profile...</p>
         </div>
       </div>
     );
@@ -74,16 +72,16 @@ const UserProfile = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UserCircleIcon className="h-8 w-8 text-red-600" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-md w-full text-center">
+          <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <UserCircleIcon className="h-7 w-7 text-red-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => navigate(-1)}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="w-full px-4 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-xl font-medium transition-all duration-200"
           >
             Go Back
           </button>
@@ -94,14 +92,14 @@ const UserProfile = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
-          <UserCircleIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">User Not Found</h2>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl border border-gray-200 p-8 max-w-md w-full text-center">
+          <UserCircleIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-900 mb-2">User Not Found</h2>
           <p className="text-gray-600 mb-6">The user you're looking for doesn't exist.</p>
           <button
             onClick={() => navigate(-1)}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="w-full px-4 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-xl font-medium transition-all duration-200"
           >
             Go Back
           </button>
@@ -111,28 +109,28 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 transition-colors duration-200"
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors duration-200"
           >
             <ArrowLeftIcon className="h-5 w-5 mr-2" />
             Back
           </button>
           
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                 User Profile
               </h1>
               <p className="text-gray-600">View user details and information</p>
             </div>
             <button
               onClick={fetchUser}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="inline-flex items-center px-5 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow"
             >
               <ArrowPathIcon className="h-5 w-5 mr-2" />
               Refresh
@@ -140,97 +138,98 @@ const UserProfile = () => {
           </div>
         </div>
 
-        {/* Profile Card */}
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          {/* Profile Header */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-12">
-            <div className="flex items-center">
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-xl">
-                <UserCircleIcon className="h-16 w-16 text-blue-600" />
+        
+        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
+                <UserCircleIcon className="h-12 w-12 text-gray-600" />
               </div>
-              <div className="ml-6 text-white">
-                <h2 className="text-3xl font-bold mb-2">{user.full_name}</h2>
-                <div className="flex items-center space-x-3">
-                  <span className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 ${getRoleBadgeColor(user.role)} bg-white bg-opacity-90`}>
-                    {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                  </span>
-                  <span className="text-blue-100 text-sm">ID: {user.user_id}</span>
+              <div className="flex-1">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">{user.full_name}</h2>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getRoleBadgeColor(user.role)}`}>
+                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                      </span>
+                      <span className="text-gray-500 text-sm">ID: {user.user_id}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Profile Details */}
-          <div className="px-8 py-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-              <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full mr-3"></div>
-              Contact Information
-            </h3>
+          
+          <div className="p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-6">Contact Information</h3>
             
-            <div className="space-y-6">
-              {/* Email */}
-              <div className="flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <EnvelopeIcon className="h-6 w-6 text-blue-600" />
+            <div className="space-y-4">
+              
+              <div className="flex items-start p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                  <EnvelopeIcon className="h-5 w-5 text-blue-600" />
                 </div>
                 <div className="ml-4 flex-1">
                   <p className="text-sm font-medium text-gray-500 mb-1">Email Address</p>
-                  <p className="text-lg font-semibold text-gray-900">{user.email}</p>
+                  <p className="font-medium text-gray-900">{user.email}</p>
                 </div>
               </div>
 
-              {/* Phone */}
-              <div className="flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-                <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <PhoneIcon className="h-6 w-6 text-green-600" />
+              
+              <div className="flex items-start p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                  <PhoneIcon className="h-5 w-5 text-green-600" />
                 </div>
                 <div className="ml-4 flex-1">
                   <p className="text-sm font-medium text-gray-500 mb-1">Phone Number</p>
-                  <p className="text-lg font-semibold text-gray-900">{user.phone_number || 'Not provided'}</p>
+                  <p className="font-medium text-gray-900">{user.phone_number || 'Not provided'}</p>
                 </div>
               </div>
 
-              {/* Role */}
-              <div className="flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-                <div className="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <ShieldCheckIcon className="h-6 w-6 text-purple-600" />
+              
+              <div className="flex items-start p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                  <ShieldCheckIcon className="h-5 w-5 text-purple-600" />
                 </div>
                 <div className="ml-4 flex-1">
                   <p className="text-sm font-medium text-gray-500 mb-1">Account Role</p>
-                  <p className="text-lg font-semibold text-gray-900 capitalize">{user.role}</p>
+                  <p className="font-medium text-gray-900 capitalize">{user.role}</p>
                 </div>
               </div>
 
-              {/* Created Date */}
-              <div className="flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-                <div className="flex-shrink-0 w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <CalendarIcon className="h-6 w-6 text-indigo-600" />
+              
+              <div className="flex items-start p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center">
+                  <CalendarIcon className="h-5 w-5 text-indigo-600" />
                 </div>
                 <div className="ml-4 flex-1">
                   <p className="text-sm font-medium text-gray-500 mb-1">Account Created</p>
-                  <p className="text-lg font-semibold text-gray-900">{formatDate(user.created_at)}</p>
+                  <p className="font-medium text-gray-900">{formatDate(user.created_at)}</p>
                 </div>
               </div>
 
-              {/* Last Updated */}
-              <div className="flex items-start p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-                <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <ClockIcon className="h-6 w-6 text-orange-600" />
+              
+              <div className="flex items-start p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+                  <ClockIcon className="h-5 w-5 text-orange-600" />
                 </div>
                 <div className="ml-4 flex-1">
                   <p className="text-sm font-medium text-gray-500 mb-1">Last Updated</p>
-                  <p className="text-lg font-semibold text-gray-900">{formatDate(user.updated_at)}</p>
+                  <p className="font-medium text-gray-900">{formatDate(user.updated_at)}</p>
                 </div>
               </div>
 
-              {/* User ID */}
-              <div className="flex items-start p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border-2 border-blue-100">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                  <UserCircleIcon className="h-6 w-6 text-white" />
+             
+              <div className="flex items-start p-4 rounded-xl bg-gray-100 border border-gray-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+                  <UserCircleIcon className="h-5 w-5 text-white" />
                 </div>
                 <div className="ml-4 flex-1">
                   <p className="text-sm font-medium text-gray-500 mb-1">User ID</p>
-                  <p className="text-base font-mono text-gray-900 break-all">{user.user_id}</p>
+                  <p className="text-sm font-mono text-gray-900 break-all">{user.user_id}</p>
                 </div>
               </div>
             </div>

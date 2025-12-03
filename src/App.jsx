@@ -10,12 +10,12 @@ import SignupPage from "./pages/SignupPage";
 import AgentSignupPage from "./pages/AgentSignupPage";
 import GoogleCallbackPage from "./pages/GoogleCallbackPage";
 import AgentProfilePage from "./pages/AgentProfilePage";
-import AgentPersonalProfilePage from "./pages/AgentPersonalProfilePage"; // Add this import
 import AgentsPage from "./pages/AgentsPage";
 import AgentCashOperationForm from "./pages/AgentCashOperationForm";
 import UserCashOperations from "./pages/UserCashOperations";
 import UserProfile from "./pages/UserProfile";
 import AgentCashOperations from "./pages/AgentCashOperations";
+import UserProfilePage from "./pages/UserProfilePage";
 
 
 function AppContent() {
@@ -45,9 +45,7 @@ function AppContent() {
           <Route path="/agent/cash-operations" element={<AgentCashOperations />} />
           <Route path="/user/cash-operations" element={<UserCashOperations />} />
           <Route path="/users/:id" element={<UserProfile />} />
-          
-          {/* Add this route for agent's personal profile */}
-          <Route path="/agent/profile" element={<AgentPersonalProfilePage />} />
+          <Route path="/profile" element={<UserProfilePage />} />
         </Routes>
       </main>
     </div>

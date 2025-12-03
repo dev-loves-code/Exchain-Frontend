@@ -12,7 +12,6 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  
   const isActive = (path) => {
     return location.pathname === path;
   };
@@ -21,7 +20,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-lg border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
 
-        
+        {/* Logo */}
         <Link
           to="/"
           className="text-gray-900 text-2xl font-black hover:text-teal-800 transition-colors"
@@ -31,10 +30,34 @@ const Navbar = () => {
 
         <div className="flex items-center gap-4">
 
-          
+          {/* -------- AUTHENTICATED NAVIGATION -------- */}
           {user && (
             <>
-             
+              {/* Home link for all roles */}
+              <Link
+                to="/"
+                className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                  isActive('/') 
+                    ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                    : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                }`}
+              >
+                Home
+              </Link>
+
+              {/* Universal Profile Page for all users */}
+              <Link
+                to="/profile"
+                className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                  isActive('/profile') 
+                    ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                    : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                }`}
+              >
+                My Profile
+              </Link>
+
+              {/* Normal User (not agent & not admin) */}
               {user.role === "user" && (
                 <>
                   <Link
@@ -63,32 +86,19 @@ const Navbar = () => {
 
               {/* Agent */}
               {user.role === "agent" && (
-                <>
-                  <Link
-                    to="/agent/profile"
-                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
-                      isActive('/agent/profile') 
-                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
-                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
-                    }`}
-                  >
-                    My Profile
-                  </Link>
-
-                  <Link
-                    to="/agent/cash-operations"
-                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
-                      isActive('/agent/cash-operations') 
-                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
-                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
-                    }`}
-                  >
-                    My Operations
-                  </Link>
-                </>
+                <Link
+                  to="/agent/cash-operations"
+                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                    isActive('/agent/cash-operations') 
+                      ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                      : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                  }`}
+                >
+                  My Operations
+                </Link>
               )}
 
-              
+              {/* Admin */}
               {user.role === "admin" && (
                 <Link
                   to="/agents"
@@ -104,10 +114,10 @@ const Navbar = () => {
             </>
           )}
 
-          
+          {/* Notification Bell */}
           {user && <NotificationBell userId={user.user_id} />}
 
-          
+          {/* -------- AUTH BUTTONS -------- */}
           {user ? (
             <button
               onClick={handleLogout}
