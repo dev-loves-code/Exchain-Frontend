@@ -166,18 +166,6 @@ const AgentCashOperations = () => {
                   Showing {operations.length} of {pagination.total} operations
                 </p>
               </div>
-              <div className="flex items-center space-x-3">
-                <span className="text-sm text-gray-600">Items per page:</span>
-                <select
-                  value={pagination.per_page}
-                  onChange={handlePerPageChange}
-                  className="px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-sm"
-                >
-                  <option value={10}>10</option>
-                  <option value={25}>25</option>
-                  <option value={50}>50</option>
-                </select>
-              </div>
             </div>
           </div>
 

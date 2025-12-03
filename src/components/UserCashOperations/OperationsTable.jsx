@@ -1,4 +1,7 @@
-import { ChartBarIcon } from '@heroicons/react/24/outline';
+import { 
+  CurrencyDollarIcon,
+  ArrowPathIcon
+} from '@heroicons/react/24/outline';
 import OperationRow from './OperationRow';
 import Pagination from '../shared/Pagination';
 
@@ -7,9 +10,10 @@ export default function OperationsTable({
   loading, 
   pagination, 
   onPageChange, 
-  onViewUser, 
-  onCancel,
-  onPerPageChange 
+  onApprove, 
+  onReject,
+  onPerPageChange,
+  onRefresh
 }) {
   if (loading) {
     return (
@@ -23,9 +27,9 @@ export default function OperationsTable({
   if (operations.length === 0) {
     return (
       <div className="py-16 text-center">
-        <ChartBarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+        <CurrencyDollarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-gray-700 mb-2">No operations found</h3>
-        <p className="text-gray-500">Try adjusting your filters or create a new operation</p>
+        <p className="text-gray-500">Try adjusting your filters</p>
       </div>
     );
   }
@@ -37,9 +41,8 @@ export default function OperationsTable({
           <thead>
             <tr className="bg-gray-50">
               <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Type</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Customer</th>
               <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Amount</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Commission</th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Wallet Amount</th>
               <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
               <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Date</th>
               <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
@@ -50,8 +53,8 @@ export default function OperationsTable({
               <OperationRow
                 key={op.cash_op_id}
                 operation={op}
-                onViewUser={onViewUser}
-                onCancel={onCancel}
+                onApprove={onApprove}
+                onReject={onReject}
               />
             ))}
           </tbody>
