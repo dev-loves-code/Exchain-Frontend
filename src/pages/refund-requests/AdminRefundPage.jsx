@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Search, Filter, Eye, ArrowRight, Clock, CheckCircle, XCircle, User, Hash, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
-
+import SuccessPopup from "../../components/SuccessPopup"; // Add this import
 
 const API_BASE_URL = "http://127.0.0.1:8000/api";
 
@@ -93,14 +93,14 @@ const RefundCard = ({ refund, onReject, onComplete, onViewDetails, isAdmin }) =>
         <div className="flex gap-3">
           <button
             onClick={() => onComplete(refund.refund_id)}
-            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2.5 rounded-xl font-medium text-sm hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md"
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-4 py-2.5 rounded-xl font-medium text-sm hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <CheckCircle size={16} />
             <span>Approve</span>
           </button>
           <button
             onClick={() => onReject(refund.refund_id)}
-            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-rose-600 text-white px-4 py-2.5 rounded-xl font-medium text-sm hover:from-rose-600 hover:to-rose-700 transition-all duration-200 shadow-sm hover:shadow-md"
+            className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-rose-500 to-rose-600 text-white px-4 py-2.5 rounded-xl font-medium text-sm hover:from-rose-600 hover:to-rose-700 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <XCircle size={16} />
             <span>Decline</span>
@@ -121,8 +121,12 @@ const AdminRefundsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [orderBy, setOrderBy] = useState("latest");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [processingId, setProcessingId] = useState(null); // Track which refund is being processed
 
-  const fetchRefunds = async () => {
+  // Memoize fetchRefunds to prevent unnecessary re-renders
+  const fetchRefunds = useCallback(async () => {
     const token = localStorage.getItem("token");
     try {
       const params = new URLSearchParams();
@@ -139,17 +143,19 @@ const AdminRefundsPage = () => {
       if (res.ok) {
         setRefunds(data);
         setFilteredRefunds(data);
-      } else setMessage(data.message || "Error fetching refunds");
+      } else {
+        setMessage(data.message || "Error fetching refunds");
+      }
     } catch (err) {
       setMessage("Network error");
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, orderBy]);
 
   useEffect(() => {
     fetchRefunds();
-  }, [statusFilter, orderBy]);
+  }, [fetchRefunds]);
 
   useEffect(() => {
     const filtered = refunds.filter((refund) => {
@@ -170,6 +176,8 @@ const AdminRefundsPage = () => {
 
   const handleReject = async (id) => {
     const token = localStorage.getItem("token");
+    setProcessingId(id); // Set processing state
+    
     try {
       const res = await fetch(`${API_BASE_URL}/refund/request-reject/${id}`, {
         method: "PUT",
@@ -181,19 +189,31 @@ const AdminRefundsPage = () => {
       });
       const data = await res.json();
       if (res.ok) {
+        // Optimistic update for immediate UI feedback
         setRefunds(
           refunds.map((r) =>
             r.refund_id === id ? { ...r, status: "rejected" } : r
           )
         );
-      } else setMessage(data.message || "Error rejecting refund");
+        setSuccessMessage("Refund request declined successfully!");
+        setShowSuccessPopup(true);
+      } else {
+        setMessage(data.message || "Error rejecting refund");
+        // Revert optimistic update on error
+        fetchRefunds();
+      }
     } catch (err) {
       setMessage("Network error");
+      fetchRefunds(); // Revert on error
+    } finally {
+      setProcessingId(null); // Clear processing state
     }
   };
 
   const handleComplete = async (id) => {
     const token = localStorage.getItem("token");
+    setProcessingId(id); // Set processing state
+    
     try {
       const res = await fetch(
         `${API_BASE_URL}/refund/request-complete/${id}`,
@@ -204,22 +224,44 @@ const AdminRefundsPage = () => {
       );
       const data = await res.json();
       if (res.ok) {
+        // Optimistic update for immediate UI feedback
         setRefunds(
           refunds.map((r) =>
             r.refund_id === id ? { ...r, status: "completed" } : r
           )
         );
-      } else setMessage(data.message || "Error completing refund");
+        setSuccessMessage("Refund request approved successfully!");
+        setShowSuccessPopup(true);
+      } else {
+        setMessage(data.message || "Error completing refund");
+        // Revert optimistic update on error
+        fetchRefunds();
+      }
     } catch (err) {
       setMessage("Network error");
+      fetchRefunds(); // Revert on error
+    } finally {
+      setProcessingId(null); // Clear processing state
     }
   };
 
-if (loading) return <Loading fullScreen text="Loading refund requests..." />;
+  const handleSuccessPopupComplete = () => {
+    setShowSuccessPopup(false);
+    setSuccessMessage("");
+  };
 
+  if (loading) return <Loading fullScreen text="Loading refund requests..." />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <SuccessPopup 
+          message={successMessage} 
+          onComplete={handleSuccessPopupComplete} 
+        />
+      )}
+      
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
@@ -313,6 +355,8 @@ if (loading) return <Loading fullScreen text="Loading refund requests..." />;
                 onComplete={handleComplete}
                 onViewDetails={() => handleViewDetails(r.refund_id)}
                 isAdmin={true}
+                // Disable buttons while processing this specific refund
+                isProcessing={processingId === r.refund_id}
               />
             ))}
           </div>
