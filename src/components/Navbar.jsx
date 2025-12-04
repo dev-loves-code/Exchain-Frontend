@@ -51,12 +51,6 @@ const Navbar = () => {
                     Beneficiaries
                   </Link>
 
-                  <Link
-                    to="/refund/create"
-                    className="text-gray-700 hover:text-teal-800 px-4 py-2 rounded-xl hover:bg-teal-50 font-medium transition-all"
-                  >
-                    Request Refund
-                  </Link>
 
                   {/* Support Requests */}
                   <Link
