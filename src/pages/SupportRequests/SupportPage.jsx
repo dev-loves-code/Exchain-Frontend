@@ -1,5 +1,5 @@
-import React from "react";
-import SupportRequestForm from "../../components/SupportRequests/SupportRequestForm";
+import React from 'react';
+import SupportRequestForm from '../../components/SupportRequests/SupportRequestForm';
 
 const SupportPage = () => {
   return (

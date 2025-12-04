@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import SuccessPopup from "./SuccessPopup"; // import the popup component
+import React, { useState } from 'react';
+import SuccessPopup from './SuccessPopup'; // import the popup component
 
 export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
   const [formData, setFormData] = useState({
-    name: initialData.name || "",
-    email: initialData.email || "",
-    wallet_id: initialData.wallet_id || "",
-    payment_method_id: initialData.payment_method_id || "",
-    bank_account_id: initialData.bank_account_id || "",
+    name: initialData.name || '',
+    email: initialData.email || '',
+    wallet_id: initialData.wallet_id || '',
+    payment_method_id: initialData.payment_method_id || '',
+    bank_account_id: initialData.bank_account_id || '',
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false); // track popup visibility
 
   const handleChange = (e) => {
@@ -22,19 +22,19 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError('');
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("You must be logged in");
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('You must be logged in');
 
       const res = await fetch(
         `http://127.0.0.1:8000/api/beneficiaries/update/${initialData.beneficiary_id}`,
         {
-          method: "PUT",
+          method: 'PUT',
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify(formData),
         }
@@ -49,7 +49,7 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
         } else if (data.message) {
           setError(data.message);
         } else {
-          setError("Failed to update beneficiary. Please check your input.");
+          setError('Failed to update beneficiary. Please check your input.');
         }
         return;
       }
@@ -59,10 +59,9 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
 
       // Call parent's onSuccess callback
       onSuccess && onSuccess(data.beneficiary);
-
     } catch (err) {
       console.error(err);
-      setError(err.message || "Network error. Please check your backend.");
+      setError(err.message || 'Network error. Please check your backend.');
     } finally {
       setLoading(false);
     }
@@ -79,12 +78,16 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="text-red-500 text-sm p-2 bg-red-100 rounded">{error}</div>
+            <div className="text-red-500 text-sm p-2 bg-red-100 rounded">
+              {error}
+            </div>
           )}
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Full Name</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -97,7 +100,9 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
             </div>
 
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Email</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -111,7 +116,9 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
 
           <div className="grid md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Wallet ID</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Wallet ID
+              </label>
               <input
                 type="number"
                 name="wallet_id"
@@ -123,7 +130,9 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
             </div>
 
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Payment Method ID</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Payment Method ID
+              </label>
               <input
                 type="number"
                 name="payment_method_id"
@@ -135,7 +144,9 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
             </div>
 
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Bank Account ID</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Bank Account ID
+              </label>
               <input
                 type="number"
                 name="bank_account_id"
@@ -152,7 +163,7 @@ export default function EditBeneficiaryForm({ initialData = {}, onSuccess }) {
             disabled={loading}
             className={`w-full py-5 bg-teal-800 hover:bg-teal-900 text-white font-semibold text-lg rounded-xl transition-all shadow-lg hover:shadow-xl`}
           >
-            {loading ? "Updating..." : "Update Beneficiary"}
+            {loading ? 'Updating...' : 'Update Beneficiary'}
           </button>
         </form>
       </div>

@@ -1,26 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const AgentSignupPage = () => {
   const [formData, setFormData] = useState({
-    full_name: "",
-    email: "",
-    phone_number: "",
-    password: "",
-    password_confirmation: "",
-    business_name: "",
-    business_license: "",
-    latitude: "",
-    longitude: "",
-    address: "",
-    city: "",
-    working_hours_start: "",
-    working_hours_end: "",
+    full_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    password_confirmation: '',
+    business_name: '',
+    business_license: '',
+    latitude: '',
+    longitude: '',
+    address: '',
+    city: '',
+    working_hours_start: '',
+    working_hours_end: '',
   });
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [locationLoading, setLocationLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState('');
 
   // -------------------------------
   // AUTO-GET USER LOCATION + REVERSE GEOCODE
@@ -31,7 +31,11 @@ const AgentSignupPage = () => {
         async (pos) => {
           const { latitude, longitude, accuracy } = pos.coords;
 
-          console.log("Accurate geolocation:", { latitude, longitude, accuracy });
+          console.log('Accurate geolocation:', {
+            latitude,
+            longitude,
+            accuracy,
+          });
 
           // First, set the coordinates
           setFormData((prev) => ({
@@ -46,59 +50,62 @@ const AgentSignupPage = () => {
               `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1&zoom=18`,
               {
                 headers: {
-                  'User-Agent': 'PayOne-Agent-Registration/1.0'
-                }
+                  'User-Agent': 'PayOne-Agent-Registration/1.0',
+                },
               }
             );
-            
+
             const data = await response.json();
-            
-            console.log("Full geocoding response:", data);
-            
+
+            console.log('Full geocoding response:', data);
+
             if (data && data.address) {
               // Try multiple fields for street address
-              const street = data.address.road || 
-                            data.address.street || 
-                            data.address.pedestrian ||
-                            data.address.path ||
-                            data.address.neighbourhood ||
-                            data.address.suburb ||
-                            data.display_name?.split(',')[0] || // Fallback to first part of display name
-                            "";
-              
-              const city = data.address.city || 
-                          data.address.town || 
-                          data.address.village || 
-                          data.address.municipality ||
-                          data.address.county ||
-                          "";
+              const street =
+                data.address.road ||
+                data.address.street ||
+                data.address.pedestrian ||
+                data.address.path ||
+                data.address.neighbourhood ||
+                data.address.suburb ||
+                data.display_name?.split(',')[0] || // Fallback to first part of display name
+                '';
 
-              console.log("Extracted address:", { 
-                street, 
-                city, 
+              const city =
+                data.address.city ||
+                data.address.town ||
+                data.address.village ||
+                data.address.municipality ||
+                data.address.county ||
+                '';
+
+              console.log('Extracted address:', {
+                street,
+                city,
                 fullDisplayName: data.display_name,
-                allAddressFields: data.address 
+                allAddressFields: data.address,
               });
 
               setFormData((prev) => ({
                 ...prev,
-                address: street || "Address not available - please update manually",
-                city: city || "City not available - please update manually",
+                address:
+                  street || 'Address not available - please update manually',
+                city: city || 'City not available - please update manually',
               }));
             }
           } catch (error) {
-            console.error("Geocoding error:", error);
+            console.error('Geocoding error:', error);
             setFormData((prev) => ({
               ...prev,
-              address: "Unable to detect address",
-              city: "Unable to detect city",
+              address: 'Unable to detect address',
+              city: 'Unable to detect city',
             }));
           } finally {
             setLocationLoading(false);
           }
         },
         (err) => {
-          console.warn("Location error:", err);
+          console.warn('Location error:', err);
           setLocationLoading(false);
         },
         {
@@ -114,20 +121,20 @@ const AgentSignupPage = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    setErrors({ ...errors, [e.target.name]: '' });
   };
 
   const handleSubmit = async () => {
     setErrors({});
-    setSuccessMessage("");
+    setSuccessMessage('');
     setLoading(true);
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/auth/register/agent",
+        'http://127.0.0.1:8000/api/auth/register/agent',
         {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         }
       );
@@ -137,33 +144,33 @@ const AgentSignupPage = () => {
       if (data.success) {
         setSuccessMessage(
           data.message ||
-            "Agent registration submitted successfully! Awaiting approval."
+            'Agent registration submitted successfully! Awaiting approval.'
         );
 
         setFormData({
-          full_name: "",
-          email: "",
-          phone_number: "",
-          password: "",
-          password_confirmation: "",
-          business_name: "",
-          business_license: "",
-          latitude: "",
-          longitude: "",
-          address: "",
-          city: "",
-          working_hours_start: "",
-          working_hours_end: "",
+          full_name: '',
+          email: '',
+          phone_number: '',
+          password: '',
+          password_confirmation: '',
+          business_name: '',
+          business_license: '',
+          latitude: '',
+          longitude: '',
+          address: '',
+          city: '',
+          working_hours_start: '',
+          working_hours_end: '',
         });
 
         setTimeout(() => {
-          window.location.href = "/login";
+          window.location.href = '/login';
         }, 3000);
       } else {
         setErrors(data.errors || { general: data.message });
       }
     } catch (error) {
-      setErrors({ general: "Network error. Please try again." });
+      setErrors({ general: 'Network error. Please try again.' });
     }
 
     setLoading(false);
@@ -198,7 +205,7 @@ const AgentSignupPage = () => {
 
         {!locationLoading && formData.latitude && (
           <div className="bg-green-50 text-green-600 p-4 rounded-lg text-sm mb-4 text-center">
-            ✓ Location detected: {formData.city || "Location confirmed"}
+            ✓ Location detected: {formData.city || 'Location confirmed'}
           </div>
         )}
 
@@ -222,22 +229,22 @@ const AgentSignupPage = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { name: "full_name", placeholder: "Full Name *", type: "text" },
-                { name: "email", placeholder: "Email *", type: "email" },
+                { name: 'full_name', placeholder: 'Full Name *', type: 'text' },
+                { name: 'email', placeholder: 'Email *', type: 'email' },
                 {
-                  name: "phone_number",
-                  placeholder: "Phone Number *",
-                  type: "tel",
+                  name: 'phone_number',
+                  placeholder: 'Phone Number *',
+                  type: 'tel',
                 },
                 {
-                  name: "password",
-                  placeholder: "Password *",
-                  type: "password",
+                  name: 'password',
+                  placeholder: 'Password *',
+                  type: 'password',
                 },
                 {
-                  name: "password_confirmation",
-                  placeholder: "Confirm Password *",
-                  type: "password",
+                  name: 'password_confirmation',
+                  placeholder: 'Confirm Password *',
+                  type: 'password',
                 },
               ].map((field) => (
                 <div key={field.name}>
@@ -326,9 +333,7 @@ const AgentSignupPage = () => {
                   Auto-detected - you can edit if incorrect
                 </p>
                 {errors.city && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.city[0]}
-                  </p>
+                  <p className="text-red-500 text-xs mt-1">{errors.city[0]}</p>
                 )}
               </div>
             </div>
@@ -376,7 +381,8 @@ const AgentSignupPage = () => {
               </div>
             </div>
             <p className="text-sm text-gray-500 mt-2">
-              * Please specify your business operating hours in 24-hour format (HH:MM)
+              * Please specify your business operating hours in 24-hour format
+              (HH:MM)
             </p>
           </div>
 
@@ -389,7 +395,11 @@ const AgentSignupPage = () => {
             disabled={loading || locationLoading}
             className="w-full bg-teal-800 hover:bg-teal-900 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            {loading ? "Submitting..." : locationLoading ? "Detecting location..." : "Register"}
+            {loading
+              ? 'Submitting...'
+              : locationLoading
+                ? 'Detecting location...'
+                : 'Register'}
           </button>
         </div>
       </div>

@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
-export default function CurrencyDropdown({ 
-  currencies, 
-  selectedCurrency, 
-  onSelectCurrency, 
-  searchTerm, 
-  onSearchChange 
+export default function CurrencyDropdown({
+  currencies,
+  selectedCurrency,
+  onSelectCurrency,
+  searchTerm,
+  onSearchChange,
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -14,7 +14,9 @@ export default function CurrencyDropdown({
 
   useEffect(() => {
     const upperCaseTerm = searchTerm.toUpperCase();
-    setFilteredCurrencies(currencies.filter(currency => currency.includes(upperCaseTerm)));
+    setFilteredCurrencies(
+      currencies.filter((currency) => currency.includes(upperCaseTerm))
+    );
   }, [searchTerm, currencies]);
 
   useEffect(() => {
@@ -23,8 +25,8 @@ export default function CurrencyDropdown({
         setShowDropdown(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleSelect = (currency) => {
@@ -35,7 +37,9 @@ export default function CurrencyDropdown({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="block text-sm font-medium mb-2 text-gray-700">Currency</label>
+      <label className="block text-sm font-medium mb-2 text-gray-700">
+        Currency
+      </label>
       <div className="relative">
         <input
           type="text"
@@ -47,7 +51,7 @@ export default function CurrencyDropdown({
           placeholder="USD"
           maxLength="3"
         />
-        <div 
+        <div
           className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer hover:text-gray-700"
           onClick={() => setShowDropdown(!showDropdown)}
         >

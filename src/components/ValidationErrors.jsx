@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import React, { useEffect } from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-export default function ValidationErrors({ errors = [], onClose, duration = 5000 }) {
+export default function ValidationErrors({
+  errors = [],
+  onClose,
+  duration = 5000,
+}) {
   useEffect(() => {
     if (errors.length > 0 && duration > 0) {
       const timer = setTimeout(() => {

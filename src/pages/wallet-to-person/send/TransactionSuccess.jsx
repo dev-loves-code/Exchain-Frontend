@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Loading from "../../../components/Loading"; // make sure the path is correct
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Loading from '../../../components/Loading'; // make sure the path is correct
 
 export default function TransactionSuccess() {
   const { state } = useLocation();
@@ -13,16 +13,16 @@ export default function TransactionSuccess() {
 
   useEffect(() => {
     if (!txId) {
-      navigate("/send");
+      navigate('/send');
       return;
     }
 
     const fetchReceipt = async () => {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("You must be logged in to view the receipt");
-        navigate("/send");
+        alert('You must be logged in to view the receipt');
+        navigate('/send');
         return;
       }
 
@@ -31,7 +31,7 @@ export default function TransactionSuccess() {
           `http://127.0.0.1:8000/api/transactions/receipt/${txId}`,
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
@@ -41,13 +41,13 @@ export default function TransactionSuccess() {
         const data = text ? JSON.parse(text) : {};
 
         if (!res.ok || !data.success) {
-          throw new Error(data.message || "Failed to fetch receipt");
+          throw new Error(data.message || 'Failed to fetch receipt');
         }
 
         setTx(data.data || {});
       } catch (err) {
-        console.error("Failed to fetch transaction receipt:", err);
-        alert(err.message || "Could not load transaction details");
+        console.error('Failed to fetch transaction receipt:', err);
+        alert(err.message || 'Could not load transaction details');
       } finally {
         setLoading(false);
       }
@@ -103,7 +103,9 @@ export default function TransactionSuccess() {
             </div>
             <div className="flex justify-between">
               <span>Pickup Method</span>
-              <span className="font-semibold">{tx.receiver?.pickup_method}</span>
+              <span className="font-semibold">
+                {tx.receiver?.pickup_method}
+              </span>
             </div>
 
             {/* Transfer Details */}
@@ -122,20 +124,27 @@ export default function TransactionSuccess() {
             <div className="flex justify-between">
               <span>Received Amount</span>
               <span className="font-semibold">
-                {tx.transfer_details?.received_amount} {recipientCurrencyFromState || tx.receiver?.currency}
+                {tx.transfer_details?.received_amount}{' '}
+                {recipientCurrencyFromState || tx.receiver?.currency}
               </span>
             </div>
             <div className="flex justify-between">
               <span>Exchange Rate</span>
-              <span className="font-semibold">{tx.transfer_details?.exchange_rate}</span>
+              <span className="font-semibold">
+                {tx.transfer_details?.exchange_rate}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Service Type</span>
-              <span className="font-semibold">{tx.transfer_details?.service_type}</span>
+              <span className="font-semibold">
+                {tx.transfer_details?.service_type}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Transfer Speed</span>
-              <span className="font-semibold">{tx.transfer_details?.transfer_speed}</span>
+              <span className="font-semibold">
+                {tx.transfer_details?.transfer_speed}
+              </span>
             </div>
 
             {/* Status */}
@@ -155,18 +164,20 @@ export default function TransactionSuccess() {
             )}
           </div>
         ) : (
-          <p className="text-sm text-gray-500">No transaction details available.</p>
+          <p className="text-sm text-gray-500">
+            No transaction details available.
+          </p>
         )}
 
         <div className="mt-6 flex gap-3">
           <button
-            onClick={() => navigate("/transactions")}
+            onClick={() => navigate('/transactions')}
             className="px-4 py-3 rounded-xl border"
           >
             View History
           </button>
           <button
-            onClick={() => navigate("/send")}
+            onClick={() => navigate('/send')}
             className="px-4 py-3 rounded-xl bg-teal-800 text-white"
           >
             Make Another

@@ -1,23 +1,23 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const { login, loginWithGoogle } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setError("");
+    setError('');
     setLoading(true);
 
     const result = await login(email, password);
 
     if (result.success) {
-      window.location.href = "/";
+      window.location.href = '/';
     } else {
-      setError(result.message || "Login failed");
+      setError(result.message || 'Login failed');
     }
 
     setLoading(false);
@@ -77,12 +77,12 @@ const LoginPage = () => {
             disabled={loading}
             className="w-full bg-teal-800 hover:bg-teal-900 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
-            {loading ? "Signing In..." : "Sign In"}
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <a
             href="/signup"
             className="text-bg-teal-900 font-semibold hover:underline"

@@ -1,38 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { Search, Filter, Eye, ArrowRight, Clock, CheckCircle, XCircle, User, Hash, CreditCard } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import Loading from "../../components/Loading";
+import React, { useEffect, useState } from 'react';
+import {
+  Search,
+  Filter,
+  Eye,
+  ArrowRight,
+  Clock,
+  CheckCircle,
+  XCircle,
+  User,
+  Hash,
+  CreditCard,
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
-
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
 // Modern Minimal RefundCard Component
-const RefundCard = ({ refund, onReject, onComplete, onViewDetails, isAdmin }) => {
+const RefundCard = ({
+  refund,
+  onReject,
+  onComplete,
+  onViewDetails,
+  isAdmin,
+}) => {
   const statusStyles = {
-    pending: { 
-      bg: "bg-amber-500/10", 
-      text: "text-amber-700", 
-      border: "border-amber-200",
-      dot: "bg-amber-500"
+    pending: {
+      bg: 'bg-amber-500/10',
+      text: 'text-amber-700',
+      border: 'border-amber-200',
+      dot: 'bg-amber-500',
     },
-    completed: { 
-      bg: "bg-emerald-500/10", 
-      text: "text-emerald-700", 
-      border: "border-emerald-200",
-      dot: "bg-emerald-500"
+    completed: {
+      bg: 'bg-emerald-500/10',
+      text: 'text-emerald-700',
+      border: 'border-emerald-200',
+      dot: 'bg-emerald-500',
     },
-    rejected: { 
-      bg: "bg-rose-500/10", 
-      text: "text-rose-700", 
-      border: "border-rose-200",
-      dot: "bg-rose-500"
+    rejected: {
+      bg: 'bg-rose-500/10',
+      text: 'text-rose-700',
+      border: 'border-rose-200',
+      dot: 'bg-rose-500',
     },
-    cancelled: { 
-      bg: "bg-slate-500/10", 
-      text: "text-slate-700", 
-      border: "border-slate-200",
-      dot: "bg-slate-500"
-    }
+    cancelled: {
+      bg: 'bg-slate-500/10',
+      text: 'text-slate-700',
+      border: 'border-slate-200',
+      dot: 'bg-slate-500',
+    },
   };
 
   const status = statusStyles[refund.status] || statusStyles.pending;
@@ -43,8 +59,12 @@ const RefundCard = ({ refund, onReject, onComplete, onViewDetails, isAdmin }) =>
       <div className="flex items-start justify-between mb-5">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bg} ${status.text} border ${status.border}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${status.dot} animate-pulse`}></span>
+            <div
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${status.bg} ${status.text} border ${status.border}`}
+            >
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${status.dot} animate-pulse`}
+              ></span>
               <span className="text-xs font-semibold uppercase tracking-wide">
                 {refund.status}
               </span>
@@ -52,7 +72,10 @@ const RefundCard = ({ refund, onReject, onComplete, onViewDetails, isAdmin }) =>
             <div className="flex items-center gap-1.5 text-gray-400">
               <Clock size={14} />
               <span className="text-xs">
-                {new Date(refund.sent_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                {new Date(refund.sent_at).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
               </span>
             </div>
           </div>
@@ -61,7 +84,7 @@ const RefundCard = ({ refund, onReject, onComplete, onViewDetails, isAdmin }) =>
             <span className="text-sm font-mono">{refund.refund_id}</span>
           </div>
         </div>
-        
+
         <button
           onClick={onViewDetails}
           className="flex items-center gap-2 bg-gradient-to-r from-teal-600 to-teal-700 text-white px-4 py-2 rounded-xl font-medium text-sm hover:from-teal-700 hover:to-teal-800 transition-all duration-200 shadow-md hover:shadow-lg group-hover:scale-105"
@@ -78,18 +101,24 @@ const RefundCard = ({ refund, onReject, onComplete, onViewDetails, isAdmin }) =>
             {refund.user_name?.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 truncate">{refund.user_name}</p>
-            <p className="text-xs text-gray-500 truncate">{refund.user_email}</p>
+            <p className="text-sm font-semibold text-gray-900 truncate">
+              {refund.user_name}
+            </p>
+            <p className="text-xs text-gray-500 truncate">
+              {refund.user_email}
+            </p>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-lg border border-gray-200">
             <CreditCard size={14} className="text-gray-400" />
-            <span className="text-xs font-mono text-gray-600">{refund.transaction_id}</span>
+            <span className="text-xs font-mono text-gray-600">
+              {refund.transaction_id}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      {isAdmin && refund.status === "pending" && (
+      {isAdmin && refund.status === 'pending' && (
         <div className="flex gap-3">
           <button
             onClick={() => onComplete(refund.refund_id)}
@@ -117,17 +146,17 @@ const AdminRefundsPage = () => {
   const [refunds, setRefunds] = useState([]);
   const [filteredRefunds, setFilteredRefunds] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [orderBy, setOrderBy] = useState("latest");
+  const [message, setMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [orderBy, setOrderBy] = useState('latest');
 
   const fetchRefunds = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
       const params = new URLSearchParams();
-      if (statusFilter) params.append("status", statusFilter);
-      if (orderBy) params.append("order_by", orderBy);
+      if (statusFilter) params.append('status', statusFilter);
+      if (orderBy) params.append('order_by', orderBy);
 
       const res = await fetch(
         `${API_BASE_URL}/refund/requests-view-all?${params.toString()}`,
@@ -139,9 +168,9 @@ const AdminRefundsPage = () => {
       if (res.ok) {
         setRefunds(data);
         setFilteredRefunds(data);
-      } else setMessage(data.message || "Error fetching refunds");
+      } else setMessage(data.message || 'Error fetching refunds');
     } catch (err) {
-      setMessage("Network error");
+      setMessage('Network error');
     } finally {
       setLoading(false);
     }
@@ -169,54 +198,50 @@ const AdminRefundsPage = () => {
   };
 
   const handleReject = async (id) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${API_BASE_URL}/refund/request-reject/${id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ rejected_reason: "Rejected by admin" }),
+        body: JSON.stringify({ rejected_reason: 'Rejected by admin' }),
       });
       const data = await res.json();
       if (res.ok) {
         setRefunds(
           refunds.map((r) =>
-            r.refund_id === id ? { ...r, status: "rejected" } : r
+            r.refund_id === id ? { ...r, status: 'rejected' } : r
           )
         );
-      } else setMessage(data.message || "Error rejecting refund");
+      } else setMessage(data.message || 'Error rejecting refund');
     } catch (err) {
-      setMessage("Network error");
+      setMessage('Network error');
     }
   };
 
   const handleComplete = async (id) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/refund/request-complete/${id}`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/refund/request-complete/${id}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await res.json();
       if (res.ok) {
         setRefunds(
           refunds.map((r) =>
-            r.refund_id === id ? { ...r, status: "completed" } : r
+            r.refund_id === id ? { ...r, status: 'completed' } : r
           )
         );
-      } else setMessage(data.message || "Error completing refund");
+      } else setMessage(data.message || 'Error completing refund');
     } catch (err) {
-      setMessage("Network error");
+      setMessage('Network error');
     }
   };
 
-if (loading) return <Loading fullScreen text="Loading refund requests..." />;
-
+  if (loading) return <Loading fullScreen text="Loading refund requests..." />;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6">
@@ -278,10 +303,14 @@ if (loading) return <Loading fullScreen text="Loading refund requests..." />;
 
             <div className="flex items-end">
               <div className="bg-gradient-to-r from-teal-50 to-teal-100 rounded-xl px-4 py-3 w-full border border-teal-200">
-                <p className="text-xs text-teal-600 font-semibold uppercase tracking-wide mb-1">Results</p>
+                <p className="text-xs text-teal-600 font-semibold uppercase tracking-wide mb-1">
+                  Results
+                </p>
                 <p className="text-2xl font-bold text-teal-700">
                   {filteredRefunds.length}
-                  <span className="text-sm font-normal text-teal-600 ml-1">/ {refunds.length}</span>
+                  <span className="text-sm font-normal text-teal-600 ml-1">
+                    / {refunds.length}
+                  </span>
                 </p>
               </div>
             </div>
@@ -296,11 +325,11 @@ if (loading) return <Loading fullScreen text="Loading refund requests..." />;
             </div>
             <p className="text-gray-500 text-lg font-medium">
               {searchTerm
-                ? "No refund requests match your search"
-                : "No refund requests found"}
+                ? 'No refund requests match your search'
+                : 'No refund requests found'}
             </p>
             <p className="text-gray-400 text-sm mt-2">
-              {searchTerm && "Try adjusting your search criteria"}
+              {searchTerm && 'Try adjusting your search criteria'}
             </p>
           </div>
         ) : (

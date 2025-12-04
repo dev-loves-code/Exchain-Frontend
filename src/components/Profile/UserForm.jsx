@@ -10,7 +10,7 @@ export default function UserForm({ user, onSubmit, onCancel, loading }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -22,7 +22,9 @@ export default function UserForm({ user, onSubmit, onCancel, loading }) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Full Name
+          </label>
           <input
             type="text"
             name="full_name"
@@ -35,7 +37,9 @@ export default function UserForm({ user, onSubmit, onCancel, loading }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Email
+          </label>
           <input
             type="email"
             name="email"
@@ -48,7 +52,9 @@ export default function UserForm({ user, onSubmit, onCancel, loading }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Phone Number
+          </label>
           <input
             type="tel"
             name="phone_number"

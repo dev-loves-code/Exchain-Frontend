@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import ValidationErrors from "../../../components/ValidationErrors";
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import ValidationErrors from '../../../components/ValidationErrors';
 
 export default function ConfirmTransaction() {
   const { state } = useLocation();
@@ -9,7 +9,7 @@ export default function ConfirmTransaction() {
   const [errors, setErrors] = useState([]);
 
   if (!state?.formData) {
-    navigate("/send");
+    navigate('/send');
     return null;
   }
 
@@ -29,15 +29,16 @@ export default function ConfirmTransaction() {
         service_id: formData.serviceId,
       };
 
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("You must be logged in to perform this action");
+      const token = localStorage.getItem('token');
+      if (!token)
+        throw new Error('You must be logged in to perform this action');
 
       const res = await fetch(
-        "http://127.0.0.1:8000/api/transactions/initiate-wallet-to-person",
+        'http://127.0.0.1:8000/api/transactions/initiate-wallet-to-person',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
@@ -53,15 +54,16 @@ export default function ConfirmTransaction() {
           setErrors(messages);
           return;
         }
-        setErrors([data.message || "Could not create transaction"]);
+        setErrors([data.message || 'Could not create transaction']);
         return;
       }
 
       const txId = data.data.transaction_id || data.data.id;
-      navigate("/send/success", { state: { txId, recipientCurrency: formData.recipientCurrency } });
-
+      navigate('/send/success', {
+        state: { txId, recipientCurrency: formData.recipientCurrency },
+      });
     } catch (err) {
-      setErrors([err.message || "Could not create transaction"]);
+      setErrors([err.message || 'Could not create transaction']);
     } finally {
       setLoading(false);
     }
@@ -86,7 +88,9 @@ export default function ConfirmTransaction() {
           </div>
           <div className="flex justify-between">
             <span>You Send</span>
-            <span className="font-semibold">{formData.amount} {formData.currency}</span>
+            <span className="font-semibold">
+              {formData.amount} {formData.currency}
+            </span>
           </div>
         </div>
 
@@ -102,7 +106,7 @@ export default function ConfirmTransaction() {
             onClick={onConfirm}
             className="flex-1 py-3 bg-teal-800 text-white font-bold rounded-xl"
           >
-            {loading ? "Processing..." : "Confirm & Send"}
+            {loading ? 'Processing...' : 'Confirm & Send'}
           </button>
         </div>
       </div>

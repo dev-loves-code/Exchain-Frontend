@@ -1,21 +1,21 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const SignupPage = () => {
   const { register, loginWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
-    full_name: "",
-    email: "",
-    phone_number: "",
-    password: "",
-    password_confirmation: "",
+    full_name: '',
+    email: '',
+    phone_number: '',
+    password: '',
+    password_confirmation: '',
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    setErrors({ ...errors, [e.target.name]: '' });
   };
 
   const handleSubmit = async () => {
@@ -25,7 +25,7 @@ const SignupPage = () => {
     const result = await register(formData);
 
     if (result.success) {
-      window.location.href = "/";
+      window.location.href = '/';
     } else {
       setErrors(result.errors || { general: result.message });
     }
@@ -82,14 +82,14 @@ const SignupPage = () => {
 
         <div className="space-y-4">
           {[
-            { name: "full_name", placeholder: "Full Name", type: "text" },
-            { name: "email", placeholder: "Email", type: "email" },
-            { name: "phone_number", placeholder: "Phone Number", type: "tel" },
-            { name: "password", placeholder: "Password", type: "password" },
+            { name: 'full_name', placeholder: 'Full Name', type: 'text' },
+            { name: 'email', placeholder: 'Email', type: 'email' },
+            { name: 'phone_number', placeholder: 'Phone Number', type: 'tel' },
+            { name: 'password', placeholder: 'Password', type: 'password' },
             {
-              name: "password_confirmation",
-              placeholder: "Confirm Password",
-              type: "password",
+              name: 'password_confirmation',
+              placeholder: 'Confirm Password',
+              type: 'password',
             },
           ].map((field) => (
             <div key={field.name}>
@@ -114,12 +114,12 @@ const SignupPage = () => {
             disabled={loading}
             className="w-full bg-teal-800 hover:bg-teal-900 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
           >
-            {loading ? "Creating Account..." : "Sign Up"}
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </div>
 
         <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{" "}
+          Already have an account?{' '}
           <a
             href="/login"
             className="text-bg-teal-900 font-semibold hover:underline"

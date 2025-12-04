@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { 
-  MapPin, 
-  Clock, 
-  Phone, 
-  Mail, 
-  Building2, 
-  Loader2, 
-  AlertCircle, 
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  MapPin,
+  Clock,
+  Phone,
+  Mail,
+  Building2,
+  Loader2,
+  AlertCircle,
   ArrowLeft,
   CheckCircle,
   XCircle,
   Calendar,
   User,
-  Shield
+  Shield,
 } from 'lucide-react';
 import AgentsMap from '../components/AgentsMap';
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from '../context/AuthContext';
 import StatusBadge from '../components/AgentProfile/StatusBadge';
 import InfoCard from '../components/AgentProfile/InfoCard';
 
@@ -28,40 +28,40 @@ export default function AgentProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
+  const [statusMessage, setStatusMessage] = useState('');
 
   // Check if user is admin
   const isAdmin = user?.role === 'admin';
 
   const fetchAgent = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      setError("Authentication required");
+      setError('Authentication required');
       setLoading(false);
       return;
     }
 
     fetch(`http://127.0.0.1:8000/api/agents/${id}`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch agent");
+        if (!res.ok) throw new Error('Failed to fetch agent');
         return res.json();
       })
       .then((data) => {
         if (data.success) {
           setAgent(data.data);
-          setStatusMessage("");
+          setStatusMessage('');
         } else {
-          setError(data.message || "Failed to load agent");
+          setError(data.message || 'Failed to load agent');
         }
       })
       .catch((err) => {
         console.error(err);
-        setError(err.message || "Network error");
+        setError(err.message || 'Network error');
       })
       .finally(() => setLoading(false));
   };
@@ -73,27 +73,30 @@ export default function AgentProfilePage() {
   // Handle status update
   const handleUpdateStatus = async (newStatus) => {
     if (!isAdmin) return;
-    
+
     setUpdatingStatus(true);
-    setStatusMessage("");
-    const token = localStorage.getItem("token");
-    
+    setStatusMessage('');
+    const token = localStorage.getItem('token');
+
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/admin/agents/${id}/status`, {
-        method: 'PATCH',
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/admin/agents/${id}/status`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        setAgent(prev => ({ ...prev, status: newStatus }));
+        setAgent((prev) => ({ ...prev, status: newStatus }));
         setStatusMessage(`Agent ${newStatus} successfully!`);
-        setTimeout(() => setStatusMessage(""), 3000);
+        setTimeout(() => setStatusMessage(''), 3000);
       } else {
         setStatusMessage(`Failed: ${data.message || 'Unknown error'}`);
       }
@@ -124,7 +127,7 @@ export default function AgentProfilePage() {
             <AlertCircle className="w-6 h-6" />
             <h2 className="text-xl font-bold">Error</h2>
           </div>
-          <p className="text-gray-600 mb-6">{error || "Agent not found"}</p>
+          <p className="text-gray-600 mb-6">{error || 'Agent not found'}</p>
           <button
             onClick={() => window.history.back()}
             className="w-full px-4 py-3 bg-gray-800 hover:bg-gray-900 text-white rounded-xl font-medium transition-all duration-200"
@@ -150,10 +153,15 @@ export default function AgentProfilePage() {
 
         {/* Status Message */}
         {statusMessage && (
-          <div className={`mb-6 p-4 rounded-xl ${statusMessage.includes('successfully') ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+          <div
+            className={`mb-6 p-4 rounded-xl ${statusMessage.includes('successfully') ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}
+          >
             <div className="flex items-center justify-between">
               <span className="font-medium">{statusMessage}</span>
-              <button onClick={() => setStatusMessage("")} className="text-sm opacity-70 hover:opacity-100">
+              <button
+                onClick={() => setStatusMessage('')}
+                className="text-sm opacity-70 hover:opacity-100"
+              >
                 ✕
               </button>
             </div>
@@ -176,15 +184,15 @@ export default function AgentProfilePage() {
                   <span>{agent.city}</span>
                 </div>
               </div>
-              
+
               <div className="flex flex-col items-start md:items-end gap-4">
                 <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
                   <div className="text-2xl font-bold text-gray-900">
-                    {agent.commission_rate ?? "N/A"}%
+                    {agent.commission_rate ?? 'N/A'}%
                   </div>
                   <p className="text-gray-500 text-xs mt-1">Commission Rate</p>
                 </div>
-                
+
                 {isAdmin && (
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
                     <Shield className="w-4 h-4" />
@@ -197,7 +205,9 @@ export default function AgentProfilePage() {
             {/* Admin Actions */}
             {isAdmin && (
               <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                <p className="text-sm font-medium text-gray-700 mb-3">Admin Actions:</p>
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Admin Actions:
+                </p>
                 <div className="flex gap-3">
                   <button
                     onClick={() => handleUpdateStatus('accepted')}
@@ -242,7 +252,7 @@ export default function AgentProfilePage() {
                 title="Address"
                 value={agent.address}
               />
-              
+
               <InfoCard
                 icon={Clock}
                 title="Working Hours"
@@ -252,34 +262,32 @@ export default function AgentProfilePage() {
                     : null
                 }
               />
-              
-              <InfoCard
-                icon={Phone}
-                title="Phone"
-                value={agent.phone_number}
-              />
-              
-              <InfoCard
-                icon={Mail}
-                title="Email"
-                value={agent.email}
-              />
+
+              <InfoCard icon={Phone} title="Phone" value={agent.phone_number} />
+
+              <InfoCard icon={Mail} title="Email" value={agent.email} />
             </div>
 
             {/* Admin Additional Info */}
             {isAdmin && (
               <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">Admin Information</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  Admin Information
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600 mb-1">Registration Date</p>
+                    <p className="text-sm text-gray-600 mb-1">
+                      Registration Date
+                    </p>
                     <p className="font-medium text-gray-900">
                       {new Date(agent.created_at).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600 mb-1">Agent ID</p>
-                    <p className="font-medium text-gray-900 font-mono">{agent.agent_id}</p>
+                    <p className="font-medium text-gray-900 font-mono">
+                      {agent.agent_id}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -288,7 +296,8 @@ export default function AgentProfilePage() {
             {/* Coordinates */}
             {agent.latitude && agent.longitude && (
               <div className="text-sm text-gray-600">
-                <strong>Coordinates:</strong> {agent.latitude}, {agent.longitude}
+                <strong>Coordinates:</strong> {agent.latitude},{' '}
+                {agent.longitude}
               </div>
             )}
           </div>

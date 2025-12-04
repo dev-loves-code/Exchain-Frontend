@@ -1,5 +1,5 @@
-import React from "react";
-import SupportRequestDetail from "../../components/SupportRequests/SupportRequestDetail";
+import React from 'react';
+import SupportRequestDetail from '../../components/SupportRequests/SupportRequestDetail';
 
 const SupportRequestDetailPage = () => {
   return (

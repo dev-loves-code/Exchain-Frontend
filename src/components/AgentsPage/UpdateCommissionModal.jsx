@@ -1,19 +1,19 @@
-import { 
-  XMarkIcon, 
-  CheckCircleIcon, 
+import {
+  XMarkIcon,
+  CheckCircleIcon,
   CurrencyDollarIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
 
-export default function UpdateCommissionModal({ 
-  show, 
-  onClose, 
-  newCommissionRate, 
-  onRateChange, 
-  onUpdate, 
-  updatingCommission, 
+export default function UpdateCommissionModal({
+  show,
+  onClose,
+  newCommissionRate,
+  onRateChange,
+  onUpdate,
+  updatingCommission,
   commissionMessage,
-  agentCount 
+  agentCount,
 }) {
   if (!show) return null;
 
@@ -21,7 +21,9 @@ export default function UpdateCommissionModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-xl font-bold text-gray-800">Update All Commissions</h3>
+          <h3 className="text-xl font-bold text-gray-800">
+            Update All Commissions
+          </h3>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-50 rounded-lg transition-colors"
@@ -29,13 +31,15 @@ export default function UpdateCommissionModal({
             <XMarkIcon className="h-5 w-5 text-gray-500" />
           </button>
         </div>
-        
+
         {commissionMessage ? (
           <div className="text-center py-6">
             <div className="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircleIcon className="h-7 w-7 text-green-600" />
             </div>
-            <h4 className="text-lg font-semibold text-gray-800 mb-2">Success!</h4>
+            <h4 className="text-lg font-semibold text-gray-800 mb-2">
+              Success!
+            </h4>
             <p className="text-gray-600">{commissionMessage}</p>
           </div>
         ) : (
@@ -61,7 +65,7 @@ export default function UpdateCommissionModal({
                 This will update commission for all {agentCount} agents
               </p>
             </div>
-            
+
             <div className="flex justify-end gap-3">
               <button
                 onClick={onClose}

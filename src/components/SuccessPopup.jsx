@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import React, { useEffect } from 'react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function SuccessPopup({ message, onComplete }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 4000); 
+    }, 4000);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -18,7 +18,9 @@ export default function SuccessPopup({ message, onComplete }) {
           loop={false}
           style={{ width: 300, height: 300 }} // increased size
         />
-        <p className="mt-4 font-bold text-lg text-gray-900 text-center">{message}</p>
+        <p className="mt-4 font-bold text-lg text-gray-900 text-center">
+          {message}
+        </p>
       </div>
     </div>
   );

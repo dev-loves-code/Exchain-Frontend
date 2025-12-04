@@ -1,39 +1,39 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import Loading from "../../../components/Loading";
-import AgentTransactionReceipt from "../../../components/wallet-to-person/AgentTransactionReceipt";
-import SuccessPopup from "../../../components/SuccessPopup"; // <-- import path
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import Loading from '../../../components/Loading';
+import AgentTransactionReceipt from '../../../components/wallet-to-person/AgentTransactionReceipt';
+import SuccessPopup from '../../../components/SuccessPopup'; // <-- import path
 
 export default function CompleteTransaction() {
   const { state } = useLocation();
 
-  const [txId] = useState(state?.transaction_id || "");
+  const [txId] = useState(state?.transaction_id || '');
   const [summary] = useState(state?.summary || null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
   const onComplete = async () => {
     if (!txId) return;
 
     setLoading(true);
-    setError("");
+    setError('');
     setShowSuccess(false);
 
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        setError("You must be logged in to complete a transaction");
+        setError('You must be logged in to complete a transaction');
         return;
       }
 
       const res = await fetch(
-        "http://127.0.0.1:8000/api/transactions/agent/wallet-to-person/complete",
+        'http://127.0.0.1:8000/api/transactions/agent/wallet-to-person/complete',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ transaction_id: txId }),
@@ -42,13 +42,17 @@ export default function CompleteTransaction() {
 
       const text = await res.text();
       let data;
-      try { data = text ? JSON.parse(text) : {}; } catch { data = {}; }
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        data = {};
+      }
 
       if (!res.ok || data.success === false) {
         if (summary) {
           setResult({ ...summary, alreadyProcessed: true });
         } else {
-          setError(data.message || "Complete failed");
+          setError(data.message || 'Complete failed');
         }
         return;
       }
@@ -60,11 +64,11 @@ export default function CompleteTransaction() {
       // Show success popup
       setShowSuccess(true);
     } catch (e) {
-      console.error("Complete transaction error:", e);
+      console.error('Complete transaction error:', e);
       if (summary) {
         setResult({ ...summary, alreadyProcessed: true });
       } else {
-        setError(e.message || "Complete failed");
+        setError(e.message || 'Complete failed');
       }
     } finally {
       setLoading(false);
@@ -95,7 +99,9 @@ export default function CompleteTransaction() {
         <AgentTransactionReceipt tx={result} />
       ) : (
         <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
-          <h2 className="text-xl font-bold mb-4">Agent - Complete Transaction</h2>
+          <h2 className="text-xl font-bold mb-4">
+            Agent - Complete Transaction
+          </h2>
 
           <input
             value={txId}
@@ -112,7 +118,9 @@ export default function CompleteTransaction() {
           </button>
 
           {error && (
-            <div className="mt-2 p-3 bg-red-100 text-red-700 rounded">{error}</div>
+            <div className="mt-2 p-3 bg-red-100 text-red-700 rounded">
+              {error}
+            </div>
           )}
         </div>
       )}

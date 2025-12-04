@@ -2,7 +2,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import Loading from '../components/Loading.jsx';
 
-
 const LoadingContext = createContext();
 
 export const useLoading = () => useContext(LoadingContext);

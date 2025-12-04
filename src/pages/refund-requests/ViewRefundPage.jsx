@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Sparkles } from "lucide-react";
-import RefundCard from "../../components/refund-requests/RefundCard";
-import Loading from "../../components/Loading";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Sparkles } from 'lucide-react';
+import RefundCard from '../../components/refund-requests/RefundCard';
+import Loading from '../../components/Loading';
 
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
 const ViewRefundPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [refund, setRefund] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   // Fetch refund details
   const fetchRefund = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`${API_BASE_URL}/refund/request-view/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       if (res.ok) setRefund({ ...data, refund_id: id });
-      else setMessage(data.message || "Error fetching refund");
+      else setMessage(data.message || 'Error fetching refund');
     } catch (err) {
-      setMessage("Network error");
+      setMessage('Network error');
     } finally {
       setLoading(false);
     }
@@ -36,21 +36,24 @@ const ViewRefundPage = () => {
 
   // Cancel refund
   const handleCancel = async (refundId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`${API_BASE_URL}/refund/request-cancel/${refundId}`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${API_BASE_URL}/refund/request-cancel/${refundId}`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
       if (res.ok) {
-        setMessage("Refund canceled successfully");
-        setRefund({ ...refund, status: "cancelled" });
+        setMessage('Refund canceled successfully');
+        setRefund({ ...refund, status: 'cancelled' });
       } else {
-        setMessage(data.message || "Error canceling refund");
+        setMessage(data.message || 'Error canceling refund');
       }
     } catch (err) {
-      setMessage("Network error");
+      setMessage('Network error');
     }
   };
 
@@ -65,7 +68,7 @@ const ViewRefundPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-md">
           <p className="text-red-600 font-semibold text-lg">
-            {message || "Refund not found"}
+            {message || 'Refund not found'}
           </p>
           <button
             onClick={handleBack}
@@ -81,7 +84,6 @@ const ViewRefundPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-4xl mx-auto">
-        
         {/* Back Button */}
         <button
           onClick={handleBack}
@@ -109,14 +111,16 @@ const ViewRefundPage = () => {
 
         {/* Refund Card */}
         <RefundCard refund={refund} onCancel={handleCancel} isAdmin={false} />
-        
+
         {/* Success/Error Message */}
         {message && (
-          <div className={`mt-4 p-4 rounded-xl ${
-            message.includes("successfully") 
-              ? "bg-green-50 text-green-700 border border-green-200" 
-              : "bg-red-50 text-red-700 border border-red-200"
-          }`}>
+          <div
+            className={`mt-4 p-4 rounded-xl ${
+              message.includes('successfully')
+                ? 'bg-green-50 text-green-700 border border-green-200'
+                : 'bg-red-50 text-red-700 border border-red-200'
+            }`}
+          >
             <p className="font-medium">{message}</p>
           </div>
         )}

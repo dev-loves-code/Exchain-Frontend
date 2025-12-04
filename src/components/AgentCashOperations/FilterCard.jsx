@@ -1,9 +1,11 @@
-import { 
-  FunnelIcon,
-  CalendarIcon
-} from '@heroicons/react/24/outline';
+import { FunnelIcon, CalendarIcon } from '@heroicons/react/24/outline';
 
-export default function FilterCard({ filters, onFilterChange, onClearFilters, onApplyFilters }) {
+export default function FilterCard({
+  filters,
+  onFilterChange,
+  onClearFilters,
+  onApplyFilters,
+}) {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-gray-200">
       <div className="flex items-center mb-6">
@@ -12,7 +14,7 @@ export default function FilterCard({ filters, onFilterChange, onClearFilters, on
         </div>
         <h2 className="text-xl font-semibold text-gray-800 ml-3">Filters</h2>
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Status Filter */}
         <div>

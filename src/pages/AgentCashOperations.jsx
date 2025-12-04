@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowPathIcon, 
-  CurrencyDollarIcon
-} from '@heroicons/react/24/outline';
+import { ArrowPathIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import api from '../utils/api';
 
 // Import components
@@ -19,18 +16,18 @@ const AgentCashOperations = () => {
     operation_type: '',
     user_id: '',
     start_date: '',
-    end_date: ''
+    end_date: '',
   });
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
     per_page: 10,
-    last_page: 1
+    last_page: 1,
   });
   const [stats, setStats] = useState({
     total_commission_usd: 0,
     total_deposits_usd: 0,
-    total_withdrawals_usd: 0
+    total_withdrawals_usd: 0,
   });
 
   const navigate = useNavigate();
@@ -41,11 +38,11 @@ const AgentCashOperations = () => {
       const params = new URLSearchParams({
         ...filters,
         page,
-        per_page: pagination.per_page
+        per_page: pagination.per_page,
       });
-      
+
       const response = await api.get(`/agent/cash-operations?${params}`);
-      
+
       if (response.data.success) {
         setOperations(response.data.data);
         setPagination(response.data.meta);
@@ -63,7 +60,7 @@ const AgentCashOperations = () => {
   }, [filters]);
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleClearFilters = () => {
@@ -72,7 +69,7 @@ const AgentCashOperations = () => {
       operation_type: '',
       user_id: '',
       start_date: '',
-      end_date: ''
+      end_date: '',
     });
   };
 
@@ -81,7 +78,11 @@ const AgentCashOperations = () => {
   };
 
   const handleCancel = async (id) => {
-    if (window.confirm('Are you sure you want to cancel this operation? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        'Are you sure you want to cancel this operation? This action cannot be undone.'
+      )
+    ) {
       try {
         const response = await api.post(`/agent/cash-operations/${id}/cancel`);
         if (response.data.success) {
@@ -108,7 +109,7 @@ const AgentCashOperations = () => {
 
   const handlePerPageChange = (e) => {
     const newPerPage = parseInt(e.target.value);
-    setPagination(prev => ({ ...prev, per_page: newPerPage }));
+    setPagination((prev) => ({ ...prev, per_page: newPerPage }));
     fetchOperations(1);
   };
 
@@ -149,7 +150,7 @@ const AgentCashOperations = () => {
         <StatsCards stats={stats} />
 
         {/* Filters */}
-        <FilterCard 
+        <FilterCard
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
@@ -161,7 +162,9 @@ const AgentCashOperations = () => {
           <div className="px-6 py-6 border-b border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-gray-800">Customer Operations</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Customer Operations
+                </h2>
                 <p className="text-gray-600 mt-1">
                   Showing {operations.length} of {pagination.total} operations
                 </p>

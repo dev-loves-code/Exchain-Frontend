@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { Sparkles } from "lucide-react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { Sparkles } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 export default function SupportRequestForm({ onSuccess }) {
   const { user } = useAuth();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
-  const [formData, setFormData] = useState({ subject: "", description: "" });
+  const [formData, setFormData] = useState({ subject: '', description: '' });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null); // null | "success" | "error" | "loading"
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,8 +19,8 @@ export default function SupportRequestForm({ onSuccess }) {
 
   const validateForm = () => {
     if (!formData.subject.trim() || !formData.description.trim()) {
-      setMessage("Please fill in all required fields");
-      setStatus("error");
+      setMessage('Please fill in all required fields');
+      setStatus('error');
       return false;
     }
     return true;
@@ -31,15 +31,15 @@ export default function SupportRequestForm({ onSuccess }) {
     if (!validateForm()) return;
 
     setLoading(true);
-    setStatus("loading");
-    setMessage("");
+    setStatus('loading');
+    setMessage('');
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/support/request", {
-        method: "POST",
+      const res = await fetch('http://127.0.0.1:8000/api/support/request', {
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
@@ -47,30 +47,30 @@ export default function SupportRequestForm({ onSuccess }) {
       const data = await res.json();
 
       if (!res.ok) {
-        setStatus("error");
-        setMessage(data.message || "Failed to send request");
+        setStatus('error');
+        setMessage(data.message || 'Failed to send request');
         setLoading(false);
         return;
       }
 
-      setStatus("success");
-      setMessage(data.message || "Request sent successfully!");
-      setFormData({ subject: "", description: "" });
+      setStatus('success');
+      setMessage(data.message || 'Request sent successfully!');
+      setFormData({ subject: '', description: '' });
       setLoading(false);
 
       // Call onSuccess callback
       onSuccess && onSuccess(data);
     } catch (err) {
-      setStatus("error");
-      setMessage("Network error — please try again.");
+      setStatus('error');
+      setMessage('Network error — please try again.');
       setLoading(false);
     }
   };
 
   // Auto-close overlay after 3 seconds for success/error
   useEffect(() => {
-    if (status === "success" || status === "error") {
-      const timer = setTimeout(() => setStatus(null), 3000); 
+    if (status === 'success' || status === 'error') {
+      const timer = setTimeout(() => setStatus(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [status]);
@@ -81,7 +81,9 @@ export default function SupportRequestForm({ onSuccess }) {
         <div className="w-40 h-40 mx-auto mb-4">
           <DotLottieReact src={lottie} loop={loop} autoplay />
         </div>
-        {title && <h3 className="text-2xl font-bold text-gray-800 mb-2">{title}</h3>}
+        {title && (
+          <h3 className="text-2xl font-bold text-gray-800 mb-2">{title}</h3>
+        )}
         <p className="text-gray-600">{message}</p>
       </div>
     </div>
@@ -94,7 +96,9 @@ export default function SupportRequestForm({ onSuccess }) {
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="w-6 h-6 text-blue-600" />
-            <span className="text-blue-600 font-semibold text-lg">Contact Support</span>
+            <span className="text-blue-600 font-semibold text-lg">
+              Contact Support
+            </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black text-gray-900">
             Our support team is ready to assist you
@@ -105,7 +109,9 @@ export default function SupportRequestForm({ onSuccess }) {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid md:grid-cols-1 gap-6">
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Subject *</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Subject *
+              </label>
               <input
                 type="text"
                 name="subject"
@@ -118,7 +124,9 @@ export default function SupportRequestForm({ onSuccess }) {
             </div>
 
             <div>
-              <label className="block text-gray-900 font-medium mb-2">Description *</label>
+              <label className="block text-gray-900 font-medium mb-2">
+                Description *
+              </label>
               <textarea
                 name="description"
                 value={formData.description}
@@ -136,13 +144,13 @@ export default function SupportRequestForm({ onSuccess }) {
             disabled={loading}
             className="w-full py-5 bg-teal-800 hover:bg-teal-900 text-white font-semibold text-lg rounded-xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Submitting..." : "Submit Request"}
+            {loading ? 'Submitting...' : 'Submit Request'}
           </button>
         </form>
       </div>
 
       {/* Overlays */}
-      {status === "loading" && (
+      {status === 'loading' && (
         <StatusOverlay
           title="Submitting..."
           message="Please wait while we send your request"
@@ -150,7 +158,7 @@ export default function SupportRequestForm({ onSuccess }) {
           loop={true}
         />
       )}
-      {status === "success" && (
+      {status === 'success' && (
         <StatusOverlay
           title="Success!"
           message={message}
@@ -158,7 +166,7 @@ export default function SupportRequestForm({ onSuccess }) {
           loop={true}
         />
       )}
-      {status === "error" && (
+      {status === 'error' && (
         <StatusOverlay
           title="Error"
           message={message}

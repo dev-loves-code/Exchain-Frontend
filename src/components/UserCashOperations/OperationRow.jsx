@@ -1,17 +1,16 @@
-import { 
+import {
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,
   WalletIcon,
   CheckCircleIcon,
-  XCircleIcon
+  XCircleIcon,
 } from '@heroicons/react/24/outline';
-import { getStatusColor, getOperationTypeColor } from '../../utils/statusColors';
+import {
+  getStatusColor,
+  getOperationTypeColor,
+} from '../../utils/statusColors';
 
-export default function OperationRow({ 
-  operation, 
-  onApprove, 
-  onReject 
-}) {
+export default function OperationRow({ operation, onApprove, onReject }) {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
@@ -19,18 +18,22 @@ export default function OperationRow({
   const formatCurrency = (amount, currency) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency || 'USD'
+      currency: currency || 'USD',
     }).format(amount);
   };
 
   const StatusBadge = ({ status }) => (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}
+    >
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 
   const OperationTypeBadge = ({ type }) => (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getOperationTypeColor(type)}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${getOperationTypeColor(type)}`}
+    >
       {type.charAt(0).toUpperCase() + type.slice(1)}
     </span>
   );
@@ -55,7 +58,10 @@ export default function OperationRow({
       </td>
       <td className="py-4 px-6">
         <div className="font-semibold text-gray-900">
-          {formatCurrency(operation.wallet_amount, operation.wallet?.currency_code)}
+          {formatCurrency(
+            operation.wallet_amount,
+            operation.wallet?.currency_code
+          )}
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           <WalletIcon className="h-4 w-4 mr-1" />
@@ -66,7 +72,9 @@ export default function OperationRow({
         <StatusBadge status={operation.status} />
       </td>
       <td className="py-4 px-6">
-        <div className="text-sm text-gray-900">{formatDate(operation.created_at)}</div>
+        <div className="text-sm text-gray-900">
+          {formatDate(operation.created_at)}
+        </div>
       </td>
       <td className="py-4 px-6">
         {operation.status === 'pending' ? (

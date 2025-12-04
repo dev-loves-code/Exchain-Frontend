@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { 
-  MagnifyingGlassIcon, 
+import {
+  MagnifyingGlassIcon,
   ArrowPathIcon,
-  CogIcon
+  CogIcon,
 } from '@heroicons/react/24/outline';
 
 // Import components
-import AgentsMap from "../components/AgentsMap";
-import FilterCard from "../components/AgentsPage/FilterCard";
-import AgentCard from "../components/AgentsPage/AgentCard";
-import StatsCards from "../components/AgentsPage/StatsCards";
-import UpdateCommissionModal from "../components/AgentsPage/UpdateCommissionModal";
+import AgentsMap from '../components/AgentsMap';
+import FilterCard from '../components/AgentsPage/FilterCard';
+import AgentCard from '../components/AgentsPage/AgentCard';
+import StatsCards from '../components/AgentsPage/StatsCards';
+import UpdateCommissionModal from '../components/AgentsPage/UpdateCommissionModal';
 
 export default function AgentsPage() {
   const { user } = useAuth();
@@ -22,23 +22,23 @@ export default function AgentsPage() {
   const [updatingStatus, setUpdatingStatus] = useState(null);
   const [updatingCommission, setUpdatingCommission] = useState(false);
   const [showCommissionModal, setShowCommissionModal] = useState(false);
-  const [newCommissionRate, setNewCommissionRate] = useState("");
-  const [commissionMessage, setCommissionMessage] = useState("");
-  
+  const [newCommissionRate, setNewCommissionRate] = useState('');
+  const [commissionMessage, setCommissionMessage] = useState('');
+
   const isAdmin = user?.role === 'admin';
-  
+
   const [filters, setFilters] = useState({
     city: '',
     name: '',
-    status: ''
+    status: '',
   });
 
   const fetchAgents = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) return;
 
     setLoading(true);
-    
+
     const params = new URLSearchParams();
     if (filters.city) params.append('city', filters.city);
     if (filters.name) params.append('name', filters.name);
@@ -46,7 +46,7 @@ export default function AgentsPage() {
 
     fetch(`http://127.0.0.1:8000/api/agents?${params.toString()}`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
@@ -71,7 +71,7 @@ export default function AgentsPage() {
   }, [filters, isAdmin]);
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const clearFilters = () => {
@@ -84,28 +84,29 @@ export default function AgentsPage() {
 
   const handleUpdateStatus = async (agentId, status) => {
     if (!isAdmin) return;
-    
+
     setUpdatingStatus(agentId);
-    const token = localStorage.getItem("token");
-    
+    const token = localStorage.getItem('token');
+
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/admin/agents/${agentId}/status`, {
-        method: 'PATCH',
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/admin/agents/${agentId}/status`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        setAgents(prevAgents => 
-          prevAgents.map(agent => 
-            agent.agent_id === agentId 
-              ? { ...agent, status: status }
-              : agent
+        setAgents((prevAgents) =>
+          prevAgents.map((agent) =>
+            agent.agent_id === agentId ? { ...agent, status: status } : agent
           )
         );
         alert(`Agent ${status} successfully!`);
@@ -122,24 +123,34 @@ export default function AgentsPage() {
 
   const handleUpdateAllCommissions = async () => {
     if (!isAdmin) return;
-    
-    if (!newCommissionRate || isNaN(newCommissionRate) || newCommissionRate < 1 || newCommissionRate > 100) {
-      alert("Please enter a valid commission rate between 1% and 100%");
+
+    if (
+      !newCommissionRate ||
+      isNaN(newCommissionRate) ||
+      newCommissionRate < 1 ||
+      newCommissionRate > 100
+    ) {
+      alert('Please enter a valid commission rate between 1% and 100%');
       return;
     }
 
     setUpdatingCommission(true);
-    const token = localStorage.getItem("token");
-    
+    const token = localStorage.getItem('token');
+
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/admin/agents/commission/update-all', {
-        method: 'PATCH',
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ commission_rate: parseFloat(newCommissionRate) }),
-      });
+      const response = await fetch(
+        'http://127.0.0.1:8000/api/admin/agents/commission/update-all',
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            commission_rate: parseFloat(newCommissionRate),
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -148,11 +159,13 @@ export default function AgentsPage() {
         fetchAgents();
         setTimeout(() => {
           setShowCommissionModal(false);
-          setCommissionMessage("");
-          setNewCommissionRate("");
+          setCommissionMessage('');
+          setNewCommissionRate('');
         }, 2000);
       } else {
-        alert(`Failed to update commissions: ${data.message || 'Unknown error'}`);
+        alert(
+          `Failed to update commissions: ${data.message || 'Unknown error'}`
+        );
       }
     } catch (error) {
       console.error('Error updating commissions:', error);
@@ -173,7 +186,8 @@ export default function AgentsPage() {
                 Find Agents
               </h1>
               <p className="text-gray-600">
-                Discover agents near you • {agents.length} agent{agents.length !== 1 ? 's' : ''} found
+                Discover agents near you • {agents.length} agent
+                {agents.length !== 1 ? 's' : ''} found
                 {isAdmin && (
                   <span className="ml-3 px-3 py-1 bg-gray-800 text-white rounded-full text-sm font-medium">
                     Admin View
@@ -202,13 +216,11 @@ export default function AgentsPage() {
           </div>
 
           {/* Stats Cards */}
-          {isAdmin && agents.length > 0 && (
-            <StatsCards agents={agents} />
-          )}
+          {isAdmin && agents.length > 0 && <StatsCards agents={agents} />}
         </div>
 
         {/* Update Commissions Modal */}
-        <UpdateCommissionModal 
+        <UpdateCommissionModal
           show={showCommissionModal}
           onClose={() => setShowCommissionModal(false)}
           newCommissionRate={newCommissionRate}
@@ -220,7 +232,7 @@ export default function AgentsPage() {
         />
 
         {/* Filters Card */}
-        <FilterCard 
+        <FilterCard
           filters={filters}
           isAdmin={isAdmin}
           onFilterChange={handleFilterChange}
@@ -234,9 +246,12 @@ export default function AgentsPage() {
             <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-800">Agents List</h2>
+                  <h2 className="text-xl font-semibold text-gray-800">
+                    Agents List
+                  </h2>
                   <p className="text-gray-600 mt-1">
-                    Showing {agents.length} agent{agents.length !== 1 ? 's' : ''}
+                    Showing {agents.length} agent
+                    {agents.length !== 1 ? 's' : ''}
                   </p>
                 </div>
               </div>
@@ -253,8 +268,12 @@ export default function AgentsPage() {
                     <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <MagnifyingGlassIcon className="h-6 w-6 text-gray-500" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2">No agents found</h3>
-                    <p className="text-gray-500 mb-6">Try adjusting your filters or check back later</p>
+                    <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                      No agents found
+                    </h3>
+                    <p className="text-gray-500 mb-6">
+                      Try adjusting your filters or check back later
+                    </p>
                     <button
                       onClick={clearFilters}
                       className="inline-flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-lg font-medium transition-all duration-200"
@@ -281,13 +300,15 @@ export default function AgentsPage() {
           {/* Map Section */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-200 sticky top-8">
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">Map View</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                Map View
+              </h2>
+
               {/* Map Container */}
               <div className="bg-gray-50 rounded-xl border border-gray-300 overflow-hidden h-[500px] mb-6">
                 <AgentsMap agents={agents} />
               </div>
-              
+
               {/* Quick Stats */}
               <div className="pt-4 border-t border-gray-200">
                 <h3 className="font-medium text-gray-700 mb-3">Quick Stats</h3>
@@ -296,13 +317,17 @@ export default function AgentsPage() {
                     <div className="text-xl font-bold text-gray-900 mb-1">
                       {agents.length}
                     </div>
-                    <div className="text-xs text-gray-600 font-medium">Total Agents</div>
+                    <div className="text-xs text-gray-600 font-medium">
+                      Total Agents
+                    </div>
                   </div>
                   <div className="bg-gray-50 p-3 rounded-xl">
                     <div className="text-xl font-bold text-gray-900 mb-1">
-                      {[...new Set(agents.map(a => a.city))].length}
+                      {[...new Set(agents.map((a) => a.city))].length}
                     </div>
-                    <div className="text-xs text-gray-600 font-medium">Cities Covered</div>
+                    <div className="text-xs text-gray-600 font-medium">
+                      Cities Covered
+                    </div>
                   </div>
                 </div>
               </div>

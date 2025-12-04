@@ -1,16 +1,16 @@
-import { 
-  MagnifyingGlassIcon, 
-  MapPinIcon, 
-  UserIcon, 
+import {
+  MagnifyingGlassIcon,
+  MapPinIcon,
+  UserIcon,
   FunnelIcon,
-  XMarkIcon
+  XMarkIcon,
 } from '@heroicons/react/24/outline';
 
-export default function FilterCard({ 
-  filters, 
-  isAdmin, 
-  onFilterChange, 
-  onClearFilters 
+export default function FilterCard({
+  filters,
+  isAdmin,
+  onFilterChange,
+  onClearFilters,
 }) {
   return (
     <div className="bg-white rounded-2xl shadow-sm p-6 mb-8 border border-gray-200">
@@ -29,8 +29,10 @@ export default function FilterCard({
           </button>
         )}
       </div>
-      
-      <div className={`grid grid-cols-1 ${isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
+
+      <div
+        className={`grid grid-cols-1 ${isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-6`}
+      >
         {/* Name Filter */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">

@@ -1,12 +1,12 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Headphones } from "lucide-react";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Headphones } from 'lucide-react';
 
 const SupportCard = ({ subject, description }) => {
   const navigate = useNavigate();
 
   const handleChatClick = () => {
-    navigate("/support-request"); // navigate to support form page
+    navigate('/support-request'); // navigate to support form page
   };
 
   return (
@@ -19,12 +19,13 @@ const SupportCard = ({ subject, description }) => {
 
         {/* Subject */}
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-          {subject || "Need Help?"}
+          {subject || 'Need Help?'}
         </h2>
 
         {/* Description */}
         <p className="text-gray-700 mb-8">
-          {description || "Need help with your account? Our experts are ready to assist you!"}
+          {description ||
+            'Need help with your account? Our experts are ready to assist you!'}
         </p>
 
         {/* Button */}

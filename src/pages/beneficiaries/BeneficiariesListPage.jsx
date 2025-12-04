@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import BeneficiaryCard from "../../components/beneficiaries/BeneficiaryCard";
-import Loading from "../../components/Loading.jsx";
-import { useNavigate } from "react-router-dom";
-import { Plus, Users } from "lucide-react";
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import BeneficiaryCard from '../../components/beneficiaries/BeneficiaryCard';
+import Loading from '../../components/Loading.jsx';
+import { useNavigate } from 'react-router-dom';
+import { Plus, Users } from 'lucide-react';
 
 export default function BeneficiariesListPage() {
   const { user, loading } = useAuth();
   const [beneficiaries, setBeneficiaries] = useState(null); // start as null
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
 
@@ -18,21 +18,21 @@ export default function BeneficiariesListPage() {
 
   const fetchBeneficiaries = async () => {
     try {
-      setError("");
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://127.0.0.1:8000/api/beneficiaries", {
+      setError('');
+      const token = localStorage.getItem('token');
+      const res = await fetch('http://127.0.0.1:8000/api/beneficiaries', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
       if (data.success) setBeneficiaries(data.beneficiaries);
-      else setError("Failed to fetch beneficiaries");
+      else setError('Failed to fetch beneficiaries');
     } catch (err) {
-      setError(err.message || "Network error");
+      setError(err.message || 'Network error');
     }
   };
 
   const handleCreateClick = () => {
-    navigate("/beneficiaries/add");
+    navigate('/beneficiaries/add');
   };
 
   if (loading || beneficiaries === null)
@@ -42,7 +42,9 @@ export default function BeneficiariesListPage() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="text-center bg-white rounded-2xl shadow-lg p-8">
-          <p className="text-gray-600 text-lg">Please login to view beneficiaries.</p>
+          <p className="text-gray-600 text-lg">
+            Please login to view beneficiaries.
+          </p>
         </div>
       </div>
     );
@@ -55,7 +57,9 @@ export default function BeneficiariesListPage() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-6 h-6 text-blue-600" />
-              <span className="text-blue-600 font-semibold">Manage Beneficiaries</span>
+              <span className="text-blue-600 font-semibold">
+                Manage Beneficiaries
+              </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-gray-900">
               Your Beneficiaries
@@ -83,7 +87,9 @@ export default function BeneficiariesListPage() {
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
               <Users className="w-10 h-10 text-gray-400" />
             </div>
-            <p className="text-xl font-bold text-gray-900 mb-2">No beneficiaries yet</p>
+            <p className="text-xl font-bold text-gray-900 mb-2">
+              No beneficiaries yet
+            </p>
             <p className="text-gray-500 text-center">
               Click "Create Beneficiary" to add your first one.
             </p>
@@ -97,7 +103,9 @@ export default function BeneficiariesListPage() {
                 beneficiary={b}
                 isSelected={selectedId === b.beneficiary_id}
                 onSelect={() =>
-                  setSelectedId(selectedId === b.beneficiary_id ? null : b.beneficiary_id)
+                  setSelectedId(
+                    selectedId === b.beneficiary_id ? null : b.beneficiary_id
+                  )
                 }
               />
             ))}

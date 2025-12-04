@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowPathIcon,
-  ClockIcon
-} from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ClockIcon } from '@heroicons/react/24/outline';
 import api from '../utils/api';
 
 // Import components
@@ -17,13 +14,13 @@ const UserCashOperations = () => {
     status: '',
     operation_type: '',
     start_date: '',
-    end_date: ''
+    end_date: '',
   });
   const [pagination, setPagination] = useState({
     current_page: 1,
     total: 0,
     per_page: 10,
-    last_page: 1
+    last_page: 1,
   });
 
   const navigate = useNavigate();
@@ -34,11 +31,11 @@ const UserCashOperations = () => {
       const params = new URLSearchParams({
         ...filters,
         page,
-        per_page: pagination.per_page
+        per_page: pagination.per_page,
       });
-      
+
       const response = await api.get(`/user/cash-operations?${params}`);
-      
+
       if (response.data.success) {
         setOperations(response.data.data);
         setPagination(response.data.meta);
@@ -55,7 +52,7 @@ const UserCashOperations = () => {
   }, [filters]);
 
   const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleClearFilters = () => {
@@ -63,7 +60,7 @@ const UserCashOperations = () => {
       status: '',
       operation_type: '',
       start_date: '',
-      end_date: ''
+      end_date: '',
     });
   };
 
@@ -101,7 +98,7 @@ const UserCashOperations = () => {
 
   const handlePerPageChange = (e) => {
     const newPerPage = parseInt(e.target.value);
-    setPagination(prev => ({ ...prev, per_page: newPerPage }));
+    setPagination((prev) => ({ ...prev, per_page: newPerPage }));
     fetchOperations(1);
   };
 
@@ -131,7 +128,7 @@ const UserCashOperations = () => {
         </div>
 
         {/* Filters */}
-        <FilterCard 
+        <FilterCard
           filters={filters}
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
@@ -142,7 +139,9 @@ const UserCashOperations = () => {
           <div className="px-6 py-6 border-b border-gray-200">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-xl font-semibold text-gray-800">Operations</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Operations
+                </h2>
                 <p className="text-gray-600 mt-1">
                   Showing {operations.length} of {pagination.total} operations
                 </p>

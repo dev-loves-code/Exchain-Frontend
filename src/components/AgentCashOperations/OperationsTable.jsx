@@ -2,14 +2,14 @@ import { ChartBarIcon } from '@heroicons/react/24/outline';
 import OperationRow from './OperationRow';
 import Pagination from '../shared/Pagination';
 
-export default function OperationsTable({ 
-  operations, 
-  loading, 
-  pagination, 
-  onPageChange, 
-  onViewUser, 
+export default function OperationsTable({
+  operations,
+  loading,
+  pagination,
+  onPageChange,
+  onViewUser,
   onCancel,
-  onPerPageChange 
+  onPerPageChange,
 }) {
   if (loading) {
     return (
@@ -24,8 +24,12 @@ export default function OperationsTable({
     return (
       <div className="py-16 text-center">
         <ChartBarIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">No operations found</h3>
-        <p className="text-gray-500">Try adjusting your filters or create a new operation</p>
+        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+          No operations found
+        </h3>
+        <p className="text-gray-500">
+          Try adjusting your filters or create a new operation
+        </p>
       </div>
     );
   }
@@ -36,13 +40,27 @@ export default function OperationsTable({
         <table className="w-full">
           <thead>
             <tr className="bg-gray-50">
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Type</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Customer</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Amount</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Commission</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Date</th>
-              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Type
+              </th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Customer
+              </th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Amount
+              </th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Commission
+              </th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Date
+              </th>
+              <th className="py-3 px-6 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">

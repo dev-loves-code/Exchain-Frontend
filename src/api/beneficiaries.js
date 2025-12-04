@@ -1,11 +1,13 @@
-const API_BASE_URL = "http://127.0.0.1:8000/api/beneficiaries";
+const API_BASE_URL = 'http://127.0.0.1:8000/api/beneficiaries';
 
-const getToken = () => localStorage.getItem("token");
+const getToken = () => localStorage.getItem('token');
 
 export const beneficiariesAPI = {
-  async list(search = "") {
+  async list(search = '') {
     try {
-      const url = search ? `${API_BASE_URL}?search=${encodeURIComponent(search)}` : API_BASE_URL;
+      const url = search
+        ? `${API_BASE_URL}?search=${encodeURIComponent(search)}`
+        : API_BASE_URL;
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
@@ -29,10 +31,10 @@ export const beneficiariesAPI = {
   async create(data) {
     try {
       const res = await fetch(`${API_BASE_URL}/create`, {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${getToken()}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
@@ -45,10 +47,10 @@ export const beneficiariesAPI = {
   async update(id, data) {
     try {
       const res = await fetch(`${API_BASE_URL}/update/${id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${getToken()}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
@@ -61,7 +63,7 @@ export const beneficiariesAPI = {
   async remove(id) {
     try {
       const res = await fetch(`${API_BASE_URL}/destroy/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       return await res.json();

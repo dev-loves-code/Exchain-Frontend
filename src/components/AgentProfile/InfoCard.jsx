@@ -7,9 +7,7 @@ const InfoCard = ({ icon: Icon, title, value, subtext = null }) => {
       <div className="flex-1">
         <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
         <p className="text-gray-900 font-medium">{value || 'Not provided'}</p>
-        {subtext && (
-          <p className="text-sm text-gray-600 mt-1">{subtext}</p>
-        )}
+        {subtext && <p className="text-sm text-gray-600 mt-1">{subtext}</p>}
       </div>
     </div>
   );

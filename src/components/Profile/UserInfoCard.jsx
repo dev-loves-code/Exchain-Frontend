@@ -9,7 +9,9 @@ export default function UserInfoCard({ user }) {
             <User className="w-6 h-6 text-teal-600" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{user.full_name}</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {user.full_name}
+            </h3>
             <div className="mt-2 space-y-3">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-gray-400" />

@@ -8,7 +8,9 @@ export default function CommissionRateCard({ agentCommission }) {
       <div className="flex justify-between items-center">
         <div>
           <p className="text-gray-600">Your Commission Rate</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{agentCommission}%</p>
+          <p className="text-3xl font-bold text-gray-900 mt-2">
+            {agentCommission}%
+          </p>
         </div>
         <div className="p-3 bg-white rounded-lg">
           <CurrencyDollarIcon className="h-8 w-8 text-teal-600" />

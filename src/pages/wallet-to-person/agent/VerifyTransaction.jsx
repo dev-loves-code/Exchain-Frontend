@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Loading from "../../../components/Loading";
-import ValidationErrors from "../../../components/ValidationErrors"; // <-- import path
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../../../components/Loading';
+import ValidationErrors from '../../../components/ValidationErrors'; // <-- import path
 
 export default function VerifyTransaction() {
   const navigate = useNavigate();
 
-  const [ref, setRef] = useState("");
+  const [ref, setRef] = useState('');
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
@@ -17,10 +17,10 @@ export default function VerifyTransaction() {
     setLoading(true);
     setErrors([]); // reset errors before each request
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
-      setErrors(["You must be logged in to verify a transaction"]);
+      setErrors(['You must be logged in to verify a transaction']);
       return;
     }
 
@@ -28,9 +28,9 @@ export default function VerifyTransaction() {
       const res = await fetch(
         `http://127.0.0.1:8000/api/transactions/agent/wallet-to-person/verify`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ reference_code: referenceCode }),
@@ -41,14 +41,16 @@ export default function VerifyTransaction() {
       const data = text ? JSON.parse(text) : {};
 
       if (!res.ok || !data.success) {
-    const errorMsg = data.errors || data.message || "Verification failed";
-    throw new Error(Array.isArray(errorMsg) ? errorMsg.join(", ") : errorMsg);
+        const errorMsg = data.errors || data.message || 'Verification failed';
+        throw new Error(
+          Array.isArray(errorMsg) ? errorMsg.join(', ') : errorMsg
+        );
       }
 
       setResult(data.data || data);
     } catch (err) {
-      console.error("Transaction verification error:", err);
-      setErrors([err.message || "Could not verify transaction"]);
+      console.error('Transaction verification error:', err);
+      setErrors([err.message || 'Could not verify transaction']);
     } finally {
       setLoading(false);
     }
@@ -115,8 +117,11 @@ export default function VerifyTransaction() {
             <div className="mt-4">
               <button
                 onClick={() =>
-                  navigate("/agent/complete", {
-                    state: { transaction_id: result.transaction_id, summary: result },
+                  navigate('/agent/complete', {
+                    state: {
+                      transaction_id: result.transaction_id,
+                      summary: result,
+                    },
                   })
                 }
                 className="px-4 py-3 bg-teal-800 text-white rounded-xl w-full"

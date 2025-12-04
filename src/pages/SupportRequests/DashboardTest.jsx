@@ -1,5 +1,5 @@
-import React from "react";
-import SupportCard from "../../components/SupportRequests/SupportCard";
+import React from 'react';
+import SupportCard from '../../components/SupportRequests/SupportCard';
 
 const DashboardTest = () => {
   return (
@@ -17,7 +17,6 @@ const DashboardTest = () => {
           subject="Another Feature"
           description="You can add any other card here, and it will sit side-by-side."
         />
-        
       </div>
 
       {/* Other dashboard content can go here */}

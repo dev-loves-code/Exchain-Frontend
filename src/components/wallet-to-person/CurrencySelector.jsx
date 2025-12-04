@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export default function CurrencySelector({ value, onChange }) {
-  const currencies = ["USD", "EUR", "LBP"];
+  const currencies = ['USD', 'EUR', 'LBP'];
   const [selected, setSelected] = useState(value || currencies[0]);
 
   const handleChange = (e) => {

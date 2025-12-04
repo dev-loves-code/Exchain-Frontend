@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import "leaflet-routing-machine";
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
-import iconUrl from "leaflet/dist/images/marker-icon.png";
-import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+import { useEffect, useState } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-routing-machine';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
@@ -14,7 +21,7 @@ L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
 // Function to create custom icons based on agent status - USING YOUR LEGEND COLORS
 const createStatusIcon = (status) => {
   let color, borderColor;
-  
+
   switch (status) {
     case 'rejected':
       color = '#ef4444'; // Red
@@ -35,7 +42,9 @@ const createStatusIcon = (status) => {
   }
 
   return new L.Icon({
-    iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    iconUrl:
+      'data:image/svg+xml;base64,' +
+      btoa(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
         <path fill="${color}" stroke="${borderColor}" stroke-width="2" d="M12 0C7.03 0 3 4.03 3 9c0 7.5 9 18 9 18s9-10.5 9-18c0-4.97-4.03-9-9-9z"/>
         <circle cx="12" cy="9" r="4" fill="#fff"/>
@@ -52,7 +61,9 @@ const createStatusIcon = (status) => {
 
 // Custom BLUE icon for user location (as per your legend)
 const userIcon = new L.Icon({
-  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+  iconUrl:
+    'data:image/svg+xml;base64,' +
+    btoa(`
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="24" height="36">
       <path fill="#3b82f6" stroke="#fff" stroke-width="2" d="M12 0C7.03 0 3 4.03 3 9c0 7.5 9 18 9 18s9-10.5 9-18c0-4.97-4.03-9-9-9z"/>
       <circle cx="12" cy="9" r="4" fill="#fff"/>
@@ -80,7 +91,7 @@ function RoutingControl({ start, end, showDirections }) {
 
     const control = L.Routing.control({
       waypoints: [L.latLng(start[0], start[1]), L.latLng(end[0], end[1])],
-      lineOptions: { styles: [{ color: "#6366f1", opacity: 0.8, weight: 5 }] },
+      lineOptions: { styles: [{ color: '#6366f1', opacity: 0.8, weight: 5 }] },
       addWaypoints: false,
       draggableWaypoints: false,
       fitSelectedRoutes: true,
@@ -128,10 +139,14 @@ export default function AgentsMap({ agents }) {
   // Helper function to get status badge color
   const getStatusBadgeColor = (status) => {
     switch (status) {
-      case 'accepted': return 'bg-green-100 text-green-800 border-green-200';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'accepted':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'rejected':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -140,16 +155,22 @@ export default function AgentsMap({ agents }) {
       <MapContainer
         center={[33.9, 35.5]}
         zoom={8}
-        style={{ height: "500px", width: "100%", borderRadius: "12px" }}
+        style={{ height: '500px', width: '100%', borderRadius: '12px' }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        
+
         <MapClickHandler onMapClick={clearRoute} />
 
         {currentPosition && (
           <Marker position={currentPosition} icon={userIcon}>
             <Popup>
-              <div style={{ textAlign: 'center', fontWeight: '600', color: '#3b82f6' }}>
+              <div
+                style={{
+                  textAlign: 'center',
+                  fontWeight: '600',
+                  color: '#3b82f6',
+                }}
+              >
                 📍 You are here
               </div>
             </Popup>
@@ -161,54 +182,83 @@ export default function AgentsMap({ agents }) {
           // If agent.status doesn't exist, default to 'pending'
           const status = agent.status || 'pending';
           const agentIcon = createStatusIcon(status);
-          
+
           return (
-            <Marker key={agent.agent_id} position={[agent.latitude, agent.longitude]} icon={agentIcon}>
+            <Marker
+              key={agent.agent_id}
+              position={[agent.latitude, agent.longitude]}
+              icon={agentIcon}
+            >
               <Popup>
                 <div style={{ minWidth: '200px' }}>
-                  <div style={{ 
-                    fontSize: '16px', 
-                    fontWeight: '600', 
-                    marginBottom: '8px',
-                    color: '#1f2937'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      marginBottom: '8px',
+                      color: '#1f2937',
+                    }}
+                  >
                     {agent.business_name || agent.name || agent.full_name}
                   </div>
-                  
+
                   {/* Status Badge */}
-                  <div style={{ 
-                    display: 'inline-block',
-                    padding: '4px 8px',
-                    borderRadius: '12px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    marginBottom: '8px',
-                    ...(status === 'accepted' ? { backgroundColor: '#d1fae5', color: '#065f46' } :
-                        status === 'pending' ? { backgroundColor: '#fef3c7', color: '#92400e' } :
-                        status === 'rejected' ? { backgroundColor: '#fee2e2', color: '#991b1b' } :
-                        { backgroundColor: '#f3f4f6', color: '#374151' })
-                  }}>
+                  <div
+                    style={{
+                      display: 'inline-block',
+                      padding: '4px 8px',
+                      borderRadius: '12px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      marginBottom: '8px',
+                      ...(status === 'accepted'
+                        ? { backgroundColor: '#d1fae5', color: '#065f46' }
+                        : status === 'pending'
+                          ? { backgroundColor: '#fef3c7', color: '#92400e' }
+                          : status === 'rejected'
+                            ? { backgroundColor: '#fee2e2', color: '#991b1b' }
+                            : { backgroundColor: '#f3f4f6', color: '#374151' }),
+                    }}
+                  >
                     {status.charAt(0).toUpperCase() + status.slice(1)}
                   </div>
-                  
-                  <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '12px' }}>
-                    📍 {agent.city}<br />
+
+                  <div
+                    style={{
+                      fontSize: '14px',
+                      color: '#6b7280',
+                      marginBottom: '12px',
+                    }}
+                  >
+                    📍 {agent.city}
+                    <br />
                     {agent.working_hours_start && agent.working_hours_end && (
-                      <>🕐 {agent.working_hours_start} - {agent.working_hours_end}<br /></>
+                      <>
+                        🕐 {agent.working_hours_start} -{' '}
+                        {agent.working_hours_end}
+                        <br />
+                      </>
                     )}
                     {agent.commission_rate && (
-                      <>💰 Commission: {agent.commission_rate}%<br /></>
+                      <>
+                        💰 Commission: {agent.commission_rate}%<br />
+                      </>
                     )}
-                    {agent.phone && (
-                      <>📱 {agent.phone}</>
-                    )}
+                    {agent.phone && <>📱 {agent.phone}</>}
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', flexDirection: 'column' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      gap: '8px',
+                      flexDirection: 'column',
+                    }}
+                  >
                     <button
                       onClick={() => handleViewProfile(agent.agent_id)}
                       style={{
                         padding: '8px 16px',
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        background:
+                          'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         color: 'white',
                         border: 'none',
                         borderRadius: '8px',
@@ -217,8 +267,12 @@ export default function AgentsMap({ agents }) {
                         fontSize: '14px',
                         transition: 'transform 0.2s',
                       }}
-                      onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-                      onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                      onMouseOver={(e) =>
+                        (e.target.style.transform = 'scale(1.05)')
+                      }
+                      onMouseOut={(e) =>
+                        (e.target.style.transform = 'scale(1)')
+                      }
                     >
                       👤 View Profile
                     </button>
@@ -226,7 +280,8 @@ export default function AgentsMap({ agents }) {
                       onClick={() => handleRoute(agent)}
                       style={{
                         padding: '8px 16px',
-                        background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                        background:
+                          'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                         color: 'white',
                         border: 'none',
                         borderRadius: '8px',
@@ -235,8 +290,12 @@ export default function AgentsMap({ agents }) {
                         fontSize: '14px',
                         transition: 'transform 0.2s',
                       }}
-                      onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
-                      onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                      onMouseOver={(e) =>
+                        (e.target.style.transform = 'scale(1.05)')
+                      }
+                      onMouseOut={(e) =>
+                        (e.target.style.transform = 'scale(1)')
+                      }
                     >
                       🗺️ Get Directions
                     </button>
@@ -248,9 +307,9 @@ export default function AgentsMap({ agents }) {
         })}
 
         {currentPosition && selectedAgent && (
-          <RoutingControl 
-            start={currentPosition} 
-            end={selectedAgent} 
+          <RoutingControl
+            start={currentPosition}
+            end={selectedAgent}
             showDirections={showDirections}
           />
         )}
@@ -258,20 +317,22 @@ export default function AgentsMap({ agents }) {
 
       {/* Control buttons - positioned at bottom left to not interfere */}
       {selectedAgent && (
-        <div style={{ 
-          position: 'absolute', 
-          bottom: '20px', 
-          left: '20px', 
-          zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px'
-        }}>
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '20px',
+            zIndex: 1000,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+          }}
+        >
           <button
             onClick={toggleDirections}
             style={{
               padding: '12px 20px',
-              background: showDirections 
+              background: showDirections
                 ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)'
                 : 'white',
               color: showDirections ? 'white' : '#6366f1',
@@ -284,7 +345,7 @@ export default function AgentsMap({ agents }) {
               transition: 'all 0.3s',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '8px',
             }}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px)';
@@ -312,12 +373,13 @@ export default function AgentsMap({ agents }) {
               transition: 'all 0.3s',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px'
+              gap: '8px',
             }}
             onMouseOver={(e) => {
               e.target.style.transform = 'translateY(-2px)';
               e.target.style.boxShadow = '0 6px 16px rgba(0, 0, 0, 0.2)';
-              e.target.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+              e.target.style.background =
+                'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
               e.target.style.color = 'white';
               e.target.style.border = 'none';
             }}

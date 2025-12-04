@@ -1,14 +1,14 @@
-import React from "react";
-import BeneficiaryForm from "../../components/beneficiaries/BeneficiaryForm";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import BeneficiaryForm from '../../components/beneficiaries/BeneficiaryForm';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddBeneficiaryPage() {
   const navigate = useNavigate();
 
   const handleSuccess = (createdBeneficiary) => {
     // Optionally, you could show a toast or log the created data
-    console.log("Beneficiary created:", createdBeneficiary);
-    navigate("/beneficiaries");
+    console.log('Beneficiary created:', createdBeneficiary);
+    navigate('/beneficiaries');
   };
 
   return (

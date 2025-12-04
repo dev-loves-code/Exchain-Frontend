@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { Filter, Clock, CheckCircle, XCircle, Mail, User, Calendar } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import Loading from "../../components/Loading"; // <- Import your Lottie Loading component
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import {
+  Filter,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Mail,
+  User,
+  Calendar,
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../../components/Loading'; // <- Import your Lottie Loading component
 
 const SupportRequestList = () => {
   const { user } = useAuth();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Filter state
-  const [statusFilter, setStatusFilter] = useState("");
-  const [orderBy, setOrderBy] = useState("latest");
+  const [statusFilter, setStatusFilter] = useState('');
+  const [orderBy, setOrderBy] = useState('latest');
 
   const fetchRequests = async () => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams();
-      if (statusFilter) queryParams.append("status", statusFilter);
-      if (orderBy) queryParams.append("order_by", orderBy);
+      if (statusFilter) queryParams.append('status', statusFilter);
+      if (orderBy) queryParams.append('order_by', orderBy);
 
       const res = await fetch(
         `http://127.0.0.1:8000/api/support/request?${queryParams.toString()}`,
@@ -30,12 +38,12 @@ const SupportRequestList = () => {
 
       const data = await res.json();
       if (!res.ok) {
-        console.error("Failed to fetch requests:", res.status, data);
+        console.error('Failed to fetch requests:', res.status, data);
         return;
       }
       setRequests(data);
     } catch (error) {
-      console.error("Network error:", error);
+      console.error('Network error:', error);
     } finally {
       setLoading(false);
     }
@@ -51,24 +59,24 @@ const SupportRequestList = () => {
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "resolved":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "closed":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'resolved':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'closed':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return 'bg-blue-100 text-blue-800 border-blue-200';
     }
   };
 
   const getStatusIcon = (status) => {
     switch (status?.toLowerCase()) {
-      case "pending":
+      case 'pending':
         return <Clock className="w-4 h-4" />;
-      case "resolved":
+      case 'resolved':
         return <CheckCircle className="w-4 h-4" />;
-      case "closed":
+      case 'closed':
         return <XCircle className="w-4 h-4" />;
       default:
         return <Mail className="w-4 h-4" />;
@@ -80,14 +88,18 @@ const SupportRequestList = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-black text-gray-900 mb-2">Support Requests</h1>
+          <h1 className="text-4xl font-black text-gray-900 mb-2">
+            Support Requests
+          </h1>
           <p className="text-gray-600">Track and manage your support tickets</p>
         </div>
 
         {/* Filters */}
         <div className="bg-white rounded-3xl shadow-2xl p-6 mb-8 flex flex-col sm:flex-row gap-4 items-center">
           <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Status
+            </label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -101,7 +113,9 @@ const SupportRequestList = () => {
           </div>
 
           <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Sort By
+            </label>
             <select
               value={orderBy}
               onChange={(e) => setOrderBy(e.target.value)}
@@ -115,8 +129,10 @@ const SupportRequestList = () => {
 
         {/* Results Count */}
         <div className="mb-6 text-gray-600 text-sm">
-          Showing <span className="font-semibold text-gray-900">{requests.length}</span> request
-          {requests.length !== 1 ? "s" : ""}
+          Showing{' '}
+          <span className="font-semibold text-gray-900">{requests.length}</span>{' '}
+          request
+          {requests.length !== 1 ? 's' : ''}
         </div>
 
         {/* Loading */}
@@ -128,8 +144,12 @@ const SupportRequestList = () => {
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Mail className="w-10 h-10 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No support requests found</h3>
-            <p className="text-gray-600">Try adjusting your filters or create a new support request.</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No support requests found
+            </h3>
+            <p className="text-gray-600">
+              Try adjusting your filters or create a new support request.
+            </p>
           </div>
         ) : (
           !loading && (
@@ -141,7 +161,9 @@ const SupportRequestList = () => {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">{r.subject}</h3>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                        {r.subject}
+                      </h3>
                       <span
                         className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold border ${getStatusColor(
                           r.status
@@ -178,7 +200,11 @@ const SupportRequestList = () => {
                   </div>
 
                   {/* Description */}
-                  {r.description && <p className="text-gray-700 mb-4 line-clamp-2">{r.description}</p>}
+                  {r.description && (
+                    <p className="text-gray-700 mb-4 line-clamp-2">
+                      {r.description}
+                    </p>
+                  )}
 
                   {/* Footer */}
                   <div className="flex justify-between items-center text-sm text-gray-500">
@@ -189,7 +215,7 @@ const SupportRequestList = () => {
                     </span>
                     <button
                       onClick={() => {
-                        if (user?.role === "admin") {
+                        if (user?.role === 'admin') {
                           navigate(`/admin/support/${r.support_id}`);
                         } else {
                           navigate(`/support/${r.support_id}`);

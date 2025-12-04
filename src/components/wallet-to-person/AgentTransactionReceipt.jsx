@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Printer, CheckCircle, Clock, XCircle } from "lucide-react";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Printer, CheckCircle, Clock, XCircle } from 'lucide-react';
 
 export default function AgentTransactionReceipt({ tx }) {
   const navigate = useNavigate();
@@ -25,35 +25,35 @@ export default function AgentTransactionReceipt({ tx }) {
   const statusConfig = {
     done: {
       icon: <CheckCircle size={20} />,
-      bg: "bg-green-50",
-      text: "text-green-700",
-      border: "border-green-200",
-      label: "COMPLETED",
+      bg: 'bg-green-50',
+      text: 'text-green-700',
+      border: 'border-green-200',
+      label: 'COMPLETED',
     },
     pending: {
       icon: <Clock size={20} />,
-      bg: "bg-yellow-50",
-      text: "text-yellow-700",
-      border: "border-yellow-200",
-      label: "PENDING",
+      bg: 'bg-yellow-50',
+      text: 'text-yellow-700',
+      border: 'border-yellow-200',
+      label: 'PENDING',
     },
     refunded: {
       icon: <XCircle size={20} />,
-      bg: "bg-blue-50",
-      text: "text-blue-700",
-      border: "border-blue-200",
-      label: "REFUNDED",
+      bg: 'bg-blue-50',
+      text: 'text-blue-700',
+      border: 'border-blue-200',
+      label: 'REFUNDED',
     },
     cancelled: {
       icon: <XCircle size={20} />,
-      bg: "bg-red-50",
-      text: "text-red-700",
-      border: "border-red-200",
-      label: "CANCELLED",
+      bg: 'bg-red-50',
+      text: 'text-red-700',
+      border: 'border-red-200',
+      label: 'CANCELLED',
     },
   };
 
-  const statusKey = tx?.status?.trim().toLowerCase() || "pending";
+  const statusKey = tx?.status?.trim().toLowerCase() || 'pending';
   const currentStatus = statusConfig[statusKey] || statusConfig.pending;
 
   const handlePrint = () => {
@@ -90,22 +90,25 @@ export default function AgentTransactionReceipt({ tx }) {
             </div>
             <div className="flex justify-between">
               <span>Amount:</span>
-              <span className="font-semibold">{tx.amount_received || tx.amount_to_release || "N/A"}</span>
+              <span className="font-semibold">
+                {tx.amount_received || tx.amount_to_release || 'N/A'}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Currency:</span>
-              <span className="font-semibold">{tx.currency || "N/A"}</span>
+              <span className="font-semibold">{tx.currency || 'N/A'}</span>
             </div>
             <div className="flex justify-between">
               <span>Receiver Email:</span>
-              <span className="font-semibold">{tx.receiver_email || "N/A"}</span>
+              <span className="font-semibold">
+                {tx.receiver_email || 'N/A'}
+              </span>
             </div>
             <div className="flex justify-between">
               <span>Status:</span>
               <div className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold bg-green-50 text-green-700 border border-green-200 rounded">
                 <CheckCircle size={20} /> COMPLETED
-                </div>
-
+              </div>
             </div>
             {tx.completed_at && (
               <div className="flex justify-between">
@@ -117,8 +120,12 @@ export default function AgentTransactionReceipt({ tx }) {
 
           {/* Footer */}
           <div className="border-t-2 border-gray-300 bg-gray-50 p-4 text-center mt-4">
-            <p className="text-xs text-gray-600 mb-2">Thank you for your transaction</p>
-            <p className="text-xs text-gray-500">Generated: {new Date().toLocaleString()}</p>
+            <p className="text-xs text-gray-600 mb-2">
+              Thank you for your transaction
+            </p>
+            <p className="text-xs text-gray-500">
+              Generated: {new Date().toLocaleString()}
+            </p>
           </div>
         </div>
 

@@ -1,34 +1,46 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { Clock, CheckCircle, XCircle, Mail, User, Calendar, ArrowLeft, Sparkles } from "lucide-react";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import Loading from "../../components/Loading";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import {
+  Clock,
+  CheckCircle,
+  XCircle,
+  Mail,
+  User,
+  Calendar,
+  ArrowLeft,
+  Sparkles,
+} from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import Loading from '../../components/Loading';
 
 const SupportRequestDetailAdmin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
   const [request, setRequest] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState('');
   const [updateStatusLoading, setUpdateStatusLoading] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
 
   const fetchRequest = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/support/request-admin/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/support/request-admin/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
-      if (!res.ok) return console.error("Failed to fetch request:", data);
+      if (!res.ok) return console.error('Failed to fetch request:', data);
       setRequest(data.support_request);
       setStatus(data.support_request.status);
     } catch (error) {
-      console.error("Network error:", error);
+      console.error('Network error:', error);
     } finally {
       setLoading(false);
     }
@@ -38,16 +50,19 @@ const SupportRequestDetailAdmin = () => {
     if (updateStatusLoading) return;
     setUpdateStatusLoading(true);
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/support/request/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status }),
-      });
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/support/request/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
       const data = await res.json();
-      if (!res.ok) return console.error("Failed to update:", data);
+      if (!res.ok) return console.error('Failed to update:', data);
 
       setUpdateSuccess(true);
       fetchRequest(); // Refresh after update
@@ -65,24 +80,24 @@ const SupportRequestDetailAdmin = () => {
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "resolved":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "closed":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'resolved':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'closed':
+        return 'bg-gray-100 text-gray-800 border-gray-200';
       default:
-        return "bg-blue-100 text-blue-800 border-blue-200";
+        return 'bg-blue-100 text-blue-800 border-blue-200';
     }
   };
 
   const getStatusIcon = (status) => {
     switch (status?.toLowerCase()) {
-      case "pending":
+      case 'pending':
         return <Clock className="w-4 h-4" />;
-      case "resolved":
+      case 'resolved':
         return <CheckCircle className="w-4 h-4" />;
-      case "closed":
+      case 'closed':
         return <XCircle className="w-4 h-4" />;
       default:
         return <Mail className="w-4 h-4" />;
@@ -107,7 +122,9 @@ const SupportRequestDetailAdmin = () => {
         {/* Header */}
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="w-6 h-6 text-teal-600" />
-          <h1 className="text-2xl font-bold text-gray-900">Support Request Detail</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Support Request Detail
+          </h1>
         </div>
 
         {/* Back Button */}
@@ -121,14 +138,17 @@ const SupportRequestDetailAdmin = () => {
         {/* Request Card */}
         <div className="bg-gray-50 rounded-3xl shadow-inner p-8 border border-gray-200 space-y-6">
           <div>
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-2">{request.subject}</h2>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
+              {request.subject}
+            </h2>
             <span
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border ${getStatusColor(
                 request.status
               )}`}
             >
               {getStatusIcon(request.status)}
-              {request.status?.charAt(0).toUpperCase() + request.status?.slice(1)}
+              {request.status?.charAt(0).toUpperCase() +
+                request.status?.slice(1)}
             </span>
           </div>
 
@@ -194,7 +214,9 @@ const SupportRequestDetailAdmin = () => {
                   autoplay
                 />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Status Updated!</h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                Status Updated!
+              </h3>
             </div>
           </div>
         )}

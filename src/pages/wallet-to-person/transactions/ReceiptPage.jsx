@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle, Clock, XCircle, Printer } from "lucide-react";
-import Loading from "../../../components/Loading"; // adjust path if needed
-import "./ReceiptPage.css";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, CheckCircle, Clock, XCircle, Printer } from 'lucide-react';
+import Loading from '../../../components/Loading'; // adjust path if needed
+import './ReceiptPage.css';
 
 export default function ReceiptPage() {
   const { id } = useParams();
@@ -18,10 +18,10 @@ export default function ReceiptPage() {
 
     const fetchReceipt = async () => {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem('token');
       if (!token) {
-        alert("You must be logged in to view the receipt");
-        navigate("/login");
+        alert('You must be logged in to view the receipt');
+        navigate('/login');
         return;
       }
 
@@ -30,7 +30,7 @@ export default function ReceiptPage() {
           `http://127.0.0.1:8000/api/transactions/receipt/${id}`,
           {
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
           }
@@ -40,13 +40,13 @@ export default function ReceiptPage() {
         const data = text ? JSON.parse(text) : {};
 
         if (!res.ok || !data.success) {
-          throw new Error(data.message || "Failed to fetch receipt");
+          throw new Error(data.message || 'Failed to fetch receipt');
         }
 
         setTx(data.data || {});
       } catch (err) {
-        console.error("Failed to fetch transaction receipt:", err);
-        alert(err.message || "Could not load transaction details");
+        console.error('Failed to fetch transaction receipt:', err);
+        alert(err.message || 'Could not load transaction details');
       } finally {
         setLoading(false);
       }
@@ -82,35 +82,35 @@ export default function ReceiptPage() {
   const statusConfig = {
     done: {
       icon: <CheckCircle size={20} />,
-      bg: "bg-green-50",
-      text: "text-green-700",
-      border: "border-green-200",
-      label: "COMPLETED",
+      bg: 'bg-green-50',
+      text: 'text-green-700',
+      border: 'border-green-200',
+      label: 'COMPLETED',
     },
     pending: {
       icon: <Clock size={20} />,
-      bg: "bg-yellow-50",
-      text: "text-yellow-700",
-      border: "border-yellow-200",
-      label: "PENDING",
+      bg: 'bg-yellow-50',
+      text: 'text-yellow-700',
+      border: 'border-yellow-200',
+      label: 'PENDING',
     },
     refunded: {
       icon: <XCircle size={20} />,
-      bg: "bg-blue-50",
-      text: "text-blue-700",
-      border: "border-blue-200",
-      label: "REFUNDED",
+      bg: 'bg-blue-50',
+      text: 'text-blue-700',
+      border: 'border-blue-200',
+      label: 'REFUNDED',
     },
     cancelled: {
       icon: <XCircle size={20} />,
-      bg: "bg-red-50",
-      text: "text-red-700",
-      border: "border-red-200",
-      label: "CANCELLED",
+      bg: 'bg-red-50',
+      text: 'text-red-700',
+      border: 'border-red-200',
+      label: 'CANCELLED',
     },
   };
 
-  const statusKey = tx?.status?.trim().toLowerCase() || "pending";
+  const statusKey = tx?.status?.trim().toLowerCase() || 'pending';
   const currentStatus = statusConfig[statusKey] || statusConfig.pending;
 
   return (
@@ -142,7 +142,8 @@ export default function ReceiptPage() {
           {/* Notice */}
           <div className="bg-gray-100 border-b border-gray-300 px-6 py-3">
             <p className="text-xs text-gray-700">
-              <span className="font-bold">CUSTOMER NOTICE:</span> PLEASE PRINT CLEARLY. Keep this receipt as proof of transaction.
+              <span className="font-bold">CUSTOMER NOTICE:</span> PLEASE PRINT
+              CLEARLY. Keep this receipt as proof of transaction.
             </p>
           </div>
 
@@ -151,20 +152,26 @@ export default function ReceiptPage() {
             {/* Sender Section */}
             <div className="border-2 border-gray-300">
               <div className="bg-gray-200 px-3 py-1 border-b border-gray-300">
-                <h3 className="text-xs font-bold uppercase">Sender Information</h3>
+                <h3 className="text-xs font-bold uppercase">
+                  Sender Information
+                </h3>
               </div>
               <div className="p-4 space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Sender Name</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Sender Name
+                    </label>
                     <div className="text-sm font-semibold text-gray-900 border-b border-gray-300 pb-1">
-                      {tx.sender?.full_name || "-"}
+                      {tx.sender?.full_name || '-'}
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Currency</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Currency
+                    </label>
                     <div className="text-sm font-semibold text-gray-900 border-b border-gray-300 pb-1">
-                      {tx.sender?.currency || tx.currency_code || "-"}
+                      {tx.sender?.currency || tx.currency_code || '-'}
                     </div>
                   </div>
                 </div>
@@ -174,35 +181,45 @@ export default function ReceiptPage() {
             {/* Transaction Details */}
             <div className="border-2 border-teal-800">
               <div className="bg-teal-800 text-white px-3 py-2">
-                <h3 className="text-sm font-bold uppercase">Transaction Details</h3>
+                <h3 className="text-sm font-bold uppercase">
+                  Transaction Details
+                </h3>
               </div>
               <div className="p-4 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Transfer Amount</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Transfer Amount
+                    </label>
                     <div className="text-lg font-bold text-gray-900 border-b-2 border-gray-400 pb-1">
                       ${tx.transfer_details?.amount || tx.transfer_amount || 0}
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Currency</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Currency
+                    </label>
                     <div className="text-lg font-bold text-gray-900 border-b-2 border-gray-400 pb-1">
-                      {tx.sender?.currency || tx.currency_code || ""}
+                      {tx.sender?.currency || tx.currency_code || ''}
                     </div>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Recipient Name</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Recipient Name
+                    </label>
                     <div className="text-sm font-semibold text-gray-900 border-b border-gray-300 pb-1">
-                      {tx.receiver?.name || tx.receiver_email || "-"}
+                      {tx.receiver?.name || tx.receiver_email || '-'}
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Recipient Email</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Recipient Email
+                    </label>
                     <div className="text-sm font-semibold text-gray-900 border-b border-gray-300 pb-1">
-                      {tx.receiver?.email || "-"}
+                      {tx.receiver?.email || '-'}
                     </div>
                   </div>
                 </div>
@@ -210,20 +227,28 @@ export default function ReceiptPage() {
                 <div className="border-t-2 border-gray-300 pt-4 mt-4">
                   <div className="grid grid-cols-3 gap-4">
                     <div>
-                      <label className="text-xs text-gray-600 block mb-1">Fees</label>
+                      <label className="text-xs text-gray-600 block mb-1">
+                        Fees
+                      </label>
                       <div className="text-sm font-semibold text-gray-900">
                         ${tx.transfer_details?.fee || tx.transfer_fee || 0}
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-600 block mb-1">Exchange Rate</label>
+                      <label className="text-xs text-gray-600 block mb-1">
+                        Exchange Rate
+                      </label>
                       <div className="text-sm font-semibold text-gray-900">
                         {tx.transfer_details?.exchange_rate || 1}
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs text-gray-600 block mb-1">Status</label>
-                      <div className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-bold ${currentStatus.bg} ${currentStatus.text} border ${currentStatus.border} rounded`}>
+                      <label className="text-xs text-gray-600 block mb-1">
+                        Status
+                      </label>
+                      <div
+                        className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-bold ${currentStatus.bg} ${currentStatus.text} border ${currentStatus.border} rounded`}
+                      >
                         {currentStatus.icon}
                         {currentStatus.label}
                       </div>
@@ -241,15 +266,19 @@ export default function ReceiptPage() {
               <div className="p-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Received Amount</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Received Amount
+                    </label>
                     <div className="text-2xl font-black text-teal-800 border-b-2 border-gray-400 pb-1">
                       ${tx.transfer_details?.received_amount || 0}
                     </div>
                   </div>
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Currency</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Currency
+                    </label>
                     <div className="text-2xl font-black text-teal-800 border-b-2 border-gray-400 pb-1">
-                      {tx.receiver?.currency || ""}
+                      {tx.receiver?.currency || ''}
                     </div>
                   </div>
                 </div>
@@ -259,25 +288,31 @@ export default function ReceiptPage() {
             {/* Reference & Date */}
             <div className="border-2 border-gray-300">
               <div className="bg-gray-900 text-white px-3 py-1">
-                <h3 className="text-xs font-bold uppercase">Transaction Reference</h3>
+                <h3 className="text-xs font-bold uppercase">
+                  Transaction Reference
+                </h3>
               </div>
               <div className="p-4 space-y-3">
                 <div>
-                  <label className="text-xs text-gray-600 block mb-1">Reference Number (MTCN)</label>
+                  <label className="text-xs text-gray-600 block mb-1">
+                    Reference Number (MTCN)
+                  </label>
                   <div className="text-xl font-mono font-black text-gray-900 bg-gray-100 border-2 border-gray-400 p-3 text-center tracking-wider">
                     {tx.reference_code || tx.transaction_id}
                   </div>
                 </div>
                 {tx.created_at && (
                   <div>
-                    <label className="text-xs text-gray-600 block mb-1">Transaction Date & Time</label>
+                    <label className="text-xs text-gray-600 block mb-1">
+                      Transaction Date & Time
+                    </label>
                     <div className="text-sm font-semibold text-gray-900 border-b border-gray-300 pb-1">
-                      {new Date(tx.created_at).toLocaleString("en-US", {
-                        month: "2-digit",
-                        day: "2-digit",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
+                      {new Date(tx.created_at).toLocaleString('en-US', {
+                        month: '2-digit',
+                        day: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </div>
                   </div>
@@ -288,17 +323,23 @@ export default function ReceiptPage() {
             {/* Important Info */}
             <div className="bg-gray-50 border border-gray-300 p-4">
               <p className="text-xs text-gray-700 leading-relaxed">
-                <span className="font-bold">IMPORTANT:</span> This receipt is proof of your transaction. Please keep it for your records. 
-                The reference number above is required to track or modify this transaction. If you have any questions, 
-                please contact customer service at +961 76-410-921.
+                <span className="font-bold">IMPORTANT:</span> This receipt is
+                proof of your transaction. Please keep it for your records. The
+                reference number above is required to track or modify this
+                transaction. If you have any questions, please contact customer
+                service at +961 76-410-921.
               </p>
             </div>
           </div>
 
           {/* Footer */}
           <div className="border-t-2 border-gray-300 bg-gray-50 p-4 text-center">
-            <p className="text-xs text-gray-600 mb-2">Thank you for your transaction</p>
-            <p className="text-xs text-gray-500">Generated: {new Date().toLocaleString()}</p>
+            <p className="text-xs text-gray-600 mb-2">
+              Thank you for your transaction
+            </p>
+            <p className="text-xs text-gray-500">
+              Generated: {new Date().toLocaleString()}
+            </p>
           </div>
         </div>
 

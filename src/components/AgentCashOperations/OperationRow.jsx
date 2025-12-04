@@ -1,15 +1,10 @@
-import { 
-  UserIcon,
-  EyeIcon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
-import { getStatusColor, getOperationTypeColor } from '../../utils/statusColors';
+import { UserIcon, EyeIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  getStatusColor,
+  getOperationTypeColor,
+} from '../../utils/statusColors';
 
-export default function OperationRow({ 
-  operation, 
-  onViewUser, 
-  onCancel 
-}) {
+export default function OperationRow({ operation, onViewUser, onCancel }) {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
   };
@@ -17,18 +12,22 @@ export default function OperationRow({
   const formatCurrency = (amount, currency) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency || 'USD'
+      currency: currency || 'USD',
     }).format(amount);
   };
 
   const StatusBadge = ({ status }) => (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}
+    >
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </span>
   );
 
   const OperationTypeBadge = ({ type }) => (
-    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getOperationTypeColor(type)}`}>
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-medium ${getOperationTypeColor(type)}`}
+    >
       {type.charAt(0).toUpperCase() + type.slice(1)}
     </span>
   );
@@ -42,7 +41,7 @@ export default function OperationRow({
         <div className="flex items-center">
           <UserIcon className="h-5 w-5 text-gray-400 mr-2" />
           <div>
-            <div 
+            <div
               className="font-medium text-gray-900 hover:text-teal-700 cursor-pointer"
               onClick={() => onViewUser(operation.user_id)}
             >
@@ -57,7 +56,11 @@ export default function OperationRow({
           {formatCurrency(operation.amount, operation.currency_code)}
         </div>
         <div className="text-sm text-gray-500">
-          Wallet: {formatCurrency(operation.wallet_amount, operation.wallet?.currency_code)}
+          Wallet:{' '}
+          {formatCurrency(
+            operation.wallet_amount,
+            operation.wallet?.currency_code
+          )}
         </div>
       </td>
       <td className="py-4 px-6">
@@ -69,7 +72,9 @@ export default function OperationRow({
         <StatusBadge status={operation.status} />
       </td>
       <td className="py-4 px-6">
-        <div className="text-sm text-gray-900">{formatDate(operation.created_at)}</div>
+        <div className="text-sm text-gray-900">
+          {formatDate(operation.created_at)}
+        </div>
       </td>
       <td className="py-4 px-6">
         <div className="flex space-x-2">

@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { CreditCard, Wallet, Building2, User } from "lucide-react";
-import Loading from "../../components/Loading.jsx";
-
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { CreditCard, Wallet, Building2, User } from 'lucide-react';
+import Loading from '../../components/Loading.jsx';
 
 export default function BeneficiaryDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [beneficiary, setBeneficiary] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchBeneficiary = async () => {
       try {
-        setError("");
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("You must be logged in");
+        setError('');
+        const token = localStorage.getItem('token');
+        if (!token) throw new Error('You must be logged in');
 
-        const res = await fetch(`http://127.0.0.1:8000/api/beneficiaries/view/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `http://127.0.0.1:8000/api/beneficiaries/view/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         if (!res.ok) {
           const data = await res.json().catch(() => null);
@@ -29,10 +31,10 @@ export default function BeneficiaryDetailsPage() {
 
         const data = await res.json();
         if (data.success) setBeneficiary(data.beneficiary);
-        else throw new Error(data.message || "Failed to load beneficiary");
+        else throw new Error(data.message || 'Failed to load beneficiary');
       } catch (err) {
         console.error(err);
-        setError(err.message || "Network error");
+        setError(err.message || 'Network error');
       } finally {
         setLoading(false);
       }
@@ -42,32 +44,41 @@ export default function BeneficiaryDetailsPage() {
   }, [id]);
 
   const getPaymentInfo = () => {
-    if (!beneficiary) return { icon: User, text: "No payment method", color: "text-gray-400" };
+    if (!beneficiary)
+      return { icon: User, text: 'No payment method', color: 'text-gray-400' };
 
     if (beneficiary.wallet)
-      return { icon: Wallet, text: beneficiary.wallet.name, color: "text-purple-600" };
+      return {
+        icon: Wallet,
+        text: beneficiary.wallet.name,
+        color: 'text-purple-600',
+      };
 
     if (beneficiary.payment_method)
       return {
         icon: CreditCard,
-        text: `${beneficiary.payment_method.type} ****${beneficiary.payment_method.last4 || ""}`,
-        color: "text-blue-600",
+        text: `${beneficiary.payment_method.type} ****${beneficiary.payment_method.last4 || ''}`,
+        color: 'text-blue-600',
       };
 
     if (beneficiary.bank_account)
-      return { icon: Building2, text: beneficiary.bank_account.bank_name, color: "text-green-600" };
+      return {
+        icon: Building2,
+        text: beneficiary.bank_account.bank_name,
+        color: 'text-green-600',
+      };
 
-    return { icon: User, text: "No payment method", color: "text-gray-400" };
+    return { icon: User, text: 'No payment method', color: 'text-gray-400' };
   };
 
-  if (loading)  return <Loading fullScreen={true} text="Loading Data..." />;
+  if (loading) return <Loading fullScreen={true} text="Loading Data..." />;
   if (error)
     return (
       <div className="text-center mt-10 text-red-500">
         {error}
         <div>
           <button
-            onClick={() => navigate("/beneficiaries")}
+            onClick={() => navigate('/beneficiaries')}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Go Back
@@ -86,8 +97,10 @@ export default function BeneficiaryDetailsPage() {
             {beneficiary.name.charAt(0).toUpperCase()}
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{beneficiary.name}</h2>
-            <p className="text-gray-500">{beneficiary.email || "No email"}</p>
+            <h2 className="text-2xl font-bold text-gray-900">
+              {beneficiary.name}
+            </h2>
+            <p className="text-gray-500">{beneficiary.email || 'No email'}</p>
           </div>
         </div>
 
@@ -111,7 +124,7 @@ export default function BeneficiaryDetailsPage() {
         </button>
 
         <button
-          onClick={() => navigate("/beneficiaries")}
+          onClick={() => navigate('/beneficiaries')}
           className="mt-2 w-full py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-all"
         >
           Back to Beneficiaries

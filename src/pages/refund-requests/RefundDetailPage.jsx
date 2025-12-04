@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Hash,
@@ -12,11 +12,10 @@ import {
   CheckCircle,
   XCircle,
   AlertCircle,
-} from "lucide-react";
-import Loading from "../../components/Loading";
+} from 'lucide-react';
+import Loading from '../../components/Loading';
 
-
-const API_BASE_URL = "http://127.0.0.1:8000/api";
+const API_BASE_URL = 'http://127.0.0.1:8000/api';
 
 const RefundDetailPage = () => {
   const { refundId } = useParams();
@@ -24,26 +23,29 @@ const RefundDetailPage = () => {
 
   const [refund, setRefund] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
   const fetchRefundDetails = async () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     try {
-      const res = await fetch(`${API_BASE_URL}/refund/request-view/${refundId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${API_BASE_URL}/refund/request-view/${refundId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const data = await res.json();
 
       if (res.ok) {
         setRefund(data);
       } else {
-        setMessage(data.message || "Failed to load refund details.");
+        setMessage(data.message || 'Failed to load refund details.');
       }
     } catch (err) {
-      setMessage("Network error.");
+      setMessage('Network error.');
     } finally {
       setLoading(false);
     }
@@ -56,10 +58,10 @@ const RefundDetailPage = () => {
   const handleBack = () => navigate(-1);
 
   const statusColors = {
-    pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    completed: "bg-green-50 text-green-700 border-green-200",
-    rejected: "bg-red-50 text-red-700 border-red-200",
-    cancelled: "bg-gray-200 text-gray-700 border-gray-300",
+    pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    completed: 'bg-green-50 text-green-700 border-green-200',
+    rejected: 'bg-red-50 text-red-700 border-red-200',
+    cancelled: 'bg-gray-200 text-gray-700 border-gray-300',
   };
 
   const statusIcons = {
@@ -70,10 +72,9 @@ const RefundDetailPage = () => {
   };
 
   // Avoid “toUpperCase” crash before refund loads
-  const safeStatus = refund?.status ? refund.status : "pending";
+  const safeStatus = refund?.status ? refund.status : 'pending';
 
-if (loading) return <Loading fullScreen text="Loading refund request..." />;
-
+  if (loading) return <Loading fullScreen text="Loading refund request..." />;
 
   if (!refund) {
     return (
@@ -92,7 +93,6 @@ if (loading) return <Loading fullScreen text="Loading refund request..." />;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-
       {/* Back */}
       <button
         onClick={handleBack}
@@ -123,12 +123,21 @@ if (loading) return <Loading fullScreen text="Loading refund request..." />;
 
       {/* Details */}
       <div className="bg-white rounded-2xl shadow p-6 mb-6 space-y-4">
-
-        <p><strong>Refund ID:</strong> {refund.refund_id}</p>
-        <p><strong>Transaction ID:</strong> {refund.transaction_id}</p>
-        <p><strong>User:</strong> {refund.user_name}</p>
-        <p><strong>Email:</strong> {refund.user_email}</p>
-        <p><strong>Amount:</strong> {refund.amount} {refund.currency}</p>
+        <p>
+          <strong>Refund ID:</strong> {refund.refund_id}
+        </p>
+        <p>
+          <strong>Transaction ID:</strong> {refund.transaction_id}
+        </p>
+        <p>
+          <strong>User:</strong> {refund.user_name}
+        </p>
+        <p>
+          <strong>Email:</strong> {refund.user_email}
+        </p>
+        <p>
+          <strong>Amount:</strong> {refund.amount} {refund.currency}
+        </p>
 
         {refund.description && (
           <p>
@@ -141,9 +150,9 @@ if (loading) return <Loading fullScreen text="Loading refund request..." />;
       {message && (
         <div
           className={`p-4 rounded-lg ${
-            message.includes("successfully")
-              ? "bg-green-50 text-green-700 border border-green-300"
-              : "bg-red-50 text-red-700 border border-red-300"
+            message.includes('successfully')
+              ? 'bg-green-50 text-green-700 border border-green-300'
+              : 'bg-red-50 text-red-700 border border-red-300'
           }`}
         >
           {message}

@@ -2,7 +2,11 @@
 import React from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-const Loading = ({ fullScreen = false, text = 'Loading...', showText = true }) => {
+const Loading = ({
+  fullScreen = false,
+  text = 'Loading...',
+  showText = true,
+}) => {
   // Fixed big size
   const fixedSize = 'w-48 h-48'; // 12rem x 12rem, big enough
 

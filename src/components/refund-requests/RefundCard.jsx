@@ -1,26 +1,37 @@
-import React from "react";
-import { Hash, CreditCard, User, Mail, Clock, CheckCircle, XCircle, Trash2 } from "lucide-react";
+import React from 'react';
+import {
+  Hash,
+  CreditCard,
+  User,
+  Mail,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Trash2,
+} from 'lucide-react';
 
 const RefundCard = ({ refund, onCancel, onReject, onComplete, isAdmin }) => {
   const statusColors = {
-    pending: "bg-yellow-50 text-yellow-700 border-yellow-200",
-    completed: "bg-green-50 text-green-700 border-green-200",
-    rejected: "bg-red-50 text-red-700 border-red-200",
-    cancelled: "bg-gray-100 text-gray-700 border-gray-300"
+    pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    completed: 'bg-green-50 text-green-700 border-green-200',
+    rejected: 'bg-red-50 text-red-700 border-red-200',
+    cancelled: 'bg-gray-100 text-gray-700 border-gray-300',
   };
 
   const statusIcons = {
     pending: <Clock size={16} />,
     completed: <CheckCircle size={16} />,
     rejected: <XCircle size={16} />,
-    cancelled: <XCircle size={16} />
+    cancelled: <XCircle size={16} />,
   };
 
   return (
     <div className="bg-white rounded-3xl shadow-2xl border border-gray-200 p-8 mb-4 hover:shadow-xl transition-all duration-300">
       {/* Status Badge */}
       <div className="flex items-center justify-between mb-6">
-        <span className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border ${statusColors[refund.status] || statusColors.pending}`}>
+        <span
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border ${statusColors[refund.status] || statusColors.pending}`}
+        >
           {statusIcons[refund.status] || statusIcons.pending}
           {refund.status.charAt(0).toUpperCase() + refund.status.slice(1)}
         </span>
@@ -32,7 +43,7 @@ const RefundCard = ({ refund, onCancel, onReject, onComplete, isAdmin }) => {
               day: 'numeric',
               year: 'numeric',
               hour: '2-digit',
-              minute: '2-digit'
+              minute: '2-digit',
             })}
           </p>
         </div>
@@ -47,8 +58,12 @@ const RefundCard = ({ refund, onCancel, onReject, onComplete, isAdmin }) => {
               <Hash size={18} className="text-blue-600" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-gray-500 font-medium mb-1">Refund ID</p>
-              <p className="text-sm text-gray-900 font-semibold truncate">{refund.refund_id}</p>
+              <p className="text-xs text-gray-500 font-medium mb-1">
+                Refund ID
+              </p>
+              <p className="text-sm text-gray-900 font-semibold truncate">
+                {refund.refund_id}
+              </p>
             </div>
           </div>
 
@@ -58,8 +73,12 @@ const RefundCard = ({ refund, onCancel, onReject, onComplete, isAdmin }) => {
               <CreditCard size={18} className="text-purple-600" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-gray-500 font-medium mb-1">Transaction ID</p>
-              <p className="text-sm text-gray-900 font-semibold truncate">{refund.transaction_id}</p>
+              <p className="text-xs text-gray-500 font-medium mb-1">
+                Transaction ID
+              </p>
+              <p className="text-sm text-gray-900 font-semibold truncate">
+                {refund.transaction_id}
+              </p>
             </div>
           </div>
 
@@ -70,7 +89,9 @@ const RefundCard = ({ refund, onCancel, onReject, onComplete, isAdmin }) => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs text-gray-500 font-medium mb-1">User</p>
-              <p className="text-sm text-gray-900 font-semibold truncate">{refund.user_name}</p>
+              <p className="text-sm text-gray-900 font-semibold truncate">
+                {refund.user_name}
+              </p>
             </div>
           </div>
 
@@ -81,14 +102,17 @@ const RefundCard = ({ refund, onCancel, onReject, onComplete, isAdmin }) => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs text-gray-500 font-medium mb-1">Email</p>
-              <p className="text-sm text-gray-900 font-semibold truncate">{refund.user_email}</p>
+              <p className="text-sm text-gray-900 font-semibold truncate">
+                {refund.user_email}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Action Buttons */}
-      {((isAdmin && refund.status === "pending") || (!isAdmin && refund.status === "pending")) && (
+      {((isAdmin && refund.status === 'pending') ||
+        (!isAdmin && refund.status === 'pending')) && (
         <div className="flex gap-3 pt-6 border-t border-gray-200">
           {isAdmin ? (
             <>
