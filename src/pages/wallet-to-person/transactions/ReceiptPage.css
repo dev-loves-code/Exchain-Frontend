@@ -1,0 +1,27 @@
+/* Hide everything except the receipt when printing */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #receipt, #receipt * {
+    visibility: visible;
+  }
+
+  #receipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+    zoom: 0.9; /* adjust to fit content on page */
+  }
+
+  /* Hide action buttons */
+  .print\:hidden {
+    display: none !important;
+  }
+}

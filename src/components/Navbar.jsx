@@ -81,35 +81,129 @@ const Navbar = () => {
                   >
                     My Transactions
                   </Link>
+
+                  {/* Wallet to Person Features */}
+                  <Link
+                    to="/send"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/send') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Send Money
+                  </Link>
+
+                  <Link
+                    to="/transactions"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/transactions') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Wallet Transactions
+                  </Link>
+
+                  <Link
+                    to="/beneficiaries"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/beneficiaries') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Beneficiaries
+                  </Link>
+
+                  {/* Support Requests */}
+                  <Link
+                    to="/support-request"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/support-request') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Support
+                  </Link>
+
+                  <Link
+                    to="/support-request-list"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/support-request-list') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    My Support Requests
+                  </Link>
                 </>
               )}
 
               {/* Agent */}
               {user.role === "agent" && (
-                <Link
-                  to="/agent/cash-operations"
-                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
-                    isActive('/agent/cash-operations') 
-                      ? 'bg-teal-800 text-white font-semibold shadow-md' 
-                      : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
-                  }`}
-                >
-                  My Operations
-                </Link>
+                <>
+                  <Link
+                    to="/agent/cash-operations"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/agent/cash-operations') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    My Operations
+                  </Link>
+
+                  <Link
+                    to="/agent/verify"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/agent/verify') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Verify Transaction
+                  </Link>
+                </>
               )}
 
               {/* Admin */}
               {user.role === "admin" && (
-                <Link
-                  to="/agents"
-                  className={`px-4 py-2 rounded-xl font-medium transition-all ${
-                    isActive('/agents') 
-                      ? 'bg-teal-800 text-white font-semibold shadow-md' 
-                      : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
-                  }`}
-                >
-                  Agents
-                </Link>
+                <>
+                  <Link
+                    to="/agents"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/agents') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Agents
+                  </Link>
+
+                  <Link
+                    to="/admin/refunds"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/admin/refunds') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Manage Refunds
+                  </Link>
+
+                  <Link
+                    to="/support-request-list"
+                    className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                      isActive('/support-request-list') 
+                        ? 'bg-teal-800 text-white font-semibold shadow-md' 
+                        : 'text-gray-700 hover:text-teal-800 hover:bg-teal-50'
+                    }`}
+                  >
+                    Support Admin
+                  </Link>
+                </>
               )}
             </>
           )}
