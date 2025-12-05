@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, loginWithGitHub } = useAuth(); // <-- add loginWithGitHub
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -38,6 +38,13 @@ const LoginPage = () => {
           <span className="font-semibold text-gray-700">
             Continue With Google
           </span>
+        </button>
+
+        <button
+          onClick={loginWithGitHub}
+          className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-xl py-3 mb-6 hover:bg-gray-50 transition"
+        >
+          <span className="font-semibold text-gray-700">Continue With GitHub</span>
         </button>
 
         <div className="relative mb-6">

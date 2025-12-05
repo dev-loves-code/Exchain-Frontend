@@ -54,26 +54,36 @@ const Navbar = () => {
 
   // User dropdown items
   const userLinks = [
+    { to: '/user/dashboard', label: 'Dashboard' },
     { to: '/agents', label: 'Agents' },
     { to: '/user/cash-operations', label: 'Cash Operations' },
     { to: '/send', label: 'Wallet to Person' },
     { to: '/transactions', label: 'W2P Transactions' },
     { to: '/beneficiaries', label: 'Beneficiaries' },
+    { to: '/services', label: 'Services' },
+    { to: '/reviews', label: 'My Reviews' },
     { to: '/support-request', label: 'Support' },
     { to: '/support-request-list', label: 'Support Requests' },
   ];
 
   // Agent dropdown items
   const agentLinks = [
+    { to: '/agent/dashboard', label: 'Dashboard' },
     { to: '/agent/cash-operations', label: 'My Operations' },
     { to: '/agent/verify', label: 'Verify Transaction' },
+    { to: '/services', label: 'Services' },
+    { to: '/reviews', label: 'Reviews' },
   ];
 
   // Admin dropdown items
   const adminLinks = [
+    { to: '/admin/dashboard', label: 'Dashboard' },
     { to: '/agents', label: 'Agents' },
+    { to: '/admin/agents', label: 'Manage Agents' },
     { to: '/admin/refunds', label: 'Manage Refunds' },
     { to: '/support-request-list', label: 'Support Admin' },
+    { to: '/services', label: 'Services' },
+    { to: '/reviews', label: 'Reviews' },
   ];
 
   return (

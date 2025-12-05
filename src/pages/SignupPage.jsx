@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 
 const SignupPage = () => {
-  const { register, loginWithGoogle } = useAuth();
+  const { register, loginWithGoogle,loginWithGitHub } = useAuth();
   const [formData, setFormData] = useState({
     full_name: '',
     email: '',
@@ -62,6 +62,12 @@ const SignupPage = () => {
             Continue With Google
           </span>
         </button>
+        <button
+  onClick={loginWithGitHub}
+  className="w-full flex items-center justify-center gap-3 border-2 border-gray-200 rounded-xl py-3 mb-6 hover:bg-gray-50 transition"
+>
+  <span className="font-semibold text-gray-700">Continue With GitHub</span>
+</button>
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">

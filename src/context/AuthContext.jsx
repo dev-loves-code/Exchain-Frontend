@@ -8,17 +8,30 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      fetchUser();
-    } else {
-      setLoading(false);
-    }
-  }, []);
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const oauthToken = params.get('token');
 
-  const fetchUser = async () => {
-    const token = localStorage.getItem('token');
+  if (oauthToken) {
+    localStorage.setItem('token', oauthToken);
+    fetchUser(oauthToken).then(() => {
+      // redirect AFTER user state is updated
+      window.location.href = '/';
+    });
+
+    // Clean URL
+    const url = new URL(window.location);
+    url.searchParams.delete('token');
+    window.history.replaceState({}, '', url.toString());
+  } else if (localStorage.getItem('token')) {
+    fetchUser();
+  } else {
+    setLoading(false);
+  }
+}, []);
+
+  const fetchUser = async (tokenFromParam) => {
+    const token = tokenFromParam || localStorage.getItem('token');
     if (!token) {
       setLoading(false);
       return;
@@ -112,15 +125,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = () => {
-    window.location.href = 'http://127.0.0.1:8000/api/auth/google';
+    window.location.href = `${API_BASE_URL}/auth/google`;
+  };
+
+  const loginWithGitHub = () => {
+    window.location.href = `${API_BASE_URL}/auth/github`;
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, register, logout, loginWithGoogle, loading }}
+
+    <AuthContext.Provider 
+    value={{ user, login, register, logout, loginWithGoogle, loginWithGitHub, loading }}
     >
-      {children}
+        {children}
     </AuthContext.Provider>
+
   );
 };
 

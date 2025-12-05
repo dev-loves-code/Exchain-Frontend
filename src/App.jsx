@@ -4,20 +4,35 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { LoadingProvider } from './context/LoadingContext';
 import './index.css';
 
+// Existing Imports
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AgentSignupPage from './pages/AgentSignupPage';
 import GoogleCallbackPage from './pages/GoogleCallbackPage';
+import GitHubCallbackPage from './pages/GitHubCallbackPage';
+import ChatWidget from './components/Chat';
+import Footer from './components/Footer';
+
+// Dashboard Components
+import {
+  AdminDashboard,
+  AgentDashboard,
+  UserDashboard,
+} from './components/DashboardsShared';
+
+// Profile & Agent Pages
 import AgentProfilePage from './pages/AgentProfilePage';
 import AgentsPage from './pages/AgentsPage';
+import UserProfile from './pages/UserProfile';
+import UserProfilePage from './pages/UserProfilePage';
+import { AdminAgentsPage } from './pages/AdminAgentsPage';
+
+// Cash Operations
 import AgentCashOperationForm from './pages/AgentCashOperationForm';
 import UserCashOperations from './pages/UserCashOperations';
-import UserProfile from './pages/UserProfile';
 import AgentCashOperations from './pages/AgentCashOperations';
-import UserProfilePage from './pages/UserProfilePage';
-import Footer from './components/Footer';
 
 // Support Requests
 import SupportPage from './pages/SupportRequests/SupportPage';
@@ -39,6 +54,7 @@ import TransactionSuccess from './pages/wallet-to-person/send/TransactionSuccess
 // Transactions
 import TransactionsHistory from './pages/wallet-to-person/transactions/TransactionHistory';
 import ReceiptPage from './pages/wallet-to-person/transactions/ReceiptPage';
+import TransactionTrackingPage from './components/TransactionTrackingPage';
 
 // Agent W2P
 import VerifyTransaction from './pages/wallet-to-person/agent/VerifyTransaction';
@@ -50,6 +66,14 @@ import ViewRefundPage from './pages/refund-requests/ViewRefundPage';
 import AdminRefundsPage from './pages/refund-requests/AdminRefundPage';
 import RefundDetailPage from './pages/refund-requests/RefundDetailPage';
 
+// Services & Reviews
+import ServiceListPage from './pages/ServiceListPage';
+import ServiceFormPage from './pages/ServiceFormPage';
+import ServiceDetailPage from './pages/ServiceDetailPage';
+import ReviewListPage from './pages/ReviewListPage';
+import ReviewFormPage from './pages/ReviewFormPage';
+import ReviewDetailPage from './pages/ReviewDetailPage';
+
 function AppContent() {
   const { user, loading } = useAuth();
 
@@ -60,43 +84,36 @@ function AppContent() {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 relative">
       <Navbar />
+      <ChatWidget />
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signup/agent" element={<AgentSignupPage />} />
-          <Route
-            path="/auth/google/callback"
-            element={<GoogleCallbackPage />}
-          />
+          <Route path="/auth/google/callback" element={<GoogleCallbackPage />} />
+          <Route path="/auth/github/callback" element={<GitHubCallbackPage />} />
+
+          {/* Dashboard Routes */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/agents" element={<AdminAgentsPage />} />
+          <Route path="/agent/dashboard" element={<AgentDashboard />} />
+          <Route path="/user/dashboard" element={<UserDashboard />} />
 
           {/* Cash Operations & Profiles */}
           <Route path="/agents" element={<AgentsPage />} />
           <Route path="/agents/:id" element={<AgentProfilePage />} />
-          <Route
-            path="/agent/cash-operations/new"
-            element={<AgentCashOperationForm />}
-          />
-          <Route
-            path="/agent/cash-operations"
-            element={<AgentCashOperations />}
-          />
-          <Route
-            path="/user/cash-operations"
-            element={<UserCashOperations />}
-          />
+          <Route path="/agent/cash-operations/new" element={<AgentCashOperationForm />} />
+          <Route path="/agent/cash-operations" element={<AgentCashOperations />} />
+          <Route path="/user/cash-operations" element={<UserCashOperations />} />
           <Route path="/users/:id" element={<UserProfile />} />
           <Route path="/profile" element={<UserProfilePage />} />
 
           {/* Beneficiaries */}
           <Route path="/beneficiaries/add" element={<AddBeneficiaryPage />} />
-          <Route
-            path="/beneficiaries/:id/edit"
-            element={<EditBeneficiaryPage />}
-          />
+          <Route path="/beneficiaries/:id/edit" element={<EditBeneficiaryPage />} />
           <Route path="/beneficiaries" element={<BeneficiariesListPage />} />
 
           {/* Wallet to Person - User */}
@@ -107,6 +124,7 @@ function AppContent() {
           {/* Wallet to Person - Transactions History */}
           <Route path="/transactions" element={<TransactionsHistory />} />
           <Route path="/transactions/receipt/:id" element={<ReceiptPage />} />
+          <Route path="/transactions/tracking" element={<TransactionTrackingPage />} />
 
           {/* Agent - Wallet to Person */}
           <Route path="/agent/verify" element={<VerifyTransaction />} />
@@ -115,24 +133,25 @@ function AppContent() {
           {/* Refund Requests */}
           <Route path="/refund/create" element={<CreateRefundPage />} />
           <Route path="/refund/view/:id" element={<ViewRefundPage />} />
-          <Route
-            path="/admin/refunds/:refundId"
-            element={<RefundDetailPage />}
-          />
+          <Route path="/admin/refunds/:refundId" element={<RefundDetailPage />} />
           <Route path="/admin/refunds" element={<AdminRefundsPage />} />
 
           {/* Support Requests */}
           <Route path="/dash" element={<DashboardTest />} />
           <Route path="/support-request" element={<SupportPage />} />
-          <Route
-            path="/support-request-list"
-            element={<SupportRequestListPage />}
-          />
+          <Route path="/support-request-list" element={<SupportRequestListPage />} />
           <Route path="/support/:id" element={<SupportRequestDetailPage />} />
-          <Route
-            path="/admin/support/:id"
-            element={<SupportRequestDetailAdminPage />}
-          />
+          <Route path="/admin/support/:id" element={<SupportRequestDetailAdminPage />} />
+
+          {/* Services & Reviews */}
+          <Route path="/services" element={<ServiceListPage />} />
+          <Route path="/services/add" element={<ServiceFormPage />} />
+          <Route path="/services/edit/:id" element={<ServiceFormPage />} />
+          <Route path="/services/:id" element={<ServiceDetailPage />} />
+          <Route path="/reviews" element={<ReviewListPage />} />
+          <Route path="/reviews/add" element={<ReviewFormPage />} />
+          <Route path="/reviews/:id" element={<ReviewDetailPage />} />
+          <Route path="/reviews/edit/:id" element={<ReviewFormPage />} />
         </Routes>
       </main>
       <Footer />
