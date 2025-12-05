@@ -11,8 +11,8 @@ export default function EWalletList({ wallets, onWalletClick, onWalletDelete, on
 
         <button
           onClick={onAddWallet}
-          className="mt-4 bg-teal-800 text-white px-6 py-2 rounded-xl 
-                     hover:bg-teal-700 transition shadow-md hover:shadow-lg"
+          className="mt-4 bg-teal-900 text-white px-6 py-2 rounded-xl 
+                     hover:bg-teal-800 transition shadow-md hover:shadow-lg"
         >
           Add New Wallet
         </button>

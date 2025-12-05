@@ -57,6 +57,8 @@ import WalletToWalletPage from './pages/wallet-to-wallet/WalletToWalletTransacti
 import TransactionsHistory from './pages/wallet-to-person/transactions/TransactionHistory';
 import ReceiptPage from './pages/wallet-to-person/transactions/ReceiptPage';
 import TransactionTrackingPage from './components/TransactionTrackingPage';
+import W2WHistory from './pages/wallet-to-wallet/History';
+import W2WDetails from './pages/wallet-to-wallet/TransactionDetails';
 
 // Agent W2P
 import VerifyTransaction from './pages/wallet-to-person/agent/VerifyTransaction';
@@ -119,6 +121,8 @@ function AppContent() {
 
           {/* Wallets*/}
           <Route path="/wallets" element={<UserWalletsPage />} />
+          <Route path="/wallet-to-wallet/history" element={<W2WHistory />} />
+          <Route path="/wallet-to-wallet/details/:id" element={<W2WDetails />} />
 
           {/* Wallet to Person - User */}
           <Route path="/send" element={<SendMoneyPage />} />

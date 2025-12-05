@@ -1,52 +1,50 @@
 import { Trash2 } from "lucide-react";
 
 export default function EWalletCard({ wallet, onDelete, onClick }) {
-  const cardGradient = "from-teal-300 to-emerald-400";
-
   return (
     <div
       onClick={onClick}
-      className={`relative rounded-3xl p-6 w-80 shadow-xl cursor-pointer overflow-hidden 
-      bg-gradient-to-br ${cardGradient} text-gray-900`}
+      className={`relative rounded-3xl p-6 w-80 cursor-pointer overflow-hidden 
+      bg-gradient-to-br from-teal-900/95 via-teal-800/95 to-teal-900/95 
+      text-white border border-teal-700/40 
+      hover:border-teal-600/50 transition-all duration-300`}
     >
 
-      {/* Soft background circles */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full -ml-16 -mb-16"></div>
+      {/* Minimal background effect */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                      w-64 h-64 bg-teal-400/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Content */}
       <div className="relative z-10">
-
-        {/* Balance */}
-        <div className="mb-6">
-          <p className="text-4xl font-bold mt-1">
+        <div className="mb-8">
+          <p className="text-4xl font-medium mt-1 tracking-tight text-white/95">
             {wallet.currency_code} {wallet.balance}
           </p>
         </div>
 
-        {/* Wallet Number */}
-        <div>
-          <p className="text-sm font-medium mb-1 text-gray-700 underline">
+        <div className="mt-8">
+          <p className="text-sm font-normal mb-1.5 text-teal-100/60">
             E-Wallet Number
           </p>
-          <p className="text-xl font-semibold tracking-wide">
+          <p className="text-lg font-medium tracking-wide text-white/90">
             {wallet.wallet_id}
           </p>
         </div>
 
-        {/* Delete Icon */}
         {onDelete && (
           <button
             onClick={(e) => {
               e.stopPropagation();
               onDelete();
             }}
-            className="absolute bottom-2 right-2 bg-teal-600 hover:bg-teal-700 
-                       p-2 rounded-full shadow-lg transition"
+            className="absolute bottom-6 right-6 
+                       p-2 rounded-full transition-all duration-200
+                       hover:bg-teal-800/30 text-teal-200/60 hover:text-teal-100"
+            aria-label="Delete wallet"
           >
-            <Trash2 className="w-5 h-5 text-white" />
+            <Trash2 className="w-5 h-5" />
           </button>
         )}
       </div>
