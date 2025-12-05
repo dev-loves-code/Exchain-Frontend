@@ -55,6 +55,9 @@ export default function WalletToWalletPage() {
           currency_code: currency
         })
       });
+      // In browser console on your React app:
+      console.log(localStorage.getItem('token'));
+      console.log('Status:', response.status);
       
       const raw = await response.text();
       let data = null;
