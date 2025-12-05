@@ -45,15 +45,20 @@ import BeneficiariesListPage from './pages/beneficiaries/BeneficiariesListPage';
 import AddBeneficiaryPage from './pages/beneficiaries/AddBeneficiaryPage';
 import EditBeneficiaryPage from './pages/beneficiaries/EditBeneficiaryPage';
 
+import UserWalletsPage from './pages/UserWalletsPage';
+
 // Send Money Flow
 import SendMoneyPage from './pages/wallet-to-person/send/SendMoneyPage';
 import ConfirmTransaction from './pages/wallet-to-person/send/ConfirmTransaction';
 import TransactionSuccess from './pages/wallet-to-person/send/TransactionSuccess';
+import WalletToWalletPage from './pages/wallet-to-wallet/WalletToWalletTransaction';
 
 // Transactions
 import TransactionsHistory from './pages/wallet-to-person/transactions/TransactionHistory';
 import ReceiptPage from './pages/wallet-to-person/transactions/ReceiptPage';
 import TransactionTrackingPage from './components/TransactionTrackingPage';
+import W2WHistory from './pages/wallet-to-wallet/History';
+import W2WDetails from './pages/wallet-to-wallet/TransactionDetails';
 
 // Agent W2P
 import VerifyTransaction from './pages/wallet-to-person/agent/VerifyTransaction';
@@ -114,6 +119,11 @@ function AppContent() {
           <Route path="/beneficiaries/:id/edit" element={<EditBeneficiaryPage />} />
           <Route path="/beneficiaries" element={<BeneficiariesListPage />} />
 
+          {/* Wallets*/}
+          <Route path="/wallets" element={<UserWalletsPage />} />
+          <Route path="/wallet-to-wallet/history" element={<W2WHistory />} />
+          <Route path="/wallet-to-wallet/details/:id" element={<W2WDetails />} />
+
           {/* Wallet to Person - User */}
           <Route path="/send" element={<SendMoneyPage />} />
           <Route path="/send/confirm" element={<ConfirmTransaction />} />
@@ -127,6 +137,9 @@ function AppContent() {
           {/* Agent - Wallet to Person */}
           <Route path="/agent/verify" element={<VerifyTransaction />} />
           <Route path="/agent/complete" element={<CompleteTransaction />} />
+
+          {/* Wallet to Wallet - User */}
+          <Route path="/wallet-to-wallet" element={<WalletToWalletPage />} />
 
           {/* Refund Requests */}
           <Route path="/refund/create" element={<CreateRefundPage />} />

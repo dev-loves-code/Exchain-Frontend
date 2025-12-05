@@ -55,10 +55,13 @@ const Navbar = () => {
   // User dropdown items
   const userLinks = [
     { to: '/user/dashboard', label: 'Dashboard' },
+    { to: '/wallets', label: 'My Wallets' },
     { to: '/agents', label: 'Agents' },
     { to: '/user/cash-operations', label: 'Cash Operations' },
     { to: '/send', label: 'Wallet to Person' },
     { to: '/transactions', label: 'W2P Transactions' },
+    {to: '/wallet-to-wallet', label: 'Wallet to Wallet'}, 
+    {to: '/wallet-to-wallet/history', label: 'W2W Transactions'}, 
     { to: '/beneficiaries', label: 'Beneficiaries' },
     { to: '/services', label: 'Services' },
     { to: '/reviews', label: 'My Reviews' },
