@@ -27,7 +27,6 @@ import AgentProfilePage from './pages/AgentProfilePage';
 import AgentsPage from './pages/AgentsPage';
 import UserProfile from './pages/UserProfile';
 import UserProfilePage from './pages/UserProfilePage';
-import { AdminAgentsPage } from './pages/AdminAgentsPage';
 
 // Cash Operations
 import AgentCashOperationForm from './pages/AgentCashOperationForm';
@@ -98,7 +97,6 @@ function AppContent() {
 
           {/* Dashboard Routes */}
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/admin/agents" element={<AdminAgentsPage />} />
           <Route path="/agent/dashboard" element={<AgentDashboard />} />
           <Route path="/user/dashboard" element={<UserDashboard />} />
 

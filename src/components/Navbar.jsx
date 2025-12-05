@@ -79,7 +79,6 @@ const Navbar = () => {
   const adminLinks = [
     { to: '/admin/dashboard', label: 'Dashboard' },
     { to: '/agents', label: 'Agents' },
-    { to: '/admin/agents', label: 'Manage Agents' },
     { to: '/admin/refunds', label: 'Manage Refunds' },
     { to: '/support-request-list', label: 'Support Admin' },
     { to: '/services', label: 'Services' },

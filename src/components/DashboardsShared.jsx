@@ -59,7 +59,16 @@ export const SummaryGrid = ({ items }) => (
 );
 
 export const LineChart = ({ labels = [], data = [], label = 'Data', gradientColor = '99, 102, 241' }) => {
-  if (!data || data.length === 0) return null;
+  if (!data || data.length === 0 || !labels || labels.length === 0) {
+    return (
+      <div className="bg-white p-8 rounded-3xl shadow-2xl flex items-center justify-center h-64">
+        <div className="text-center">
+          <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+          <p className="text-gray-500">No chart data available</p>
+        </div>
+      </div>
+    );
+  }
   
   const chartData = {
     labels,
@@ -83,6 +92,7 @@ export const LineChart = ({ labels = [], data = [], label = 'Data', gradientColo
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -117,7 +127,7 @@ export const LineChart = ({ labels = [], data = [], label = 'Data', gradientColo
   };
 
   return (
-    <div className="bg-white p-6 rounded-3xl shadow-2xl">
+    <div className="bg-white p-6 rounded-3xl shadow-2xl h-72">
       <Line data={chartData} options={options} />
     </div>
   );
@@ -129,17 +139,17 @@ export const TransactionsTable = ({ transactions = [], showAgent = false }) => (
       <table className="w-full text-left">
         <thead>
           <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
-            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">ID</th>
-            {showAgent && <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Agent</th>}
-            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Amount</th>
-            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Status</th>
-            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Date</th>
+            <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">ID</th>
+            {showAgent && <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">Agent</th>}
+            <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">Amount</th>
+            <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">Status</th>
+            <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
           {transactions.length === 0 ? (
             <tr>
-              <td colSpan={showAgent ? 5 : 4} className="text-center py-8">
+              <td colSpan={showAgent ? 5 : 4} className="text-center py-12">
                 <div className="flex flex-col items-center">
                   <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
                     <CreditCard className="w-8 h-8 text-gray-400" />
@@ -151,22 +161,22 @@ export const TransactionsTable = ({ transactions = [], showAgent = false }) => (
           ) : (
             transactions.map(t => (
               <tr key={t.transaction_id} className="hover:bg-gray-50 transition-all duration-200">
-                <td className="px-6 py-4 text-gray-900 font-medium border-r border-gray-100">
+                <td className="px-4 py-3 text-gray-900 font-medium border-r border-gray-100">
                   <div className="flex items-center">
                     <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
-                      <span className="text-blue-600 font-bold">#{t.transaction_id}</span>
+                      <span className="text-blue-600 font-bold text-sm">#{t.transaction_id}</span>
                     </div>
                   </div>
                 </td>
                 {showAgent && (
-                  <td className="px-6 py-4 text-gray-700 border-r border-gray-100">
-                    {t.agent?.full_name || 'N/A'}
+                  <td className="px-4 py-3 text-gray-700 border-r border-gray-100">
+                    {t.user?.full_name || 'N/A'}
                   </td>
                 )}
-                <td className="px-6 py-4 text-gray-900 font-semibold border-r border-gray-100">
+                <td className="px-4 py-3 text-gray-900 font-semibold border-r border-gray-100">
                   ${t.transfer_amount}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-3">
                   <span className={`px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full ${
                     t.status === 'done' ? 'bg-green-100 text-green-800 border border-green-200' :
                     t.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
@@ -175,7 +185,7 @@ export const TransactionsTable = ({ transactions = [], showAgent = false }) => (
                     {t.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-gray-600">
+                <td className="px-4 py-3 text-gray-600 text-sm">
                   {new Date(t.created_at).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -228,7 +238,7 @@ export const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-screen-2xl mx-auto"> {/* Changed to wider max-width */}
         {/* Header */}
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
@@ -289,17 +299,17 @@ export const AdminDashboard = () => {
                   title: 'Manage Agents', 
                   value: 'View Agents', 
                   icon: UserPlus,
-                  onClick: () => navigate('/admin/agents'), 
+                  onClick: () => navigate('/agents'), 
                   isButton: true 
                 }
               ]}
             />
           </div>
 
-          {/* Recent Transactions */}
+          {/* Recent Transactions - REMOVED showAgent prop */}
           <div className="mb-10">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Transactions</h2>
-            <TransactionsTable transactions={dashboard.history.latest_transactions || []} showAgent />
+            <TransactionsTable transactions={dashboard.history.latest_transactions || []} />
           </div>
 
           {/* Charts Grid */}
@@ -372,13 +382,16 @@ export const AgentDashboard = () => {
     );
   }
 
-  const usersPerDay = Object.entries(dashboard.history.users_per_day || {}).map(
-    ([date, total]) => ({ date, total })
-  );
+  // Fix for agent graph data structure
+  const usersPerDay = Array.isArray(dashboard.history?.users_per_day) 
+    ? dashboard.history.users_per_day.map(d => ({ date: d.date, total: d.total }))
+    : dashboard.history?.users_per_day 
+      ? Object.entries(dashboard.history.users_per_day).map(([date, total]) => ({ date, total }))
+      : [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-screen-2xl mx-auto"> {/* Changed to wider max-width */}
         {/* Header */}
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
@@ -443,7 +456,7 @@ export const AgentDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
             {/* Cash Pickups Table */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Cash Pickups</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Transactions</h2>
               <TransactionsTable 
                 transactions={dashboard.history.latest_transactions || []} 
               />
@@ -457,35 +470,48 @@ export const AgentDashboard = () => {
                   <table className="w-full text-left">
                     <thead>
                       <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
-                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">ID</th>
-                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Type</th>
-                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Amount</th>
-                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Commission</th>
-                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Status</th>
+                        <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">ID</th>
+                        <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">Type</th>
+                        <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">Amount</th>
+                        <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider border-r border-gray-200">Commission</th>
+                        <th className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {dashboard.history.latest_cash_operations?.map(op => (
-                        <tr key={op.cash_op_id} className="hover:bg-gray-50 transition-all duration-200">
-                          <td className="px-6 py-4 text-gray-900 font-medium border-r border-gray-100">#{op.cash_op_id}</td>
-                          <td className="px-6 py-4 text-gray-700 border-r border-gray-100">
-                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                              {op.operation_type}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-gray-900 font-semibold border-r border-gray-100">${op.amount}</td>
-                          <td className="px-6 py-4 text-gray-700 border-r border-gray-100">{op.agent_commission}%</td>
-                          <td className="px-6 py-4">
-                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full ${
-                              op.status === 'completed' ? 'bg-green-100 text-green-800 border border-green-200' :
-                              op.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
-                              'bg-gray-100 text-gray-800 border border-gray-200'
-                            }`}>
-                              {op.status}
-                            </span>
+                      {dashboard.history.latest_cash_operations?.length > 0 ? (
+                        dashboard.history.latest_cash_operations.map(op => (
+                          <tr key={op.cash_op_id} className="hover:bg-gray-50 transition-all duration-200">
+                            <td className="px-4 py-3 text-gray-900 font-medium border-r border-gray-100 text-sm">#{op.cash_op_id}</td>
+                            <td className="px-4 py-3 text-gray-700 border-r border-gray-100">
+                              <span className="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                                {op.operation_type}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-gray-900 font-semibold border-r border-gray-100">${op.amount}</td>
+                            <td className="px-4 py-3 text-gray-700 border-r border-gray-100">{op.agent_commission}%</td>
+                            <td className="px-4 py-3">
+                              <span className={`px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full ${
+                                op.status === 'completed' ? 'bg-green-100 text-green-800 border border-green-200' :
+                                op.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                                'bg-gray-100 text-gray-800 border border-gray-200'
+                              }`}>
+                                {op.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="5" className="text-center py-12">
+                            <div className="flex flex-col items-center">
+                              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                                <CreditCard className="w-8 h-8 text-gray-400" />
+                              </div>
+                              <p className="text-gray-500">No cash operations found</p>
+                            </div>
                           </td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -493,8 +519,8 @@ export const AgentDashboard = () => {
             </div>
           </div>
 
-          {/* Users Growth Chart */}
-          {usersPerDay.length > 0 && (
+          {/* Users Growth Chart - Fixed to handle different data structures */}
+          {usersPerDay.length > 0 ? (
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-6">User Activity Over Time</h2>
               <LineChart
@@ -503,6 +529,11 @@ export const AgentDashboard = () => {
                 label="Unique Users per Day"
                 gradientColor="245, 158, 11"
               />
+            </div>
+          ) : (
+            <div className="bg-white rounded-3xl shadow-2xl p-8 text-center">
+              <BarChart3 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500">No user activity data available</p>
             </div>
           )}
 
@@ -547,7 +578,7 @@ export const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-screen-2xl mx-auto"> {/* Changed to wider max-width */}
         {/* Header */}
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-2 mb-3">
