@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import Loading from '../../../components/Loading';
 import ValidationErrors from '../../../components/ValidationErrors';
+import WalletSelector from '../../../components/Wallet/WalletSelector';
 
 export default function SendMoneyPage() {
   const navigate = useNavigate();
@@ -57,18 +58,17 @@ export default function SendMoneyPage() {
   const selectedService = services.find(
     (s) => String(s.service_id) === String(formData.serviceId)
   );
+
   const amountNum = parseFloat(formData.amount) || 0;
-  const feePercentage = selectedService
-    ? Number(selectedService.fee_percentage)
-    : 0;
+  const feePercentage = selectedService ? Number(selectedService.fee_percentage) : 0;
   const fees = (amountNum * (feePercentage / 100)).toFixed(2);
   const totalToPay = formData.includeFees
     ? (amountNum + parseFloat(fees)).toFixed(2)
     : amountNum.toFixed(2);
+
   const recipientGets = amountNum.toFixed(2);
 
   const onContinue = () => {
-    // Validation
     if (!formData.senderWalletId) return setErrors(['Enter sender wallet ID']);
     if (!formData.recipient || !formData.recipientEmail)
       return setErrors(['Enter recipient details']);
@@ -85,6 +85,7 @@ export default function SendMoneyPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
+
         {/* Steps Header */}
         <div className="flex justify-center items-center gap-8 mb-10">
           {[
@@ -105,7 +106,9 @@ export default function SendMoneyPage() {
                 {step > s.num ? <Check className="w-6 h-6" /> : s.num}
               </div>
               <span
-                className={`mt-2 text-sm font-medium ${step === s.num ? 'text-teal-800' : 'text-gray-500'}`}
+                className={`mt-2 text-sm font-medium ${
+                  step === s.num ? 'text-teal-800' : 'text-gray-500'
+                }`}
               >
                 {s.label}
               </span>
@@ -113,23 +116,21 @@ export default function SendMoneyPage() {
           ))}
         </div>
 
+        {/* GRID LAYOUT FIXED */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* LEFT – FORM */}
+
+          {/* LEFT PANEL — FORM */}
           <div className="bg-white rounded-2xl shadow-lg p-8 h-fit lg:sticky lg:top-6">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-black text-gray-900 mb-2">
-                Send Money
-              </h1>
-              <p className="text-gray-600">
-                Send your money anytime, anywhere in the world.
-              </p>
+              <h1 className="text-3xl font-black text-gray-900 mb-2">Send Money</h1>
+              <p className="text-gray-600">Send your money anytime, anywhere in the world.</p>
             </div>
 
             <div className="bg-gray-50 rounded-xl p-6 mb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">
-                Personal Details
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Personal Details</h2>
+
               <div className="space-y-5">
+
                 {/* Wallet */}
                 <div>
                   <label className="block text-gray-900 font-medium mb-2">
@@ -139,10 +140,7 @@ export default function SendMoneyPage() {
                     type="text"
                     value={formData.senderWalletId}
                     onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        senderWalletId: e.target.value,
-                      })
+                      setFormData({ ...formData, senderWalletId: e.target.value })
                     }
                     placeholder="Enter your wallet ID"
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900"
@@ -174,10 +172,7 @@ export default function SendMoneyPage() {
                     type="email"
                     value={formData.recipientEmail}
                     onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        recipientEmail: e.target.value,
-                      })
+                      setFormData({ ...formData, recipientEmail: e.target.value })
                     }
                     placeholder="email@example.com"
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl"
@@ -211,9 +206,7 @@ export default function SendMoneyPage() {
 
                 {/* Include Fees */}
                 <div>
-                  <label className="block text-gray-900 font-medium mb-2">
-                    Include Fees
-                  </label>
+                  <label className="block text-gray-900 font-medium mb-2">Include Fees</label>
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2">
                       <input
@@ -247,8 +240,7 @@ export default function SendMoneyPage() {
                 {/* Service */}
                 <div>
                   <label className="block text-gray-900 font-medium mb-2">
-                    Select Cash-Out Service{' '}
-                    <span className="text-red-500">*</span>
+                    Select Cash-Out Service <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.serviceId}
@@ -260,8 +252,7 @@ export default function SendMoneyPage() {
                     <option value="">Select Service</option>
                     {services.map((s) => (
                       <option key={s.service_id} value={s.service_id}>
-                        {s.service_type} - {s.transfer_speed} - Fee:{' '}
-                        {s.fee_percentage}%
+                        {s.service_type} - {s.transfer_speed} - Fee: {s.fee_percentage}%
                       </option>
                     ))}
                   </select>
@@ -279,6 +270,7 @@ export default function SendMoneyPage() {
                     }
                   />
                 </div>
+
               </div>
             </div>
 
@@ -290,10 +282,9 @@ export default function SendMoneyPage() {
                   {fees} {formData.currency}
                 </span>
               </div>
+
               <div className="flex justify-between py-3">
-                <span className="text-gray-900 font-bold text-lg">
-                  Total To Pay
-                </span>
+                <span className="text-gray-900 font-bold text-lg">Total To Pay</span>
                 <span className="text-gray-900 font-bold text-xl">
                   {totalToPay} {formData.currency}
                 </span>
@@ -308,8 +299,29 @@ export default function SendMoneyPage() {
             </button>
           </div>
 
-          {/* Beneficiary Selector */}
-          <BeneficiarySelector onSelect={handleBeneficiarySelect} />
+          {/* RIGHT PANEL — BENEFICIARY + WALLET */}
+          <div className="bg-white p-8 rounded-xl shadow-lg">
+
+            {/* Beneficiary selector */}
+            <h2 className="text-2xl font-bold mb-6">Select Beneficiary</h2>
+            <BeneficiarySelector onSelect={handleBeneficiarySelect} />
+
+            {/* Wallet selector */}
+            <div className="mt-8">
+              <h2 className="text-2xl font-bold mb-6">Select Wallet</h2>
+              <WalletSelector
+                compact={true}
+                showAllOption={false}
+                onSelect={(wallet) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    senderWalletId: wallet?.wallet_id || "",
+                  }))
+                }
+              />
+            </div>
+
+          </div>
         </div>
       </div>
 
