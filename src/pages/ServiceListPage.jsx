@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
-import { Trash2, Edit, Eye, PlusCircle, Loader2, FilterX } from 'lucide-react';
+import { Trash2, Edit, Eye, PlusCircle, Loader2, FilterX, ArrowLeft, Sparkles, Search, Filter, ArrowUpDown } from 'lucide-react';
 import { fetchServices, deleteService } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const MessageBar = ({ message, type }) => {
     if (!message) return null;
-    const baseClasses = "p-4 rounded-xl font-medium shadow-md transition-all duration-300";
+    const baseClasses = "p-4 rounded-xl font-medium shadow-md transition-all duration-300 border";
     const colorClasses = type === 'error' 
         ? 'bg-red-100 text-red-700 border-red-200' 
         : 'bg-green-100 text-green-700 border-green-200';
-    return <div className={`${baseClasses} ${colorClasses} mb-6 border`}>{message}</div>;
+    return <div className={`${baseClasses} ${colorClasses} mb-6`}>{message}</div>;
 };
 
 const ServiceListPage = () => {
@@ -34,9 +34,6 @@ const ServiceListPage = () => {
     });
 
     const isAdmin = user?.role === 'admin';
-    console.log('🔍 User object:', user);
-    console.log('🔍 User role_id:', user?.role_id);
-    console.log('🔍 Is admin:', isAdmin);
     
     const loadServices = useCallback(async (page = 1) => {
         if (!token) {
@@ -53,19 +50,6 @@ const ServiceListPage = () => {
             if (filters.service_type) apiFilters.service_type = filters.service_type;
             if (filters.transfer_speed) apiFilters.transfer_speed = filters.transfer_speed;
             
-            console.log('🔍 Sending to API:', {
-                filters: apiFilters,
-                page,
-                perPage: pagination.perPage,
-                sort: filters.sort,
-                fullURL: `http://127.0.0.1:8000/api/services?${new URLSearchParams({ 
-                    ...apiFilters, 
-                    page, 
-                    perPage: pagination.perPage, 
-                    sort: filters.sort 
-                }).toString()}`
-            });
-            
             const servicesData = await fetchServices(
                 token, 
                 apiFilters, 
@@ -73,17 +57,6 @@ const ServiceListPage = () => {
                 pagination.perPage, 
                 filters.sort
             );
-            
-            console.log('📦 Received from API:', {
-                dataCount: servicesData.data?.length,
-                total: servicesData.total,
-                currentPage: servicesData.current_page,
-                filtersApplied: servicesData.data?.map(s => ({ 
-                    id: s.service_id, 
-                    type: s.service_type, 
-                    speed: s.transfer_speed 
-                }))
-            });
             
             setServices(servicesData.data || []);
             setPagination({
@@ -106,7 +79,6 @@ const ServiceListPage = () => {
     }, [token, filters, pagination.perPage]);
 
     useEffect(() => {
-        console.log('🔄 Filters changed, reloading services:', filters);
         if (token) {
             loadServices(1);
         }
@@ -114,7 +86,6 @@ const ServiceListPage = () => {
 
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
-        console.log(`🎛️ Filter changed: ${name} = "${value}"`);
         setFilters(prev => ({ ...prev, [name]: value }));
     };
 
@@ -170,7 +141,6 @@ const ServiceListPage = () => {
     };
 
     const handleClearFilters = () => {
-        console.log('🧹 Clearing all filters');
         setFilters({ 
             service_type: '', 
             transfer_speed: '', 
@@ -179,21 +149,20 @@ const ServiceListPage = () => {
     };
 
     const handlePageChange = (newPage) => {
-        console.log('📄 Changing to page:', newPage);
         loadServices(newPage);
     };
 
     const ServiceRow = ({ service }) => {
         const typeColor = {
-            transfer: 'bg-blue-100 text-blue-800',
-            payment: 'bg-purple-100 text-purple-800',
-            cash_out: 'bg-teal-100 text-teal-800',
+            transfer: 'bg-blue-100 text-blue-800 border border-blue-200',
+            payment: 'bg-purple-100 text-purple-800 border border-purple-200',
+            cash_out: 'bg-teal-100 text-teal-800 border border-teal-200',
         };
 
         const speedColor = {
-            instant: 'text-green-600 font-semibold',
-            same_day: 'text-yellow-600',
-            '1-3_days': 'text-red-600',
+            instant: 'bg-green-100 text-green-800 border border-green-200',
+            same_day: 'bg-yellow-100 text-yellow-800 border border-yellow-200',
+            '1-3_days': 'bg-red-100 text-red-800 border border-red-200',
         };
 
         const feePercentage = typeof service.fee_percentage === 'number' 
@@ -201,46 +170,57 @@ const ServiceListPage = () => {
             : parseFloat(service.fee_percentage) || 0;
 
         return (
-            <tr key={service.service_id} className="hover:bg-gray-50 transition duration-150 ease-in-out">
+            <tr key={service.service_id} className="hover:bg-gray-50 transition-all duration-200">
                 <td className="px-8 py-5 whitespace-nowrap text-base font-semibold text-gray-900 border-r border-gray-100">
-                    #{service.service_id}
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg flex items-center justify-center">
+                            <span className="text-blue-600 font-bold">#{service.service_id}</span>
+                        </div>
+                    </div>
                 </td>
                 <td className="px-8 py-5 whitespace-nowrap border-r border-gray-100">
-                    <span className={`px-4 py-2 inline-flex text-sm leading-5 font-medium rounded-full ${typeColor[service.service_type] || 'bg-gray-100 text-gray-800'}`}>
+                    <span className={`px-4 py-2 inline-flex text-sm leading-5 font-medium rounded-full ${typeColor[service.service_type] || 'bg-gray-100 text-gray-800 border border-gray-200'}`}>
                         {service.service_type?.replace(/_/g, ' ').toUpperCase() || 'N/A'}
                     </span>
                 </td>
-                <td className={`px-8 py-5 whitespace-nowrap text-base font-medium ${speedColor[service.transfer_speed] || 'text-gray-500'} border-r border-gray-100`}>
-                    {service.transfer_speed?.replace(/_/g, ' ') || 'N/A'}
+                <td className="px-8 py-5 whitespace-nowrap border-r border-gray-100">
+                    <span className={`px-4 py-2 inline-flex text-sm leading-5 font-medium rounded-full ${speedColor[service.transfer_speed] || 'bg-gray-100 text-gray-800 border border-gray-200'}`}>
+                        {service.transfer_speed?.replace(/_/g, ' ') || 'N/A'}
+                    </span>
                 </td>
-                <td className="px-8 py-5 whitespace-nowrap text-base font-semibold text-gray-900">
-                    {feePercentage.toFixed(2)}%
+                <td className="px-8 py-5 whitespace-nowrap">
+                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-3 inline-block">
+                        <span className="text-2xl font-black text-gray-900">
+                            {feePercentage.toFixed(2)}%
+                        </span>
+                        <span className="text-sm text-gray-500 ml-1">fee</span>
+                    </div>
                 </td>
-                <td className="px-8 py-5 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex justify-end space-x-3">
+                <td className="px-8 py-5 whitespace-nowrap text-right">
+                    <div className="flex justify-end space-x-2">
                         <Link 
                             to={`/services/${service.service_id}`} 
-                            className="p-3 text-gray-500 hover:text-blue-600 transition duration-150 rounded-full hover:bg-blue-50" 
+                            className="p-3 text-gray-500 hover:text-blue-600 transition duration-200 rounded-xl hover:bg-blue-50 border border-gray-200 hover:border-blue-300" 
                             title="View Details"
                         >
-                            <Eye size={20} />
+                            <Eye size={18} />
                         </Link>
                         
                         {isAdmin && (
                             <>
                                 <Link 
                                     to={`/services/edit/${service.service_id}`} 
-                                    className="p-3 text-gray-500 hover:text-yellow-600 transition duration-150 rounded-full hover:bg-yellow-50" 
+                                    className="p-3 text-gray-500 hover:text-yellow-600 transition duration-200 rounded-xl hover:bg-yellow-50 border border-gray-200 hover:border-yellow-300" 
                                     title="Edit Service"
                                 >
-                                    <Edit size={20} />
+                                    <Edit size={18} />
                                 </Link>
                                 <button 
                                     onClick={() => handleDelete(service.service_id)} 
-                                    className="p-3 text-gray-500 hover:text-red-600 transition duration-150 rounded-full hover:bg-red-50" 
+                                    className="p-3 text-gray-500 hover:text-red-600 transition duration-200 rounded-xl hover:bg-red-50 border border-gray-200 hover:border-red-300" 
                                     title="Delete Service"
                                 >
-                                    <Trash2 size={20} />
+                                    <Trash2 size={18} />
                                 </button>
                             </>
                         )}
@@ -255,29 +235,29 @@ const ServiceListPage = () => {
         const endItem = Math.min(pagination.currentPage * pagination.perPage, pagination.total);
 
         return (
-            <div className="flex justify-between items-center px-4 py-3 sm:px-6">
-                <p className="text-sm text-gray-700">
-                    Showing <span className="font-medium">{startItem}</span> to <span className="font-medium">{endItem}</span> of <span className="font-medium">{pagination.total}</span> results
+            <div className="flex flex-col sm:flex-row justify-between items-center px-6 py-5 bg-gray-50 border-t border-gray-100">
+                <p className="text-sm text-gray-600 mb-3 sm:mb-0">
+                    Showing <span className="font-semibold text-gray-900">{startItem}</span> to <span className="font-semibold text-gray-900">{endItem}</span> of <span className="font-semibold text-gray-900">{pagination.total}</span> services
                 </p>
-                <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                <div className="flex items-center space-x-2">
                     <button
                         onClick={() => handlePageChange(pagination.currentPage - 1)}
                         disabled={pagination.currentPage === 1}
-                        className="relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 rounded-xl border border-gray-300 bg-teal-800 text-white text-sm font-medium hover:bg-teal-900 hover:shadow transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                     >
-                        Previous
+                        <ArrowLeft size={16} className="mr-1" /> Prev
                     </button>
-                    <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                    <span className="px-4 py-2 bg-teal-800 text-white border border-gray-300 rounded-xl text-sm font-medium">
                         Page {pagination.currentPage} of {pagination.lastPage}
                     </span>
                     <button
                         onClick={() => handlePageChange(pagination.currentPage + 1)}
                         disabled={pagination.currentPage === pagination.lastPage || pagination.total === 0}
-                        className="relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-4 py-2 rounded-xl border border-gray-300 bg-teal-800 text-white text-sm font-medium hover:bg-teal-900 hover:shadow transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                     >
-                        Next
+                        Next <ArrowLeft size={16} className="ml-1 rotate-180" />
                     </button>
-                </nav>
+                </div>
             </div>
         );
     };
@@ -285,152 +265,211 @@ const ServiceListPage = () => {
     const hasActiveFilters = filters.service_type || filters.transfer_speed;
 
     return (
-        <div className="p-4 md:p-8 max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-4xl font-extrabold text-gray-900">
-                    Service Catalog
-                </h1>
-                {isAdmin && (
-                    <Link 
-                        to="/services/add" 
-                        className="flex items-center bg-gradient-to-r from-green-500 to-teal-600 text-white px-5 py-2 rounded-xl font-semibold shadow-lg hover:shadow-xl transition transform hover:scale-[1.02]"
-                    >
-                        <PlusCircle size={20} className="mr-2" /> Add New Service
-                    </Link>
-                )}
-            </div>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+            <div className="max-w-7xl mx-auto">
+                {/* Back Button - Only show if you have navigation history */}
+                <button
+                    onClick={() => navigate(-1)}
+                    className="mb-6 flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 bg-teal-800 text-white hover:bg-teal-900 transition"
+                >
+                    <ArrowLeft size={18} />
+                    Back
+                </button>
 
-            <MessageBar message={status.message} type={status.type} />
-
-            <div className="bg-white rounded-3xl shadow-2xl p-6 mb-8">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-semibold text-gray-800">Filters & Sorting</h2>
-                    {hasActiveFilters && (
-                        <button
-                            onClick={handleClearFilters}
-                            className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition duration-150"
-                        >
-                            <FilterX size={16} className="mr-1" />
-                            Clear Filters
-                        </button>
-                    )}
+                {/* Header */}
+                <div className="text-center mb-10">
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                        <Sparkles className="w-6 h-6 text-blue-600" />
+                        <span className="text-blue-600 font-semibold text-lg">Service Management</span>
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-black text-gray-900">
+                        Service Catalog
+                    </h1>
+                    <p className="text-slate-500 mt-2">
+                        Manage and browse all available services in the system
+                    </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
-                        <select
-                            name="service_type"
-                            value={filters.service_type}
-                            onChange={handleFilterChange}
-                            className="w-full border border-gray-300 rounded-xl p-3 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="">All Types</option>
-                            <option value="transfer">Transfer</option>
-                            <option value="payment">Payment</option>
-                            <option value="cash_out">Cash Out</option>
-                        </select>
-                    </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Transfer Speed</label>
-                        <select
-                            name="transfer_speed"
-                            value={filters.transfer_speed}
-                            onChange={handleFilterChange}
-                            className="w-full border border-gray-300 rounded-xl p-3 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="">All Speeds</option>
-                            <option value="instant">Instant</option>
-                            <option value="same_day">Same Day</option>
-                            <option value="1-3_days">1-3 Days</option>
-                        </select>
-                    </div>
+                {/* Status Message */}
+                <MessageBar message={status.message} type={status.type} />
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
-                        <select
-                            name="sort"
-                            value={filters.sort}
-                            onChange={handleFilterChange}
-                            className="w-full border border-gray-300 rounded-xl p-3 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                            <option value="service_id">ID (Ascending)</option>
-                            <option value="-service_id">ID (Descending)</option>
-                            <option value="fee_percentage">Fee % (Low to High)</option>
-                            <option value="-fee_percentage">Fee % (High to Low)</option>
-                            <option value="transfer_speed">Transfer Speed</option>
-                            <option value="-created_at">Date (Newest First)</option>
-                            <option value="created_at">Date (Oldest First)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div className="bg-white shadow-2xl rounded-3xl overflow-hidden">
-                {loading ? (
-                    <div className="p-10 text-center text-gray-500">
-                        <Loader2 className="animate-spin inline-block w-8 h-8 border-4 border-t-blue-600 border-gray-200 rounded-full mb-3" />
-                        <p>Loading service data...</p>
-                    </div>
-                ) : services.length === 0 ? (
-                    <div className="p-10 text-center text-gray-500">
-                        <div className="mb-4">
-                            <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+                {/* Main Content Card */}
+                <div className="w-full bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-8">
+                    {/* Card Header with Actions */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                        <div>
+                            <h2 className="text-xl font-semibold text-gray-900 mb-1">All Services</h2>
+                            <p className="text-slate-500">Filter and manage service offerings</p>
                         </div>
-                        <p className="text-lg font-medium text-gray-900 mb-2">No services found</p>
-                        <p className="text-gray-600 mb-6">
-                            {hasActiveFilters 
-                                ? "No services match your current filters." 
-                                : "There are no services in the system yet."
-                            }
-                        </p>
-                        {hasActiveFilters && (
-                            <button
-                                onClick={handleClearFilters}
-                                className="inline-flex items-center bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition transform hover:scale-[1.02]"
-                            >
-                                <FilterX size={18} className="mr-2" />
-                                Clear filters to see all services
-                            </button>
-                        )}
-                        {isAdmin && !hasActiveFilters && (
+                        {isAdmin && (
                             <Link 
                                 to="/services/add" 
-                                className="inline-flex items-center bg-gradient-to-r from-green-500 to-teal-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition transform hover:scale-[1.02] mt-4"
+                                className="flex items-center bg-teal-800 hover:bg-teal-900 text-white px-5 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all mt-4 md:mt-0"
                             >
-                                <PlusCircle size={18} className="mr-2" /> 
-                                Add Your First Service
+                                <PlusCircle size={18} className="mr-2" /> Add New Service
                             </Link>
                         )}
                     </div>
-                ) : (
-                    <>
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">ID</th>
-                                        <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Service Type</th>
-                                        <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider border-r border-gray-200">Transfer Speed</th>
-                                        <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Fee Percentage</th>
-                                        <th className="px-8 py-4 text-right text-sm font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {services.map(service => (
-                                        <ServiceRow key={service.service_id} service={service} />
-                                    ))}
-                                </tbody>
-                            </table>
+
+                    {/* Filters Section */}
+                    <div className="mb-8">
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="flex items-center gap-2">
+                                <Filter className="w-5 h-5 text-gray-500" />
+                                <h3 className="text-lg font-medium text-gray-900">Filters & Sorting</h3>
+                            </div>
+                            {hasActiveFilters && (
+                                <button
+                                    onClick={handleClearFilters}
+                                    className="flex items-center text-sm text-teal-800 hover:text-teal-900 transition px-3 py-1 rounded-lg hover:bg-teal-50"
+                                >
+                                    <FilterX size={16} className="mr-1" />
+                                    Clear Filters
+                                </button>
+                            )}
                         </div>
-                        {pagination.lastPage > 1 && <Pagination />}
-                    </>
-                )}
+                        
+                        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label className="block text-gray-900 font-medium mb-2">Service Type</label>
+                                    <div className="relative">
+                                        <select
+                                            name="service_type"
+                                            value={filters.service_type}
+                                            onChange={handleFilterChange}
+                                            className="w-full pl-4 pr-10 py-3 bg-white border-0 rounded-xl text-gray-900 placeholder-gray-400 transition-all focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
+                                        >
+                                            <option value="">All Types</option>
+                                            <option value="transfer">Transfer</option>
+                                            <option value="payment">Payment</option>
+                                            <option value="cash_out">Cash Out</option>
+                                        </select>
+                                        <div className="absolute right-3 top-3 pointer-events-none">
+                                            <ArrowUpDown size={18} className="text-gray-400" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-900 font-medium mb-2">Transfer Speed</label>
+                                    <div className="relative">
+                                        <select
+                                            name="transfer_speed"
+                                            value={filters.transfer_speed}
+                                            onChange={handleFilterChange}
+                                            className="w-full pl-4 pr-10 py-3 bg-white border-0 rounded-xl text-gray-900 placeholder-gray-400 transition-all focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
+                                        >
+                                            <option value="">All Speeds</option>
+                                            <option value="instant">Instant</option>
+                                            <option value="same_day">Same Day</option>
+                                            <option value="1-3_days">1-3 Days</option>
+                                        </select>
+                                        <div className="absolute right-3 top-3 pointer-events-none">
+                                            <ArrowUpDown size={18} className="text-gray-400" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-gray-900 font-medium mb-2">Sort By</label>
+                                    <div className="relative">
+                                        <select
+                                            name="sort"
+                                            value={filters.sort}
+                                            onChange={handleFilterChange}
+                                            className="w-full pl-4 pr-10 py-3 bg-white border-0 rounded-xl text-gray-900 placeholder-gray-400 transition-all focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none"
+                                        >
+                                            <option value="service_id">ID (Ascending)</option>
+                                            <option value="-service_id">ID (Descending)</option>
+                                            <option value="fee_percentage">Fee % (Low to High)</option>
+                                            <option value="-fee_percentage">Fee % (High to Low)</option>
+                                            <option value="transfer_speed">Transfer Speed</option>
+                                            <option value="-created_at">Date (Newest First)</option>
+                                            <option value="created_at">Date (Oldest First)</option>
+                                        </select>
+                                        <div className="absolute right-3 top-3 pointer-events-none">
+                                            <ArrowUpDown size={18} className="text-gray-400" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Services Table */}
+                    {loading ? (
+                        <div className="py-16 text-center">
+                            <Loader2 className="animate-spin inline-block w-12 h-12 border-4 border-t-blue-600 border-gray-200 rounded-full mb-4" />
+                            <p className="text-gray-600">Loading service data...</p>
+                        </div>
+                    ) : services.length === 0 ? (
+                        <div className="py-16 text-center">
+                            <div className="mb-6">
+                                <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto">
+                                    <Search className="w-12 h-12 text-gray-400" />
+                                </div>
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">No services found</h3>
+                            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                                {hasActiveFilters 
+                                    ? "No services match your current filters. Try adjusting your search criteria." 
+                                    : "There are no services in the system yet."
+                                }
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                                {hasActiveFilters && (
+                                    <button
+                                        onClick={handleClearFilters}
+                                        className="px-6 py-3 bg-teal-800 hover:bg-teal-900 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition transform hover:scale-[1.02]"
+                                    >
+                                        <FilterX size={18} className="inline mr-2" />
+                                        Clear all filters
+                                    </button>
+                                )}
+                                {isAdmin && !hasActiveFilters && (
+                                    <Link 
+                                        to="/services/add" 
+                                        className="px-6 py-3 bg-teal-800 hover:bg-teal-900 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition transform hover:scale-[1.02]"
+                                    >
+                                        <PlusCircle size={18} className="inline mr-2" /> 
+                                        Add Your First Service
+                                    </Link>
+                                )}
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="overflow-hidden rounded-2xl border border-gray-200">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                                        <tr>
+                                            <th className="px-8 py-5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">ID</th>
+                                            <th className="px-8 py-5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Service Type</th>
+                                            <th className="px-8 py-5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Transfer Speed</th>
+                                            <th className="px-8 py-5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider">Fee Percentage</th>
+                                            <th className="px-8 py-5 text-right text-sm font-semibold text-gray-900 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {services.map(service => (
+                                            <ServiceRow key={service.service_id} service={service} />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {pagination.lastPage > 1 && <Pagination />}
+                        </>
+                    )}
+
+                    {/* Footer Note */}
+                    <p className="text-xs text-slate-500 text-center mt-8 pt-6 border-t border-gray-100">
+                        Services are managed by administrators. Contact support for service-related inquiries.
+                    </p>
+                </div>
             </div>
         </div>
     );
-};   
+};
 
 export default ServiceListPage;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { createService, updateService, fetchService } from '../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Loader2, Save, Undo2 } from 'lucide-react';
+import { Loader2, Save, Undo2, ArrowLeft, Sparkles, FileText } from 'lucide-react';
 
 const ServiceFormPage = () => {
     const { id } = useParams(); 
@@ -26,6 +26,7 @@ const ServiceFormPage = () => {
     const [fetchLoading, setFetchLoading] = useState(isEditing);
     const [errors, setErrors] = useState({});
     const [touched, setTouched] = useState({});
+    const [focused, setFocused] = useState(null);
 
     const title = isEditing ? 'Edit Service' : 'Add New Service';
 
@@ -43,7 +44,6 @@ const ServiceFormPage = () => {
                     console.log('📦 Raw API Response:', response);
                     console.log('🔍 Full response structure:', JSON.stringify(response, null, 2));
                     
-                    // FIXED: Check for response.service_id instead of response.success
                     if (response && response.service_id) {
                         console.log('🎯 Setting form data with:', response);
                         setFormData({
@@ -53,7 +53,6 @@ const ServiceFormPage = () => {
                                 ? String(response.fee_percentage) 
                                 : '',
                         });
-                        // Clear any previous errors
                         setErrors({});
                     } else {
                         console.error('❌ API returned failure or no data');
@@ -75,16 +74,6 @@ const ServiceFormPage = () => {
             setFetchLoading(false);
         }
     }, [id, isEditing, token]);
-
-    // Log formData changes
-    useEffect(() => {
-        console.log('📝 FormData updated:', formData);
-    }, [formData]);
-
-    // Log error changes
-    useEffect(() => {
-        console.log('🚨 Errors updated:', errors);
-    }, [errors]);
 
     // Validation function
     const validateForm = () => {
@@ -117,7 +106,6 @@ const ServiceFormPage = () => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         
-        // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -126,27 +114,28 @@ const ServiceFormPage = () => {
     const handleBlur = (e) => {
         const { name } = e.target;
         setTouched(prev => ({ ...prev, [name]: true }));
+        setFocused(null);
         
-        // Validate individual field on blur
         const newErrors = validateForm();
         setErrors(prev => ({ ...prev, [name]: newErrors[name] || '' }));
+    };
+
+    const handleFocus = (fieldName) => {
+        setFocused(fieldName);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Mark all fields as touched
         setTouched({
             service_type: true,
             transfer_speed: true,
             fee_percentage: true,
         });
 
-        // Validate all fields
         const newErrors = validateForm();
         setErrors(newErrors);
 
-        // If there are errors, don't submit
         if (Object.keys(newErrors).length > 0) {
             return;
         }
@@ -161,11 +150,9 @@ const ServiceFormPage = () => {
         try {
             if (isEditing) {
                 await updateService(token, id, dataToSend);
-                // Redirect with success message
                 navigate('/services?message=Service+successfully+updated&type=success');
             } else {
                 await createService(token, dataToSend);
-                // Redirect with success message
                 navigate('/services?message=Service+successfully+created&type=success');
             }
         } catch (e) {
@@ -180,156 +167,196 @@ const ServiceFormPage = () => {
 
     // Show loading only when fetching data for editing
     if (fetchLoading) {
-        console.log('⏳ Rendering loading state...');
         return (
-            <div className="p-10 text-center">
-                <Loader2 className="animate-spin mx-auto" size={32} /> 
-                Loading Service Data...
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+                <div className="text-center">
+                    <Loader2 className="animate-spin w-12 h-12 border-4 border-t-blue-600 border-gray-200 rounded-full mx-auto mb-4" />
+                    <p className="text-gray-600">Loading service data...</p>
+                </div>
             </div>
         );
     }
 
-    console.log('🎨 Rendering form with data:', formData);
-    console.log('🎨 Current errors:', errors);
-console.log('🎨 Rendering form with data:', formData);
-console.log('🎨 Current errors:', errors);
-
-// Add this debug section
-console.log('🔍 FORM DEBUG:');
-console.log('  - service_type value:', formData.service_type);
-console.log('  - transfer_speed value:', formData.transfer_speed);
-console.log('  - fee_percentage value:', formData.fee_percentage);
-console.log('  - isEditing:', isEditing);
-console.log('  - fetchLoading:', fetchLoading);
-
-    // ... your existing JSX
     return (
-        <div className="p-4 md:p-8 max-w-xl mx-auto">
-            <h1 className="text-4xl font-extrabold text-gray-900 mb-8 text-center">
-                {isEditing ? 'Edit Service' : 'Add New Service'}
-            </h1>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+            <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 md:p-12 relative">
+                {/* Back Button */}
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute left-6 top-6 flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 bg-teal-800 text-white hover:bg-teal-900 transition"
+                >
+                    <ArrowLeft size={18} />
+                    Back
+                </button>
 
-            {errors.general && (
-                <div className="bg-red-100 text-red-700 p-4 rounded-xl mb-4 font-medium shadow-md">
-                    {errors.general}
+                {/* Header */}
+                <div className="text-center mb-10 mt-6">
+                    <div className="flex items-center justify-center gap-2 mb-3">
+                        <Sparkles className="w-6 h-6 text-blue-600" />
+                        <span className="text-blue-600 font-semibold text-lg">
+                            {isEditing ? 'Service Management' : 'Add New Service'}
+                        </span>
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-black text-gray-900">
+                        {isEditing ? 'Edit Service Details' : 'Create New Service'}
+                    </h1>
+                    <p className="text-slate-500 mt-2">
+                        {isEditing 
+                            ? 'Update the service details below.' 
+                            : 'Fill in the details to create a new service.'
+                        }
+                    </p>
                 </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="bg-white rounded-3xl shadow-2xl p-8 space-y-6">
-                
-                {/* Service Type - Now shows old value when editing */}
-                <div>
-                    <label htmlFor="service_type" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Service Type *
-                    </label>
-                    <select
-                        id="service_type"
-                        name="service_type"
-                        value={formData.service_type}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        required
-                        className={`w-full border rounded-xl p-4 focus:ring-blue-500 focus:border-blue-500 appearance-none transition ${
-                            getFieldError('service_type') 
-                                ? 'border-red-300 bg-red-50' 
-                                : 'border-gray-300 bg-black'
-                        }`}
+                {/* General Error */}
+                {errors.general && (
+                    <div className="bg-red-100 text-red-700 px-4 py-3 rounded-xl mb-6 border border-red-200">
+                        {errors.general}
+                    </div>
+                )}
+
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Service Type */}
+                    <div>
+                        <label className="block text-gray-900 font-medium mb-2">
+                            Service Type *
+                        </label>
+                        <div className="relative">
+                            <select
+                                name="service_type"
+                                value={formData.service_type}
+                                onChange={handleChange}
+                                onFocus={() => handleFocus('service_type')}
+                                onBlur={handleBlur}
+                                required
+                                className={`w-full pl-4 pr-10 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 transition-all 
+                                    focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none ${
+                                    focused === 'service_type' ? 'bg-white' : ''
+                                } ${getFieldError('service_type') ? 'border border-red-300' : ''}`}
+                            >
+                                <option value="">Select a service type</option>
+                                <option value="transfer">Money Transfer</option>
+                                <option value="payment">Bill Payment</option>
+                                <option value="cash_out">Cash Out / Withdrawal</option>
+                            </select>
+                            <div className="absolute right-4 top-4 pointer-events-none">
+                                <FileText size={20} className="text-gray-400" />
+                            </div>
+                        </div>
+                        {getFieldError('service_type') && (
+                            <p className="text-red-600 text-sm mt-2 font-medium">
+                                {errors.service_type}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Transfer Speed */}
+                    <div>
+                        <label className="block text-gray-900 font-medium mb-2">
+                            Transfer Speed *
+                        </label>
+                        <div className="relative">
+                            <select
+                                name="transfer_speed"
+                                value={formData.transfer_speed}
+                                onChange={handleChange}
+                                onFocus={() => handleFocus('transfer_speed')}
+                                onBlur={handleBlur}
+                                required
+                                className={`w-full pl-4 pr-10 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 transition-all 
+                                    focus:ring-2 focus:ring-blue-500 focus:bg-white appearance-none ${
+                                    focused === 'transfer_speed' ? 'bg-white' : ''
+                                } ${getFieldError('transfer_speed') ? 'border border-red-300' : ''}`}
+                            >
+                                <option value="">Select transfer speed</option>
+                                <option value="instant">Instant (Real-Time)</option>
+                                <option value="same_day">Same Day</option>
+                                <option value="1-3_days">1-3 Business Days</option>
+                            </select>
+                            <div className="absolute right-4 top-4 pointer-events-none">
+                                <FileText size={20} className="text-gray-400" />
+                            </div>
+                        </div>
+                        {getFieldError('transfer_speed') && (
+                            <p className="text-red-600 text-sm mt-2 font-medium">
+                                {errors.transfer_speed}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Fee Percentage */}
+                    <div>
+                        <label className="block text-gray-900 font-medium mb-2">
+                            Fee Percentage (%) *
+                        </label>
+                        <div className="relative">
+                            <input
+                                type="number"
+                                name="fee_percentage"
+                                value={formData.fee_percentage}
+                                onChange={handleChange}
+                                onFocus={() => handleFocus('fee_percentage')}
+                                onBlur={handleBlur}
+                                step="0.01"
+                                min="0"
+                                max="100"
+                                required
+                                placeholder="e.g., 1.50"
+                                className={`w-full pl-12 pr-4 py-4 bg-gray-50 border-0 rounded-xl text-gray-900 placeholder-gray-400 transition-all 
+                                    focus:ring-2 focus:ring-blue-500 focus:bg-white ${
+                                    focused === 'fee_percentage' ? 'bg-white' : ''
+                                } ${getFieldError('fee_percentage') ? 'border border-red-300' : ''}`}
+                            />
+                            <div className="absolute left-4 top-4 pointer-events-none">
+                                <span className="text-gray-400 font-medium">%</span>
+                            </div>
+                        </div>
+                        {getFieldError('fee_percentage') && (
+                            <p className="text-red-600 text-sm mt-2 font-medium">
+                                {errors.fee_percentage}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full py-5 bg-teal-800 hover:bg-teal-900 text-white font-semibold text-lg rounded-xl transition-all shadow-lg hover:shadow-xl"
                     >
-                        <option value="">Select a service type</option>
-                        <option value="transfer">Money Transfer</option>
-                        <option value="payment">Bill Payment</option>
-                        <option value="cash_out">Cash Out / Withdrawal</option>
-                    </select>
-                    {getFieldError('service_type') && (
-                        <p className="text-red-600 text-sm mt-2 font-medium">
-                            {errors.service_type}
-                        </p>
-                    )}
-                </div>
+                        {loading ? (
+                            <span className="flex items-center justify-center">
+                                <Loader2 className="animate-spin mr-2" size={20} />
+                                {isEditing ? 'Saving Changes...' : 'Creating Service...'}
+                            </span>
+                        ) : (
+                            <span className="flex items-center justify-center">
+                                <Save className="mr-2" size={20} />
+                                {isEditing ? 'Save Changes' : 'Create Service'}
+                            </span>
+                        )}
+                    </button>
 
-                {/* Transfer Speed - Now shows old value when editing */}
-                <div>
-                    <label htmlFor="transfer_speed" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Transfer Speed *
-                    </label>
-                    <select
-                        id="transfer_speed"
-                        name="transfer_speed"
-                        value={formData.transfer_speed}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        required
-                        className={`w-full border rounded-xl p-4 focus:ring-blue-500 focus:border-blue-500 appearance-none transition ${
-                            getFieldError('transfer_speed') 
-                                ? 'border-red-300 bg-red-50' 
-                                : 'border-gray-300 bg-black'
-                        }`}
-                    >
-                        <option value="">Select transfer speed</option>
-                        <option value="instant">Instant (Real-Time)</option>
-                        <option value="same_day">Same Day</option>
-                        <option value="1-3_days">1-3 Business Days</option>
-                    </select>
-                    {getFieldError('transfer_speed') && (
-                        <p className="text-red-600 text-sm mt-2 font-medium">
-                            {errors.transfer_speed}
-                        </p>
-                    )}
-                </div>
-
-                {/* Fee Percentage - Now shows old value when editing */}
-                <div>
-                    <label htmlFor="fee_percentage" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Fee Percentage (%) *
-                    </label>
-                    <input
-                        type="number"
-                        id="fee_percentage"
-                        name="fee_percentage"
-                        value={formData.fee_percentage}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        step="0.01"
-                        min="0"
-                        max="100"
-                        required
-                        placeholder="e.g., 1.50"
-                        className={`w-full border rounded-xl p-4 focus:ring-blue-500 focus:border-blue-500 text-xl font-mono transition ${
-                            getFieldError('fee_percentage') 
-                                ? 'border-red-300 bg-red-50' 
-                                : 'border-gray-300 bg-black'
-                        }`}
-                    />
-                    {getFieldError('fee_percentage') && (
-                        <p className="text-red-600 text-sm mt-2 font-medium">
-                            {errors.fee_percentage}
-                        </p>
-                    )}
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-4 pt-4">
+                    {/* Cancel Button */}
                     <button
                         type="button"
                         onClick={() => navigate('/services')}
-                        className="flex-1 flex items-center justify-center border border-gray-300 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 transition"
+                        className="w-full py-4 border border-gray-300 bg-teal-800 text-white font-semibold rounded-xl hover:bg-teal-900 transition flex items-center justify-center"
                     >
-                        <Undo2 size={20} className="mr-2" /> Cancel
+                        <Undo2 className="mr-2" size={18} />
+                        Cancel
                     </button>
-                    <button
-                        type="submit"
-                        disabled={loading || fetchLoading}
-                        className="flex-1 flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg disabled:opacity-50 transition"
-                    >
-                        {loading ? (
-                            <Loader2 size={20} className="animate-spin mr-2" />
-                        ) : (
-                            <Save size={20} className="mr-2" />
-                        )}
-                        {isEditing ? (loading ? 'Saving...' : 'Save Changes') : (loading ? 'Creating...' : 'Create Service')}
-                    </button>
-                </div>
-            </form>
+                </form>
+
+                {/* Footer Note */}
+                <p className="text-xs text-slate-500 text-center mt-8 pt-6 border-t border-gray-100">
+                    {isEditing 
+                        ? 'Changes will be applied immediately after saving.' 
+                        : 'New services will be available for transactions immediately.'
+                    }
+                </p>
+            </div>
         </div>
     );
 };

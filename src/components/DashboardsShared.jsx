@@ -2,6 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Users, DollarSign, CreditCard, TrendingUp, 
+  BarChart3, Wallet, Clock, CheckCircle,
+  UserPlus, Percent, Sparkles, ArrowRight
+} from 'lucide-react';
 
 import {
   Chart as ChartJS,
@@ -11,29 +16,51 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 } from 'chart.js';
+
 import { fetchAdminDashboard, fetchAgentDashboard, fetchUserDashboard } from '../services/api';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+
 /* ---------------- Shared UI components ---------------- */
-export const StatCard = ({ title, value }) => (
-  <div className="bg-white p-4 rounded-xl shadow text-center">
-    <p className="text-sm text-gray-500">{title}</p>
-    <p className="text-2xl font-bold text-gray-900">{value}</p>
+export const StatCard = ({ title, value, icon: Icon, onClick, isButton = false }) => (
+  <div
+    className={`bg-white p-6 rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl ${
+      isButton ? 'cursor-pointer hover:-translate-y-1' : ''
+    }`}
+    onClick={isButton ? onClick : undefined}
+  >
+    <div className="flex items-center justify-between mb-4">
+      <div className="p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+        {Icon && <Icon className="w-6 h-6 text-blue-600" />}
+      </div>
+      {isButton && <ArrowRight className="w-5 h-5 text-gray-400" />}
+    </div>
+    <p className="text-sm text-gray-500 font-medium mb-1">{title}</p>
+    <p className="text-2xl font-black text-gray-900">{value}</p>
   </div>
 );
 
 export const SummaryGrid = ({ items }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
     {items.map((it, idx) => (
-      <StatCard key={idx} title={it.title} value={it.value} />
+      <StatCard 
+        key={idx} 
+        title={it.title} 
+        value={it.value} 
+        icon={it.icon}
+        onClick={it.onClick}
+        isButton={it.isButton}
+      />
     ))}
   </div>
 );
 
-export const LineChart = ({ labels = [], data = [], label = 'Data' }) => {
-    if (!data || data.length === 0) return null;
+export const LineChart = ({ labels = [], data = [], label = 'Data', gradientColor = '99, 102, 241' }) => {
+  if (!data || data.length === 0) return null;
+  
   const chartData = {
     labels,
     datasets: [
@@ -41,59 +68,134 @@ export const LineChart = ({ labels = [], data = [], label = 'Data' }) => {
         label,
         data,
         fill: true,
-        tension: 0.3,
-        borderColor: 'rgb(99, 102, 241)',
-        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+        tension: 0.4,
+        borderColor: `rgb(${gradientColor})`,
+        backgroundColor: `rgba(${gradientColor}, 0.1)`,
+        borderWidth: 3,
+        pointBackgroundColor: `rgb(${gradientColor})`,
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 6,
+        pointHoverRadius: 8,
       },
     ],
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        padding: 12,
+        cornerRadius: 8,
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          color: '#6b7280',
+        }
+      },
+      x: {
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          color: '#6b7280',
+        }
+      }
+    },
+  };
+
   return (
-    <div className="bg-white p-4 rounded-xl shadow">
-      <Line data={chartData} />
+    <div className="bg-white p-6 rounded-3xl shadow-2xl">
+      <Line data={chartData} options={options} />
     </div>
   );
 };
 
 export const TransactionsTable = ({ transactions = [], showAgent = false }) => (
-  <div className="overflow-x-auto bg-white p-4 rounded-xl shadow">
-    <table className="w-full text-left table-auto border-collapse">
-      <thead className="bg-gray-100">
-        <tr>
-          <th className="px-4 py-2 text-black">ID</th>
-          {showAgent && <th className="px-4 py-2 text-black">Agent</th>}
-          <th className="px-4 py-2 text-black">Amount</th>
-          <th className="px-4 py-2 text-black">Status</th>
-          <th className="px-4 py-2 text-black">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {transactions.length === 0 ? (
-          <tr>
-            <td colSpan={showAgent ? 5 : 4} className="text-center py-6 text-black">
-              No transactions found
-            </td>
+  <div className="bg-white rounded-3xl shadow-2xl p-6">
+    <div className="overflow-x-auto">
+      <table className="w-full text-left">
+        <thead>
+          <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
+            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">ID</th>
+            {showAgent && <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Agent</th>}
+            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Amount</th>
+            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Status</th>
+            <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Date</th>
           </tr>
-        ) : (
-          transactions.map(t => (
-            <tr key={t.transaction_id} className="border-b hover:bg-gray-50 transition">
-              <td className="px-4 py-2 text-black">{t.transaction_id}</td>
-              {showAgent && <td className="px-4 py-2 text-black">{t.agent?.full_name || 'N/A'}</td>}
-              <td className="px-4 py-2 text-black">${t.transfer_amount}</td>
-              <td className="px-4 py-2 font-semibold text-black">{t.status}</td>
-              <td className="px-4 py-2 text-black">{new Date(t.created_at).toLocaleString()}</td>
+        </thead>
+        <tbody className="divide-y divide-gray-200">
+          {transactions.length === 0 ? (
+            <tr>
+              <td colSpan={showAgent ? 5 : 4} className="text-center py-8">
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                    <CreditCard className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="text-gray-500">No transactions found</p>
+                </div>
+              </td>
             </tr>
-          ))
-        )}
-      </tbody>
-    </table>
+          ) : (
+            transactions.map(t => (
+              <tr key={t.transaction_id} className="hover:bg-gray-50 transition-all duration-200">
+                <td className="px-6 py-4 text-gray-900 font-medium border-r border-gray-100">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
+                      <span className="text-blue-600 font-bold">#{t.transaction_id}</span>
+                    </div>
+                  </div>
+                </td>
+                {showAgent && (
+                  <td className="px-6 py-4 text-gray-700 border-r border-gray-100">
+                    {t.agent?.full_name || 'N/A'}
+                  </td>
+                )}
+                <td className="px-6 py-4 text-gray-900 font-semibold border-r border-gray-100">
+                  ${t.transfer_amount}
+                </td>
+                <td className="px-6 py-4">
+                  <span className={`px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full ${
+                    t.status === 'done' ? 'bg-green-100 text-green-800 border border-green-200' :
+                    t.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                    'bg-gray-100 text-gray-800 border border-gray-200'
+                  }`}>
+                    {t.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-gray-600">
+                  {new Date(t.created_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   </div>
 );
 
 /* ---------------- Admin Dashboard ---------------- */
 export const AdminDashboard = () => {
   const [dashboard, setDashboard] = useState(null);
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -108,7 +210,16 @@ const navigate = useNavigate();
     fetchData();
   }, []);
 
-  if (!dashboard) return <p className="text-center mt-20">Loading...</p>;
+  if (!dashboard) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-t-blue-600 border-gray-200 rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   const usersPerDay = (dashboard.history?.users_per_day || []).map(d => ({
     date: d.date,
@@ -116,67 +227,116 @@ const navigate = useNavigate();
   }));
 
   return (
-    <div className="p-6 md:p-12 min-h-screen bg-gray-50">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome Admin</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Sparkles className="w-6 h-6 text-blue-600" />
+            <span className="text-blue-600 font-semibold text-lg">Administrator Dashboard</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-black text-gray-900">
+            Welcome, Administrator
+          </h1>
+          <p className="text-slate-500 mt-2">
+            Overview of platform performance and metrics
+          </p>
+        </div>
 
-      {/* Summary Grid - 4 per row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-       {[
-  { title: 'Total Transactions', value: dashboard.summary.total_transactions ?? 0 },
-  { title: 'Total Volume', value: `$${dashboard.summary.total_volume ?? 0}` },
-  { title: 'Total Fees', value: `$${dashboard.summary.total_fees ?? 0}` },
-  { title: 'Total Users', value: dashboard.summary.total_users ?? 0 },
-  { title: 'Total Agents', value: dashboard.summary.total_agents ?? 0 },
-  { title: 'Done Transactions', value: dashboard.summary.transactions_by_status?.done ?? 0 },
-  { title: 'Total Agent Commission', value: `$${dashboard.summary.total_agent_commission ?? 0}` },
-  {
-    title: 'Agents',
-    value: 'View Agents',
-    onClick: () => navigate('/admin/agents'), 
-    isButton: true
-  }
-].map((item, idx) => (
-  <div
-    key={idx}
-    className={`bg-white p-4 rounded-xl shadow text-center ${
-      item.isButton ? 'cursor-pointer hover:bg-gray-100' : ''
-    }`}
-    onClick={item.isButton ? item.onClick : undefined} // attach onClick
-  >
-    <p className="text-sm text-gray-500">{item.title}</p>
-    <p className="text-2xl font-bold text-gray-900">{item.value}</p>
-  </div>
-))}
+        {/* Main Content Card */}
+        <div className="w-full bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-8">
+          {/* Summary Grid */}
+          <div className="mb-10">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Platform Overview</h2>
+            <SummaryGrid
+              items={[
+                { 
+                  title: 'Total Transactions', 
+                  value: dashboard.summary.total_transactions ?? 0, 
+                  icon: CreditCard 
+                },
+                { 
+                  title: 'Total Volume', 
+                  value: `$${dashboard.summary.total_volume ?? 0}`, 
+                  icon: DollarSign 
+                },
+                { 
+                  title: 'Total Fees', 
+                  value: `$${dashboard.summary.total_fees ?? 0}`, 
+                  icon: TrendingUp 
+                },
+                { 
+                  title: 'Total Users', 
+                  value: dashboard.summary.total_users ?? 0, 
+                  icon: Users 
+                },
+                { 
+                  title: 'Total Agents', 
+                  value: dashboard.summary.total_agents ?? 0, 
+                  icon: Users 
+                },
+                { 
+                  title: 'Completed Transactions', 
+                  value: dashboard.summary.transactions_by_status?.done ?? 0, 
+                  icon: CheckCircle 
+                },
+                { 
+                  title: 'Agent Commissions', 
+                  value: `$${dashboard.summary.total_agent_commission ?? 0}`, 
+                  icon: Percent 
+                },
+                { 
+                  title: 'Manage Agents', 
+                  value: 'View Agents', 
+                  icon: UserPlus,
+                  onClick: () => navigate('/admin/agents'), 
+                  isButton: true 
+                }
+              ]}
+            />
+          </div>
+
+          {/* Recent Transactions */}
+          <div className="mb-10">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Transactions</h2>
+            <TransactionsTable transactions={dashboard.history.latest_transactions || []} showAgent />
+          </div>
+
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Users Growth Chart */}
+            {usersPerDay.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Users Growth</h2>
+                <LineChart
+                  labels={usersPerDay.map(d => d.date)}
+                  data={usersPerDay.map(d => d.total)}
+                  label="New Users"
+                  gradientColor="59, 130, 246"
+                />
+              </div>
+            )}
+
+            {/* Fees Chart */}
+            {dashboard.history?.fees_per_day?.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Fees Collected</h2>
+                <LineChart
+                  labels={dashboard.history.fees_per_day.map(d => d.date)}
+                  data={dashboard.history.fees_per_day.map(d => d.total)}
+                  label="Fees ($)"
+                  gradientColor="16, 185, 129"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Footer Note */}
+          <p className="text-xs text-slate-500 text-center mt-8 pt-6 border-t border-gray-100">
+            Data updates in real-time. Last updated: {new Date().toLocaleTimeString()}
+          </p>
+        </div>
       </div>
-
-      {/* Transactions Table */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-4 text-black">Transactions (History)</h2>
-        <TransactionsTable transactions={dashboard.history.latest_transactions || []} showAgent />
-      </div>
-
-     {/* Users Growth Graph */}
-{usersPerDay.length > 0 && (
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-black">Users Growth</h2>
-    <LineChart
-      labels={usersPerDay.map(d => d.date)}
-      data={usersPerDay.map(d => d.total)}
-      label="New users"
-    />
-  </div>
-)}
-
-{dashboard.history?.fees_per_day?.length > 0 && (
-  <div className="mb-6">
-    <h2 className="text-2xl font-semibold mb-4 text-black">Fees Collected Over Time</h2>
-    <LineChart
-      labels={dashboard.history.fees_per_day.map(d => d.date)}
-      data={dashboard.history.fees_per_day.map(d => d.total)}
-      label="Fees ($)"
-    />
-  </div>
-)}
     </div>
   );
 };
@@ -201,81 +361,162 @@ export const AgentDashboard = () => {
     fetchData();
   }, []);
 
-  if (!dashboard) return <p className="text-center mt-20">Loading...</p>;
+  if (!dashboard) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-t-blue-600 border-gray-200 rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading agent dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   const usersPerDay = Object.entries(dashboard.history.users_per_day || {}).map(
     ([date, total]) => ({ date, total })
   );
 
   return (
-    <div className="p-6 md:p-12 min-h-screen bg-gray-50 text-black">
-      <h1 className="text-4xl font-bold mb-6">Agent Dashboard</h1>
-
-      <SummaryGrid
-        items={[
-          { title: 'Total Transactions', value: dashboard.summary.total_transactions ?? 0 },
-          { title: 'Pending', value: dashboard.summary.pending ?? 0 },
-          { title: 'Done', value: dashboard.summary.done ?? 0 },
-          { title: 'Total Processed', value: `$${dashboard.summary.total_transfer_amount ?? 0}` },
-          { title: 'Unique Users', value: dashboard.summary.unique_users ?? 0 },
-          { title: 'Current Commission Rate', value: `${dashboard.summary.commission_rate ?? 0}%` },
-          { title: 'Total Commission Earned', value: `$${dashboard.summary.total_commission_earned ?? 0}` },
-        ]}
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-
-        {/* Cash Pickups Table */}
-        <div>
-          <h2 className="text-2xl font-semibold mb-4 text-black">Latest Cash Pickups</h2>
-          <TransactionsTable 
-            transactions={dashboard.history.latest_transactions || []} 
-            textColor="black"
-          />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Sparkles className="w-6 h-6 text-blue-600" />
+            <span className="text-blue-600 font-semibold text-lg">Agent Dashboard</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-black text-gray-900">
+            Welcome, Agent
+          </h1>
+          <p className="text-slate-500 mt-2">
+            Manage your transactions and monitor performance
+          </p>
         </div>
 
-        {/* Cash Operations Table */}
-        <div>
-          <h2 className="text-2xl font-semibold mb-4 text-black">Latest Cash Operations</h2>
-          <table className="min-w-full border border-black">
-            <thead className="bg-white text-black">
-              <tr>
-                <th className="px-4 py-2 border">ID</th>
-                <th className="px-4 py-2 border">Operation Type</th>
-                <th className="px-4 py-2 border">Amount</th>
-                <th className="px-4 py-2 border">Agent Commission (%)</th>
-                <th className="px-4 py-2 border">Status</th>
-                <th className="px-4 py-2 border">Created At</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dashboard.history.latest_cash_operations?.map(op => (
-                <tr key={op.cash_op_id} className="text-black">
-                  <td className="px-4 py-2 border">{op.cash_op_id}</td>
-                  <td className="px-4 py-2 border">{op.operation_type}</td>
-                  <td className="px-4 py-2 border">${op.amount}</td>
-                  <td className="px-4 py-2 border">{op.agent_commission}%</td>
-                  <td className="px-4 py-2 border">{op.status}</td>
-                  <td className="px-4 py-2 border">{new Date(op.created_at).toLocaleString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        {/* Main Content Card */}
+        <div className="w-full bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-8">
+          {/* Summary Grid */}
+          <div className="mb-10">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Performance Overview</h2>
+            <SummaryGrid
+              items={[
+                { 
+                  title: 'Total Transactions', 
+                  value: dashboard.summary.total_transactions ?? 0, 
+                  icon: CreditCard 
+                },
+                { 
+                  title: 'Pending', 
+                  value: dashboard.summary.pending ?? 0, 
+                  icon: Clock 
+                },
+                { 
+                  title: 'Completed', 
+                  value: dashboard.summary.done ?? 0, 
+                  icon: CheckCircle 
+                },
+                { 
+                  title: 'Total Processed', 
+                  value: `$${dashboard.summary.total_transfer_amount ?? 0}`, 
+                  icon: DollarSign 
+                },
+                { 
+                  title: 'Unique Users', 
+                  value: dashboard.summary.unique_users ?? 0, 
+                  icon: Users 
+                },
+                { 
+                  title: 'Commission Rate', 
+                  value: `${dashboard.summary.commission_rate ?? 0}%`, 
+                  icon: Percent 
+                },
+                { 
+                  title: 'Commission Earned', 
+                  value: `$${dashboard.summary.total_commission_earned ?? 0}`, 
+                  icon: Wallet 
+                },
+              ]}
+            />
+          </div>
 
-      <div className="mt-8">
-        <h2 className="text-2xl font-semibold mb-4 text-black">Users Over Time</h2>
-        <LineChart
-          labels={usersPerDay.map(d => d.date)}
-          data={usersPerDay.map(d => d.total)}
-          label="Unique users per day"
-        />
+          {/* Recent Activity Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            {/* Cash Pickups Table */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Cash Pickups</h2>
+              <TransactionsTable 
+                transactions={dashboard.history.latest_transactions || []} 
+              />
+            </div>
+
+            {/* Cash Operations Table */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Cash Operations</h2>
+              <div className="bg-white rounded-3xl shadow-2xl p-6">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-gray-50 to-gray-100">
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">ID</th>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Type</th>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Amount</th>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider border-r border-gray-200">Commission</th>
+                        <th className="px-6 py-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {dashboard.history.latest_cash_operations?.map(op => (
+                        <tr key={op.cash_op_id} className="hover:bg-gray-50 transition-all duration-200">
+                          <td className="px-6 py-4 text-gray-900 font-medium border-r border-gray-100">#{op.cash_op_id}</td>
+                          <td className="px-6 py-4 text-gray-700 border-r border-gray-100">
+                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                              {op.operation_type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-gray-900 font-semibold border-r border-gray-100">${op.amount}</td>
+                          <td className="px-6 py-4 text-gray-700 border-r border-gray-100">{op.agent_commission}%</td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-medium rounded-full ${
+                              op.status === 'completed' ? 'bg-green-100 text-green-800 border border-green-200' :
+                              op.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
+                              'bg-gray-100 text-gray-800 border border-gray-200'
+                            }`}>
+                              {op.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Users Growth Chart */}
+          {usersPerDay.length > 0 && (
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">User Activity Over Time</h2>
+              <LineChart
+                labels={usersPerDay.map(d => d.date)}
+                data={usersPerDay.map(d => d.total)}
+                label="Unique Users per Day"
+                gradientColor="245, 158, 11"
+              />
+            </div>
+          )}
+
+          {/* Footer Note */}
+          <p className="text-xs text-slate-500 text-center mt-8 pt-6 border-t border-gray-100">
+            Performance metrics updated in real-time
+          </p>
+        </div>
       </div>
     </div>
   );
 };
-/* ---------------- User Dashboard (simplified) ---------------- */
+
+/* ---------------- User Dashboard ---------------- */
 export const UserDashboard = () => {
   const [dashboard, setDashboard] = useState(null);
 
@@ -293,24 +534,76 @@ export const UserDashboard = () => {
     fetchData();
   }, []);
 
-  if (!dashboard) return <p className="text-center mt-20">Loading...</p>;
+  if (!dashboard) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-t-blue-600 border-gray-200 rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading user dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 md:p-12 min-h-screen bg-gray-50">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Welcome,</h1>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <Sparkles className="w-6 h-6 text-blue-600" />
+            <span className="text-blue-600 font-semibold text-lg">User Dashboard</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-black text-gray-900">
+            Welcome Back
+          </h1>
+          <p className="text-slate-500 mt-2">
+            Overview of your transactions and account activity
+          </p>
+        </div>
 
-      <SummaryGrid
-        items={[
-          { title: 'Total Transactions', value: dashboard.total_transactions ?? 0 },
-          { title: 'Pending', value: dashboard.pending ?? 0 },
-          { title: 'Done', value: dashboard.done ?? 0 },
-          { title: 'Total Sent', value: `$${dashboard.total_sent_amount ?? 0}` },
-        ]}
-      />
+        {/* Main Content Card */}
+        <div className="w-full bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-8">
+          {/* Summary Grid */}
+          <div className="mb-10">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Transaction Summary</h2>
+            <SummaryGrid
+              items={[
+                { 
+                  title: 'Total Transactions', 
+                  value: dashboard.total_transactions ?? 0, 
+                  icon: CreditCard 
+                },
+                { 
+                  title: 'Pending', 
+                  value: dashboard.pending ?? 0, 
+                  icon: Clock 
+                },
+                { 
+                  title: 'Completed', 
+                  value: dashboard.done ?? 0, 
+                  icon: CheckCircle 
+                },
+                { 
+                  title: 'Total Sent', 
+                  value: `$${dashboard.total_sent_amount ?? 0}`, 
+                  icon: DollarSign 
+                },
+              ]}
+            />
+          </div>
 
-      <div>
-        <h2 className="text-2xl font-semibold mb-4">Latest Transactions</h2>
-        <TransactionsTable transactions={dashboard.latest_transactions || []} />
+          {/* Recent Transactions */}
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Transactions</h2>
+            <TransactionsTable transactions={dashboard.latest_transactions || []} />
+          </div>
+
+          {/* Footer Note */}
+          <p className="text-xs text-slate-500 text-center mt-8 pt-6 border-t border-gray-100">
+            Your transaction history is updated in real-time
+          </p>
+        </div>
       </div>
     </div>
   );
