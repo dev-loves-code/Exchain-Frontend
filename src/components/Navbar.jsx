@@ -59,6 +59,7 @@ const Navbar = () => {
     { to: '/user/cash-operations', label: 'Cash Operations' },
     { to: '/send', label: 'Wallet to Person' },
     { to: '/transactions', label: 'W2P Transactions' },
+    {to: '/wallet-to-wallet', label: 'Wallet to Wallet'}, 
     { to: '/beneficiaries', label: 'Beneficiaries' },
     { to: '/services', label: 'Services' },
     { to: '/reviews', label: 'My Reviews' },
