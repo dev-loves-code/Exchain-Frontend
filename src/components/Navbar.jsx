@@ -71,8 +71,6 @@ const Navbar = () => {
     { to: '/agent/dashboard', label: 'Dashboard' },
     { to: '/agent/cash-operations', label: 'My Operations' },
     { to: '/agent/verify', label: 'Verify Transaction' },
-    { to: '/services', label: 'Services' },
-    { to: '/reviews', label: 'Reviews' },
   ];
 
   // Admin dropdown items
