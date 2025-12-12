@@ -50,6 +50,12 @@ import ViewRefundPage from './pages/refund-requests/ViewRefundPage';
 import AdminRefundsPage from './pages/refund-requests/AdminRefundPage';
 import RefundDetailPage from './pages/refund-requests/RefundDetailPage';
 
+// Payment Management
+import PaymentManagementPage from './pages/PaymentManagementPage';
+
+// Admin Currency Rates
+import AdminCurrencyRatesPage from './pages/AdminCurrencyRatesPage';
+
 function AppContent() {
   const { user, loading } = useAuth();
 
@@ -120,6 +126,15 @@ function AppContent() {
             element={<RefundDetailPage />}
           />
           <Route path="/admin/refunds" element={<AdminRefundsPage />} />
+
+          {/* Payment Management */}
+          <Route path="/payments" element={<PaymentManagementPage />} />
+
+          {/* Admin - Currency Rates */}
+          <Route
+            path="/admin/currency-rates"
+            element={<AdminCurrencyRatesPage />}
+          />
 
           {/* Support Requests */}
           <Route path="/dash" element={<DashboardTest />} />
