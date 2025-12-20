@@ -70,6 +70,7 @@ import ViewRefundPage from './pages/refund-requests/ViewRefundPage';
 import AdminRefundsPage from './pages/refund-requests/AdminRefundPage';
 import RefundDetailPage from './pages/refund-requests/RefundDetailPage';
 
+
 // Services & Reviews
 import ServiceListPage from './pages/ServiceListPage';
 import ServiceFormPage from './pages/ServiceFormPage';
@@ -77,6 +78,13 @@ import ServiceDetailPage from './pages/ServiceDetailPage';
 import ReviewListPage from './pages/ReviewListPage';
 import ReviewFormPage from './pages/ReviewFormPage';
 import ReviewDetailPage from './pages/ReviewDetailPage';
+
+// Payment Management
+import PaymentManagementPage from './pages/PaymentManagementPage';
+
+// Admin Currency Rates
+import AdminCurrencyRatesPage from './pages/AdminCurrencyRatesPage';
+
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -146,6 +154,15 @@ function AppContent() {
           <Route path="/refund/view/:id" element={<ViewRefundPage />} />
           <Route path="/admin/refunds/:refundId" element={<RefundDetailPage />} />
           <Route path="/admin/refunds" element={<AdminRefundsPage />} />
+
+          {/* Payment Management */}
+          <Route path="/payments" element={<PaymentManagementPage />} />
+
+          {/* Admin - Currency Rates */}
+          <Route
+            path="/admin/currency-rates"
+            element={<AdminCurrencyRatesPage />}
+          />
 
           {/* Support Requests */}
           <Route path="/dash" element={<DashboardTest />} />

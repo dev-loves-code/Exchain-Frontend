@@ -65,6 +65,7 @@ const Navbar = () => {
     { to: '/beneficiaries', label: 'Beneficiaries' },
     { to: '/services', label: 'Services' },
     { to: '/reviews', label: 'My Reviews' },
+    { to: '/payments', label: 'Payments & Transactions' },
     { to: '/support-request', label: 'Support' },
     { to: '/support-request-list', label: 'Support Requests' },
   ];
