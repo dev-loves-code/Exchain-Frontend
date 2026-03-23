@@ -90,8 +90,8 @@ src/
 ### Setup
 
 ```bash
-git clone https://github.com/your-repo/exchain-frontend.git
-cd exchain-frontend
+git clone https://github.com/dev-loves-code/Exchain-Frontend.git
+cd Exchain-Frontend
 
 npm install
 npm run dev
