@@ -1,16 +1,137 @@
-# React + Vite
+# Exchain – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+Exchain frontend is a modern, responsive web application built with React and TailwindCSS, providing an intuitive interface for managing money transfers, agents, and real-time tracking.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Features
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+### User Features
 
-## Expanding the ESLint configuration
+* Signup & login (JWT + social authentication)
+* Search and compare transfer services
+* Initiate and track transfers in real-time
+* Manage beneficiaries
+* View transaction history
+* Multi-currency support
+* Notifications system
+* Reviews and ratings
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Agent Features
+
+* Register as an agent with automatic geolocation
+* Manage cash-in / cash-out operations
+* View transfer requests
+* Track commissions
+
+### Admin Features
+
+* Manage users and agents
+* Monitor transactions
+* Platform control dashboard
+
+---
+
+## Real-Time Functionality
+
+* Integrated with Laravel Reverb via PusherJS
+* Live updates for:
+
+  * Transfer status
+  * Notifications
+  * Agent activities
+
+---
+
+## Maps & Location
+
+* Interactive maps using Leaflet
+* Automatic location detection via browser
+* Features:
+
+  * Register agent location (latitude/longitude auto-detection)
+  * Display nearby agents
+  * Route and direction visualization
+
+---
+
+## Tech Stack
+
+* React
+* TailwindCSS
+* PusherJS
+* Leaflet
+* Axios (API communication)
+
+---
+
+## Project Structure
+
+```
+src/
+  components/
+  pages/
+  services/
+  hooks/
+  assets/
+```
+
+---
+
+## Installation
+
+### Prerequisites
+
+* Node.js >= 18
+* npm or yarn
+
+### Setup
+
+```bash
+git clone https://github.com/your-repo/exchain-frontend.git
+cd exchain-frontend
+
+npm install
+npm run dev
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file:
+
+```
+VITE_API_URL=http://localhost:8000
+VITE_PUSHER_KEY=your_key
+VITE_PUSHER_CLUSTER=your_cluster
+```
+
+---
+
+## UI & Design
+
+* Responsive design using TailwindCSS
+* Clean and modern interface
+* Optimized UX for financial transactions
+
+---
+
+## Key Highlights
+
+* Real-time UI updates
+* Interactive map integration
+* Seamless user experience
+* Scalable component-based architecture
+
+---
+
+## Future Improvements
+
+* Mobile app version
+* Advanced filtering system
+* UI animations and enhancements
+
+.
